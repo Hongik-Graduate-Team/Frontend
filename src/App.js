@@ -6,6 +6,9 @@ import HomePage from './components/pages/HomePage.js';
 import InputInfo from './components/pages/InputInfo.js';
 import './index.css'
 
+// Kakao SDK 초기화
+window.Kakao.init('YOUR_KAKAO_JAVASCRIPT_KEY');
+
 function App() {
     return (
         <Router>
