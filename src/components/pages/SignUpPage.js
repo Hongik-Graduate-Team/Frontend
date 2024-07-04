@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 function SignUpPage() {
-    // useState로 상태 관리.
+    // useState로 상태 관리..
     const [memberData, setMemberData] = useState({
         id: "",
         name: "",
