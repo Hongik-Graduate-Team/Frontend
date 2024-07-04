@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import LoginHeader from '../modecules/SignInHeader'; // 경로를 실제 파일 위치에 맞게 변경하세요.
+import SignInHeader from '../modecules/SignInHeader'; // 경로를 실제 파일 위치에 맞게 변경하세요.
 import kakaoLogo from '../../assets/img/kakaoLogo.png'; // 이미지 파일을 import
 
 function SignInPage() {
@@ -70,7 +70,7 @@ function SignInPage() {
 
     return (
         <div className="flex flex-col min-h-screen">
-            <LoginHeader />
+            <SignInHeader />
             <div className="flex flex-1 items-center justify-center bg-white-100">
                 <div className="w-full max-w-lg p-8 space-y-8">
                     <h1 className="mt-10 text-center text-4xl font-bold leading-9 tracking-tight text-gray-900">로그인</h1>
