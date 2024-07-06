@@ -4,6 +4,7 @@ import SignInPage from './components/pages/SignInPage.js';
 import SignUpPage from './components/pages/SignUpPage.js';
 import HomePage from './components/pages/HomePage.js';
 import InputInfo from './components/pages/InputInfo.js';
+import MyPage from './components/pages/MyPage';
 import './index.css'
 
 // Kakao SDK 초기화
@@ -17,6 +18,7 @@ function App() {
                 <Route path="/signup" element={<SignUpPage />} />
                 <Route path="/homepage" element={<HomePage />} />
                 <Route path="/inputInfo" element={<InputInfo />} />
+                <Route path="/mypage" element={<MyPage/>} />
             </Routes>
         </Router>
     );

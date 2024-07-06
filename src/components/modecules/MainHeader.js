@@ -1,8 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import logo from "../../assets/img/Logo.png";
+import logo from '../../assets/img/Logo.png';
 
-function SignInHeader() {
+function MainHeader() {
     const navigate = useNavigate();
 
     const handleNavigation = (path) => {
@@ -12,24 +12,24 @@ function SignInHeader() {
     return (
         <header className="w-full p-4 bg-white flex justify-between items-center">
             <div>
-                <img src={logo} alt="Logo" className="h-8"/> {/* 로고 이미지 표시 */}
+                <img src={logo} alt="Logo" className="h-8" />  {/* 로고 이미지 표시 */}
             </div>
             <div className="space-x-4">
                 <button
-                    onClick={() => handleNavigation('/')}
+                    onClick={() => handleNavigation('/mypage')}
                     className="text-gray-900 hover:underline"
                 >
-                    나만바 소개
+                    마이페이지
                 </button>
                 <button
-                    onClick={() => handleNavigation('/signin')}
+                    onClick={() => handleNavigation('/signup')}
                     className="text-gray-900 hover:underline"
                 >
-                    로그인
+                    로그아웃
                 </button>
             </div>
         </header>
     );
 }
 
-export default SignInHeader;
+export default MainHeader;
