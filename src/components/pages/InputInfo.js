@@ -6,11 +6,11 @@ function InputInfo() {
   const [resumeData, setResumeData] = useState({
     jobType: '',
     questions: [{ question: '', answer: '' }],
-    experience: [{ position: '', period: '' }],
+    careers: [{ type: '', content: '', period: '' }],
     stacks: [''],
+    awards: [''],
     certs: [''],
     languageCerts: [{ type: '', level: '' }],
-    awards: [''],
   });
 
   const navigate = useNavigate();
@@ -58,16 +58,16 @@ function InputInfo() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-3xl mx-auto p-2">
-    <h2 className="mt-10 text-left text-2xl font-bold leading-9 tracking-tight text-gray-900">직군 선택</h2>
+    <form onSubmit={handleSubmit} className="max-w-4xl mx-auto p-2">
+    <h2 className="mt-5 text-left text-2xl font-bold leading-9 tracking-tight text-gray-900">직군 선택</h2>
     <div class="border-b border-gray-900/10 mt-3 mb-3"></div>
     <div className="mb-4">
       <select
-        id="position"
-        name="position"
+        id="jobType"
+        name="jobType"
         value={resumeData.position}
         onChange={handleChange}
-        className="w-1/2 p-3 mt-2 border border-gray-300 rounded-lg  focus:outline-none focus:ring-1 focus:ring-indigo-500"
+        className="w-1/3 p-3 mt-2 border border-gray-300 rounded-lg  focus:outline-none focus:ring-1 focus:ring-indigo-500"
         required
       >
         <option value="">직군을 선택하세요</option>
@@ -83,7 +83,7 @@ function InputInfo() {
         <input
           type="text"
           id={`question-${index}`}
-          name={`question-${index}`}
+          name={"question"}
           value={question.question}
           placeholder="질문"
           onChange={(e) => handleItemChange('questions', index, e)}
@@ -92,7 +92,7 @@ function InputInfo() {
           />
         <textarea
           id={`answer-${index}`}
-          name={`answer-${index}`}
+          name={"answer"}
           value={question.answer}
           placeholder="답변"
           onChange={(e) => handleItemChange('questions', index, e)}
@@ -100,33 +100,242 @@ function InputInfo() {
           className="w-full p-3 mt-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
           required
         />
+        {resumeData.questions.length < 5 && index === resumeData.questions.length - 1 && (
+        <button
+          type="button"
+          onClick={() => addInputField('questions', { question: '', answer: '' })}
+          className="mr-3 text-xs text-blue-600 focus:outline-none">
+            질문 추가
+        </button>
+        )}
         {resumeData.questions.length > 1 && index === resumeData.questions.length - 1 && (
           <button
             type="button"
             onClick={() => deleteInputField('questions', index)}
-            className="ml-2 self-end text-sm text-red-600 focus:outline-none">
+            className="text-xs text-red-400 focus:outline-none">
               삭제
           </button>
-        )}
-        {resumeData.questions.length < 4 && index === resumeData.questions.length - 1 && (
-        <button
-          type="button"
-          onClick={() => addInputField('questions', { question: '', answer: '' })}
-          className="text-sm text-blue-600 focus:outline-none">
-            질문 추가
-        </button>
         )}
         </div>
       ))}
     </div>
 
     <h2 className="mt-10 text-left text-2xl font-bold leading-9 tracking-tight text-gray-900">추가 정보 입력</h2>
-    <div class="border-b border-gray-900/10 mt-3 mb-3"></div>
+    <div className="border-b border-gray-900/10 mt-3 mb-3"></div>
+    <div className="mb-4">
+      <h3 className="mt-2 text-left text-lg font-bold leading-9 tracking-tight text-gray-900">경력 사항</h3>
+      {resumeData.careers.map((career, index) => (
+        <div key={index} className="mb-4">
+          <div className="flex space-x-4 justify-center">
+            <select
+              id={`type-${index}`}
+              name="type"
+              value={career.type}
+              onChange={(e) => handleItemChange('careers', index, e)}
+              className="w-1/5 p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            >
+              <option value="">구분</option>
+              <option value="club">동아리활동</option>
+              <option value="bootcamp">부트캠프</option>
+              <option value="trainingProgram">교육 이수</option>
+              <option value="intern">인턴</option>
+              <option value="fulltime">정규직</option>
+              <option value="freelancer">프리랜서</option>
+            </select>
+            <input
+              type="text"
+              id={`content-${index}`}
+              name="content"
+              value={career.content}
+              placeholder="내용"
+              onChange={(e) => handleItemChange('careers', index, e)}
+              className="w-1/2 p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            />
+            <input
+              type="number"
+              id={`period-${index}`}
+              name="period"
+              value={career.period}
+              placeholder="기간"
+              onChange={(e) => handleItemChange('careers', index, e)}
+              className="w-1/5 p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            />
+            <span className="mt-4 ml-2">개월</span>
+          </div>
+          {index === resumeData.careers.length - 1 && (
+            <button
+            type="button"
+            onClick={() => addInputField('careers', { type: '', content: '', period: '' })}
+            className="mr-3 text-xs text-blue-600 focus:outline-none"
+          >
+            추가
+          </button>
+        )}
+          {index === resumeData.careers.length - 1 && resumeData.careers.length > 1 && (
+            <button
+              type="button"
+              onClick={() => deleteInputField('careers', index)}
+              className="text-xs text-red-400 focus:outline-none"
+            >
+              삭제
+            </button>
+          )}
+        </div>
+      ))}
+    </div>
+
+    <div className="mb-4">
+        <h3 className="mt-2 text-left text-lg font-bold leading-9 tracking-tight text-gray-900">기술 스택</h3>
+        {resumeData.stacks.map((stack, index) => (
+          <div key={index} className="mb-4">
+            <input
+              type="text"
+              id={`stack-${index}`}
+              value={stack}
+              placeholder="스택"
+              onChange={(e) => handleItemChange('stacks', index, e)}
+              className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            />
+            {index === resumeData.stacks.length - 1 && (
+              <button
+                type="button"
+                onClick={() => addInputField('stacks', '')}
+                className="mr-3 text-xs text-blue-600 focus:outline-none"
+              >
+                추가
+              </button>
+            )}
+            {index === resumeData.stacks.length - 1 && resumeData.stacks.length > 1 && (
+              <button
+                type="button"
+                onClick={() => deleteInputField('stacks', index)}
+                className="text-xs text-red-400 focus:outline-none"
+              >
+                삭제
+              </button>
+            )}
+          </div>
+        ))}
+      </div>
+
+      <div className="mb-4">
+        <h3 className="mt-2 text-left text-lg font-bold leading-9 tracking-tight text-gray-900">수상 내역</h3>
+        {resumeData.awards.map((award, index) => (
+          <div key={index} className="mb-4">
+            <input
+              type="text"
+              id={`award-${index}`}
+              value={award}
+              placeholder="내용"
+              onChange={(e) => handleItemChange('awards', index, e)}
+              className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            />
+            {index === resumeData.awards.length - 1 && (
+              <button
+                type="button"
+                onClick={() => addInputField('awards', '')}
+                className="mr-3 text-xs text-blue-600 focus:outline-none"
+              >
+                추가
+              </button>
+            )}
+            {index === resumeData.awards.length - 1 && resumeData.awards.length > 1 && (
+              <button
+                type="button"
+                onClick={() => deleteInputField('awards', index)}
+                className="text-xs text-red-400 focus:outline-none"
+              >
+                삭제
+              </button>
+            )}
+          </div>
+        ))}
+      </div>
+
+      <div className="mb-4">
+        <h3 className="mt-2 text-left text-lg font-bold leading-9 tracking-tight text-gray-900">자격증</h3>
+        {resumeData.certs.map((cert, index) => (
+          <div key={index} className="mb-4">
+            <input
+              type="text"
+              id={`cert-${index}`}
+              value={cert}
+              placeholder="내용"
+              onChange={(e) => handleItemChange('certs', index, e)}
+              className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            />
+            {index === resumeData.certs.length - 1 && (
+              <button
+                type="button"
+                onClick={() => addInputField('certs', '')}
+                className="mr-3 text-xs text-blue-600 focus:outline-none"
+              >
+                추가
+              </button>
+            )}
+            {index === resumeData.certs.length - 1 && resumeData.certs.length > 1 && (
+              <button
+                type="button"
+                onClick={() => deleteInputField('certs', index)}
+                className="text-xs text-red-400 focus:outline-none"
+              >
+                삭제
+              </button>
+            )}
+          </div>
+        ))}
+      </div>
+
+      <div className="mb-4">
+      <h3 className="mt-2 text-left text-lg font-bold leading-9 tracking-tight text-gray-900">어학 성적</h3>
+      {resumeData.languageCerts.map((languageCert, index) => (
+        <div key={index} className="mb-4">
+          <div className="flex space-x-4">
+            <input
+              type="text"
+              id={`type-${index}`}
+              name="type"
+              value={languageCert.type}
+              placeholder="자격증 이름"
+              onChange={(e) => handleItemChange('languageCerts', index, e)}
+              className="w-2/3 p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            />
+            <input
+              type="text"
+              id={`level-${index}`}
+              name="level"
+              value={languageCert.level}
+              placeholder="성적"
+              onChange={(e) => handleItemChange('languageCerts', index, e)}
+              className="w-1/3 p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            />
+          </div>
+          {index === resumeData.languageCerts.length - 1 && (
+            <button
+            type="button"
+            onClick={() => addInputField('languageCerts', { type: '', content: '', period: '' })}
+            className="mr-3 text-xs text-blue-600 focus:outline-none"
+          >
+            추가
+          </button>
+        )}
+          {index === resumeData.languageCerts.length - 1 && resumeData.languageCerts.length > 1 && (
+            <button
+              type="button"
+              onClick={() => deleteInputField('languageCerts', index)}
+              className="text-xs text-red-400 focus:outline-none"
+            >
+              삭제
+            </button>
+          )}
+        </div>
+      ))}
+    </div>
 
 
     <div className="flex justify-end space-x-4 mt-4">
       <button type="button" onClick={loadRecentData} className="bg-gray-200 px-4 py-2 rounded-lg shadow-md hover:bg-gray-300">최근 입력 불러오기</button>
-      <button type="submit" className="bg-indigo-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-indigo-600">저장하기</button>
+      <button type="submit" onClick={handleSubmit} className="bg-indigo-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-indigo-600">저장하기</button>
     </div>
   </form>
   );

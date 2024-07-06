@@ -69,7 +69,7 @@ function SignInPage() {
     };
 
     return (
-        <div className="flex flex-col min-h-screen">
+        <div className="flex flex-col">
             <SignInHeader />
             <div className="flex flex-1 items-center justify-center bg-white-100">
                 <div className="w-full max-w-lg p-8 space-y-8">
