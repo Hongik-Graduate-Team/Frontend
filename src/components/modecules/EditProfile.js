@@ -48,7 +48,7 @@ function EditProfile() {
             <h2 className="text-2xl font-bold mb-4">내 정보 수정</h2>
             {['id', 'name', 'email', 'password'].map((field) => (
                 <div key={field} className="mb-4 flex flex-col sm:flex-row sm:items-center">
-                    <label className="block text-sm font-medium leading-6 text-gray-900 w-full sm:w-1/4 mb-2 sm:mb-0">
+                    <label className="block text-m font-medium leading-6 text-gray-900 w-full sm:w-1/4 mb-2 sm:mb-0">
                         {field === 'id' ? '아이디' : field === 'name' ? '이름' : field === 'email' ? '이메일' : '비밀번호'}
                     </label>
                     {editingField === field ? (
