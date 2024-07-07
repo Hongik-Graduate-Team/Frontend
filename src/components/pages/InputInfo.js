@@ -1,14 +1,17 @@
 import React, {useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import MainHeader from '../modecules/MainHeader.js';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 function InputInfo() {
   const [resumeData, setResumeData] = useState({
     jobType: '',
     questions: [{ question: '', answer: '' }],
-    careers: [{ type: '', content: '', period: '' }],
+    careers: [{ type: '', content: '', startDate: null, endDate: null }],
     stacks: [''],
-    awards: [''],
+    awards: [{ type: '', prize: '' }],
     certs: [''],
     languageCerts: [{ type: '', level: '' }],
   });
@@ -20,11 +23,18 @@ function InputInfo() {
     setResumeData({ ...resumeData, [name]: value });
   };
 
+  const handleDateChange = (section, index, dateType, date) => {
+    const updatedItems = resumeData[section].map((item, i) =>
+      i === index ? { ...item, [dateType]: date } : item
+    );
+    setResumeData({ ...resumeData, [section]: updatedItems });
+  };
+
   // 배열에 입력 값 추가
   const handleItemChange = (section, index, e) => {
-    const { name, value } = e.target;
+    const { value } = e.target;
     const updatedItems = resumeData[section].map((item, i) =>
-      i === index ? { ...item, [name]: value } : item
+      i === index ? value : item
     );
     setResumeData({ ...resumeData, [section]: updatedItems });
   };
@@ -58,6 +68,8 @@ function InputInfo() {
   };
 
   return (
+    <div>
+      <MainHeader />
     <form onSubmit={handleSubmit} className="max-w-4xl mx-auto p-2">
     <h2 className="mt-5 text-left text-2xl font-bold leading-9 tracking-tight text-gray-900">직군 선택</h2>
     <div class="border-b border-gray-900/10 mt-3 mb-3"></div>
@@ -67,7 +79,7 @@ function InputInfo() {
         name="jobType"
         value={resumeData.position}
         onChange={handleChange}
-        className="w-1/3 p-3 mt-2 border border-gray-300 rounded-lg  focus:outline-none focus:ring-1 focus:ring-indigo-500"
+        className="w-1/3 p-3 mt-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-indigo-500"
         required
       >
         <option value="">직군을 선택하세요</option>
@@ -126,7 +138,7 @@ function InputInfo() {
       <h3 className="mt-2 text-left text-lg font-bold leading-9 tracking-tight text-gray-900">경력 사항</h3>
       {resumeData.careers.map((career, index) => (
         <div key={index} className="mb-4">
-          <div className="flex space-x-4 justify-center">
+          <div className="flex space-x-4">
             <select
               id={`type-${index}`}
               name="type"
@@ -149,18 +161,27 @@ function InputInfo() {
               value={career.content}
               placeholder="내용"
               onChange={(e) => handleItemChange('careers', index, e)}
-              className="w-1/2 p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
+              className="w-4/5 p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
             />
-            <input
-              type="number"
-              id={`period-${index}`}
-              name="period"
-              value={career.period}
-              placeholder="기간"
-              onChange={(e) => handleItemChange('careers', index, e)}
-              className="w-1/5 p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            <DatePicker
+              selected={career.startDate}
+              onChange={(date) => handleDateChange('careers', index, 'startDate', date)}
+              selectsStart
+              startDate={career.startDate}
+              endDate={career.endDate}
+              className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
+              placeholderText="시작 날짜"
             />
-            <span className="mt-4 ml-2">개월</span>
+            <DatePicker
+              selected={career.endDate}
+              onChange={(date) => handleDateChange('careers', index, 'endDate', date)}
+              selectsEnd
+              startDate={career.startDate}
+              endDate={career.endDate}
+              minDate={career.startDate}
+              className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
+              placeholderText="종료 날짜"
+            />
           </div>
           {index === resumeData.careers.length - 1 && (
             <button
@@ -217,40 +238,52 @@ function InputInfo() {
           </div>
         ))}
       </div>
-
+      
       <div className="mb-4">
-        <h3 className="mt-2 text-left text-lg font-bold leading-9 tracking-tight text-gray-900">수상 내역</h3>
-        {resumeData.awards.map((award, index) => (
-          <div key={index} className="mb-4">
+      <h3 className="mt-2 text-left text-lg font-bold leading-9 tracking-tight text-gray-900">수상 내역</h3>
+      {resumeData.awards.map((award, index) => (
+        <div key={index} className="mb-4">
+          <div className="flex space-x-4">
             <input
               type="text"
-              id={`award-${index}`}
-              value={award}
-              placeholder="내용"
+              id={`type-${index}`}
+              name="type"
+              value={award.type}
+              placeholder="대회명"
               onChange={(e) => handleItemChange('awards', index, e)}
-              className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
+              className="w-2/3 p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
             />
-            {index === resumeData.awards.length - 1 && (
-              <button
-                type="button"
-                onClick={() => addInputField('awards', '')}
-                className="mr-3 text-xs text-blue-600 focus:outline-none"
-              >
-                추가
-              </button>
-            )}
-            {index === resumeData.awards.length - 1 && resumeData.awards.length > 1 && (
-              <button
-                type="button"
-                onClick={() => deleteInputField('awards', index)}
-                className="text-xs text-red-400 focus:outline-none"
-              >
-                삭제
-              </button>
-            )}
+            <input
+              type="text"
+              id={`prize-${index}`}
+              name="prize"
+              value={award.prize}
+              placeholder="입상 내역"
+              onChange={(e) => handleItemChange('awards', index, e)}
+              className="w-1/3 p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            />
           </div>
-        ))}
-      </div>
+          {index === resumeData.awards.length - 1 && (
+            <button
+            type="button"
+            onClick={() => addInputField('awards', { type: '', prize: '' })}
+            className="mr-3 text-xs text-blue-600 focus:outline-none"
+          >
+            추가
+          </button>
+        )}
+          {index === resumeData.languageCerts.length - 1 && resumeData.awards.length > 1 && (
+            <button
+              type="button"
+              onClick={() => deleteInputField('awards', index)}
+              className="text-xs text-red-400 focus:outline-none"
+            >
+              삭제
+            </button>
+          )}
+        </div>
+      ))}
+    </div>
 
       <div className="mb-4">
         <h3 className="mt-2 text-left text-lg font-bold leading-9 tracking-tight text-gray-900">자격증</h3>
@@ -260,7 +293,7 @@ function InputInfo() {
               type="text"
               id={`cert-${index}`}
               value={cert}
-              placeholder="내용"
+              placeholder="자격증명"
               onChange={(e) => handleItemChange('certs', index, e)}
               className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
             />
@@ -296,7 +329,7 @@ function InputInfo() {
               id={`type-${index}`}
               name="type"
               value={languageCert.type}
-              placeholder="자격증 이름"
+              placeholder="시험명"
               onChange={(e) => handleItemChange('languageCerts', index, e)}
               className="w-2/3 p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
             />
@@ -313,7 +346,7 @@ function InputInfo() {
           {index === resumeData.languageCerts.length - 1 && (
             <button
             type="button"
-            onClick={() => addInputField('languageCerts', { type: '', content: '', period: '' })}
+            onClick={() => addInputField('languageCerts', { type: '', level: '' })}
             className="mr-3 text-xs text-blue-600 focus:outline-none"
           >
             추가
@@ -338,6 +371,7 @@ function InputInfo() {
       <button type="submit" onClick={handleSubmit} className="bg-indigo-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-indigo-600">저장하기</button>
     </div>
   </form>
+  </div>
   );
 }
 

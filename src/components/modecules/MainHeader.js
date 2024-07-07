@@ -12,18 +12,20 @@ function MainHeader() {
     return (
         <header className="w-full p-4 bg-white flex justify-between items-center">
             <div>
-                <img src={logo} alt="Logo" className="h-8" />  {/* 로고 이미지 표시 */}
+                <img src={logo} alt="Logo" className="h-8 ml-3"
+                onClick={() => handleNavigation('/')}>
+                </img>
             </div>
             <div className="space-x-4">
                 <button
                     onClick={() => handleNavigation('/mypage')}
-                    className="text-gray-900 hover:underline"
+                    className="text-gray-600 hover:underline"
                 >
                     마이페이지
                 </button>
                 <button
                     onClick={() => handleNavigation('/signup')}
-                    className="text-gray-900 hover:underline"
+                    className="text-gray-600 hover:underline"
                 >
                     로그아웃
                 </button>
