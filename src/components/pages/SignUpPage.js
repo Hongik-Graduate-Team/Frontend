@@ -24,18 +24,18 @@ function SignUpPage() {
 
     const handleIdValidation = async () => {
         try {
-            const response = await axios.post('/validate-id', { id: memberData.id });
-            if (response.data.isValid) {
-                setIsIdValid(true);
-                setValidationMessage("사용 가능한 아이디입니다.");
-            } else {
+            const response = await axios.post('/check-id-duplicate', { id: memberData.id });
+            if (response.data.isDuplicate) {
                 setIsIdValid(false);
                 setValidationMessage("이미 사용 중인 아이디입니다.");
+            } else {
+                setIsIdValid(true);
+                setValidationMessage("사용 가능한 아이디입니다.");
             }
         } catch (error) {
             console.error('서버 요청 오류:', error);
             setIsIdValid(false);
-            setValidationMessage("유효성 검사 중 오류가 발생했습니다.");
+            setValidationMessage("아이디 중복 검사 중 오류가 발생했습니다.");
         }
     };
 
@@ -48,7 +48,7 @@ function SignUpPage() {
         }
 
         if (isIdValid === false || isIdValid === null) {
-            return alert('아이디 유효성 검사를 완료해 주세요.');
+            return alert('아이디 중복 확인을 완료해 주세요.');
         }
 
         try {
@@ -157,3 +157,4 @@ function SignUpPage() {
 };
 
 export default SignUpPage;
+
