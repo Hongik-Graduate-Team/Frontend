@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import SignInHeader from '../modecules/SignInHeader'; // 경로를 실제 파일 위치에 맞게 변경하세요.
+import SignInHeader from '../molecules/SignInHeader'; // 경로를 실제 파일 위치에 맞게 변경하세요.
 import kakaoLogo from '../../assets/img/kakaoLogo.png'; // 이미지 파일을 import
 
 function SignInPage() {
