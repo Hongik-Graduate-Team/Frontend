@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import PreviousInterviews from '../modecules/PreviousInterviews';
-import EditProfile from '../modecules/EditProfile';
-import MainHeader from "../modecules/MainHeader";
+import PreviousInterviews from '../molecules/PreviousInterviews';
+import EditProfile from '../molecules/EditProfile';
+import MainHeader from "../molecules/MainHeader";
 import Profile from '../../assets/img/Profile.png';
 import InterviewList from '../../assets/img/InterviewList.png'; // PreviousInterviews 이미지 경로
 
