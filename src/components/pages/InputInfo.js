@@ -135,7 +135,7 @@ function InputInfo() {
     <h2 className="mt-10 text-left text-2xl font-bold leading-9 tracking-tight text-gray-900">추가 정보 입력</h2>
     <div className="border-b border-gray-900/10 mt-3 mb-3"></div>
     <div className="mb-4">
-      <h3 className="mt-2 text-left text-lg font-bold leading-9 tracking-tight text-gray-900">경력 사항</h3>
+      <h3 className="mt-2 text-left text-lg font-semibold leading-9 tracking-tight text-gray-900">경력 사항</h3>
       {resumeData.careers.map((career, index) => (
         <div key={index} className="mb-4">
           <div className="flex space-x-4">
@@ -147,7 +147,7 @@ function InputInfo() {
               className="w-1/5 p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
             >
               <option value="">구분</option>
-              <option value="club">동아리활동</option>
+              <option value="club">동아리</option>
               <option value="bootcamp">부트캠프</option>
               <option value="trainingProgram">교육 이수</option>
               <option value="intern">인턴</option>
@@ -206,7 +206,7 @@ function InputInfo() {
     </div>
 
     <div className="mb-4">
-        <h3 className="mt-2 text-left text-lg font-bold leading-9 tracking-tight text-gray-900">기술 스택</h3>
+        <h3 className="mt-2 text-left text-lg font-semibold leading-9 tracking-tight text-gray-900">기술 스택</h3>
         {resumeData.stacks.map((stack, index) => (
           <div key={index} className="mb-4">
             <input
@@ -240,7 +240,7 @@ function InputInfo() {
       </div>
       
       <div className="mb-4">
-      <h3 className="mt-2 text-left text-lg font-bold leading-9 tracking-tight text-gray-900">수상 내역</h3>
+      <h3 className="mt-2 text-left text-lg font-semibold leading-9 tracking-tight text-gray-900">수상 내역</h3>
       {resumeData.awards.map((award, index) => (
         <div key={index} className="mb-4">
           <div className="flex space-x-4">
@@ -286,7 +286,7 @@ function InputInfo() {
     </div>
 
       <div className="mb-4">
-        <h3 className="mt-2 text-left text-lg font-bold leading-9 tracking-tight text-gray-900">자격증</h3>
+        <h3 className="mt-2 text-left text-lg font-semibold leading-9 tracking-tight text-gray-900">자격증</h3>
         {resumeData.certs.map((cert, index) => (
           <div key={index} className="mb-4">
             <input
@@ -319,8 +319,8 @@ function InputInfo() {
         ))}
       </div>
 
-      <div className="mb-4">
-      <h3 className="mt-2 text-left text-lg font-bold leading-9 tracking-tight text-gray-900">어학 성적</h3>
+      <div className="mb-10">
+      <h3 className="mt-2 text-left text-lg font-semibold leading-9 tracking-tight text-gray-900">어학 성적</h3>
       {resumeData.languageCerts.map((languageCert, index) => (
         <div key={index} className="mb-4">
           <div className="flex space-x-4">

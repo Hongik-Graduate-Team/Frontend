@@ -61,11 +61,11 @@ function SignUpPage() {
     };
 
     return (
-        <div className="flex flex-col min-h-screen bg-white-100">
+        <div className="flex flex-col bg-white-100">
             <SignInHeader /> {/* SignInHeader를 상단에 추가합니다. */}
             <div className="flex items-center justify-center flex-1">
-                <div className="w-full max-w-lg p-8 space-y-8">
-                    <h1 className="mt-10 text-center text-4xl font-bold leading-9 tracking-tight text-gray-900">회원가입</h1>
+                <div className="w-full mt-10 max-w-lg p-8 space-y-8">
+                    <h1 className="text-center text-4xl font-bold leading-9 tracking-tight text-gray-900">회원가입</h1>
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div>
                             <label htmlFor="id" className="block text-sm font-medium leading-6 text-gray-900">아이디</label>
