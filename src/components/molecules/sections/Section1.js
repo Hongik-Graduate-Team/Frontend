@@ -6,13 +6,15 @@ import IntroImg from '../../../assets/img/Intro.png';
 const Section1 = () => {
   const controls = useAnimation();
   const [ref, inView] = useInView({
-    triggerOnce: false,
+    triggerOnce: false,  // triggerOnce 옵션을 false로 설정하여 애니메이션 반복
     threshold: 0.1,
   });
 
   useEffect(() => {
     if (inView) {
       controls.start("visible");
+    } else {
+      controls.start("hidden");
     }
   }, [controls, inView]);
 
@@ -34,7 +36,7 @@ const Section1 = () => {
           <motion.img
               src={IntroImg}
               alt="AI 모의면접 이미지"
-              className="rounded-lg max-w-full h-auto" // 이미지 크기 조정을 위해 max-w-full과 h-auto 추가
+              className="max-w-full h-auto"  // 그림자 제거
               initial={{ opacity: 0, y: 100 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
@@ -45,4 +47,3 @@ const Section1 = () => {
 };
 
 export default Section1;
-

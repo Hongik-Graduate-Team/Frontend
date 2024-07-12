@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import SignInHeader from '../molecules/SignInHeader'; // SignInHeader 컴포넌트를 불러옵니다.
+import SignInHeader from '../molecules/Header/SignInHeader'; // SignInHeader 컴포넌트를 불러옵니다.
 
 function SignUpPage() {
     const [memberData, setMemberData] = useState({
