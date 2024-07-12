@@ -29,12 +29,13 @@ const Section2 = () => {
   };
 
   return (
-    <div ref={ref} className="flex w-full min-h-1280 items-center justify-center">
+    <div ref={ref} className="flex max-w-8xl min-h-screen items-center justify-center bg-indigo-50">
+      <div className="flex w-3/4">
       <motion.div
         initial="hidden"
         animate={controls}
         variants={imageVariants}
-        className="flex-1 max-w-md"
+        className="w-3/4"
       >
         <img src={Sec2Img} alt="섹션2 이미지" className="w-full" />
       </motion.div>
@@ -42,11 +43,12 @@ const Section2 = () => {
         initial="hidden"
         animate={controls}
         variants={textVariants}
-        className="flex-1 pl-8 max-w-md"
+        className="pl-4 w-1/4"
       >
-        <h2 className="text-3xl font-bold mb-4">Section 2</h2>
-        <p className="text-lg">This is the content of section 2.</p>
+        <h2 className="text-4xl font-bold mb-4">AI기반으로 생성된 개인 맞춤형 질문</h2>
+        <p className="text-xl font-300">This is the content of section 2.</p>
       </motion.div>
+      </div>
     </div>
   );
 };
