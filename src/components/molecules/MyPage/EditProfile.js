@@ -46,10 +46,26 @@ function EditProfile() {
     return (
         <div>
             <h2 className="text-2xl font-bold mb-4">내 정보 수정</h2>
-            {['id', 'name', 'email', 'password'].map((field) => (
+            {/* ID 필드는 항상 비활성화 */}
+            <div className="mb-4 flex flex-col sm:flex-row sm:items-center">
+                <label className="block text-m font-medium leading-6 text-gray-900 w-full sm:w-1/4 mb-2 sm:mb-0">
+                    아이디
+                </label>
+                <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2 w-full sm:w-3/4">
+                    <input
+                        type="text"
+                        value={userData.id}
+                        disabled
+                        className="w-full sm:w-3/4 p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none bg-gray-100 mb-2 sm:mb-0"
+                    />
+                </div>
+            </div>
+
+            {/* 다른 필드 처리 */}
+            {['name', 'email', 'password'].map((field) => (
                 <div key={field} className="mb-4 flex flex-col sm:flex-row sm:items-center">
                     <label className="block text-m font-medium leading-6 text-gray-900 w-full sm:w-1/4 mb-2 sm:mb-0">
-                        {field === 'id' ? '아이디' : field === 'name' ? '이름' : field === 'email' ? '이메일' : '비밀번호'}
+                        {field === 'name' ? '이름' : field === 'email' ? '이메일' : '비밀번호'}
                     </label>
                     {editingField === field ? (
                         <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2 w-full sm:w-3/4">
