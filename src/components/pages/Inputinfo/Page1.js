@@ -146,7 +146,7 @@ function PageOne({ resumeData, handleChange, handleItemChange, addInputField, de
                 startDate={career.startDate}
                 endDate={career.endDate}
                 locale={ko}
-                dateFormat="yyyy년 MM월 dd일"
+                dateFormat="yyyy/MM/dd"
                 className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
                 placeholderText="시작일"
               />
@@ -158,7 +158,7 @@ function PageOne({ resumeData, handleChange, handleItemChange, addInputField, de
                 endDate={career.endDate}
                 minDate={career.startDate}
                 locale={ko}
-                dateFormat="yyyy년 MM월 dd일"
+                dateFormat="yyyy/MM/dd"
                 className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
                 placeholderText="종료일"
               />
@@ -298,7 +298,7 @@ function PageOne({ resumeData, handleChange, handleItemChange, addInputField, de
                 selected={cert.date}
                 onChange={(date) => handleDateChange('certs', index, 'date', date)}
                 locale={ko}
-                dateFormat="yyyy년 MM월 dd일"
+                dateFormat="yyyy/MM/dd"
                 className="w-2/3 p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
                 placeholderText="취득일"
               />
@@ -352,7 +352,7 @@ function PageOne({ resumeData, handleChange, handleItemChange, addInputField, de
                 selected={languageCert.date}
                 onChange={(date) => handleDateChange('languageCerts', index, 'date', date)}
                 locale={ko}
-                dateFormat="yyyy년 MM월 dd일"
+                dateFormat="yyyy/MM/dd"
                 className="w-2/3 p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
                 placeholderText="취득일"
               />
