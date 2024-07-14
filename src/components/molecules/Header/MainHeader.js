@@ -25,7 +25,7 @@ function MainHeader() {
                         마이페이지
                     </button>
                     <button
-                        onClick={() => handleNavigation('/signup')}
+                        onClick={() => handleNavigation('/')}
                         className="text-gray-600 hover:underline"
                     >
                         로그아웃
