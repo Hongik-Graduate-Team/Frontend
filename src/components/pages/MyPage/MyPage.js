@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import PreviousInterviews from '../molecules/MyPage/PreviousInterviews';
-import EditProfile from '../molecules/MyPage/EditProfile';
-import InterviewDetails from '../molecules/MyPage/InterviewDetails';
-import MainHeader from "../molecules/Header/MainHeader";
-import Profile from '../../assets/img/Profile.png';
-import InterviewList from '../../assets/img/InterviewList.png';
+import PreviousInterviews from './PreviousInterviews';
+import EditProfile from './EditProfile';
+import InterviewDetails from './InterviewDetails';
+import MainHeader from "../../molecules/Header/MainHeader";
+import Profile from '../../../assets/img/Profile.png';
+import InterviewList from '../../../assets/img/InterviewList.png';
 
 function MyPage() {
     const [selectedMenu, setSelectedMenu] = useState('previousInterviews');

@@ -21,6 +21,7 @@ const Section3 = () => {
   };
 
   return (
+    <div ref={ref} className="flex max-w-8xl min-h-screen items-center justify-center bg-gradient-to-t from-indigo-100 to-white">
     <motion.div
       ref={ref}
       initial="hidden"
@@ -31,6 +32,7 @@ const Section3 = () => {
       <h2>Section 3</h2>
       <p>This is the content of section 3.</p>
     </motion.div>
+    </div>
   );
 };
 

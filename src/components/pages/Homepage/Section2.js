@@ -43,10 +43,10 @@ const Section2 = () => {
         initial="hidden"
         animate={controls}
         variants={textVariants}
-        className="pl-4 w-1/4"
+        className="w-1/4 flex flex-col justify-center ml-4 mt-50"
       >
-        <h2 className="text-4xl font-bold mb-4">AI기반으로 생성된 개인 맞춤형 질문</h2>
-        <p className="text-xl font-300">This is the content of section 2.</p>
+        <h2 className="text-4xl font-bold mb-2">AI기반으로 생성된<p></p>개인 맞춤형 질문</h2>
+        <p className="text-xl font-300">생성형 ai를 이용하여<p></p>사용자의 자기소개서에 기반한<p></p>맞춤형 질문을 제공합니다.</p>
       </motion.div>
       </div>
     </div>

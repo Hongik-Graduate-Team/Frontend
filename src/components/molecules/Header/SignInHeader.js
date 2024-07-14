@@ -17,6 +17,12 @@ function SignInHeader() {
                          onClick={() => handleNavigation('/')} /> {/* 로고 이미지 표시 */}
                 </div>
                 <div className="space-x-4">
+                <button
+                        onClick={() => handleNavigation('/signup')}
+                        className="text-gray-600 hover:underline"
+                    >
+                        회원가입
+                    </button>
                     <button
                         onClick={() => handleNavigation('/signin')}
                         className="text-gray-600 hover:underline"

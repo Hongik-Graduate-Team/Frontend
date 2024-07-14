@@ -31,12 +31,12 @@ const Section1 = () => {
           variants={variants}
           className="flex flex-col items-center justify-center h-screen"
       >
-        <h2 className="text-4xl font-bold mb-4 text-center">나만바 AI모의면접 서비스</h2>
+        <h2 className="text-4xl font-bold mb-2 text-center">나만바 AI모의면접 서비스</h2>
         <div className="flex items-center justify-center">
           <motion.img
               src={IntroImg}
               alt="AI 모의면접 이미지"
-              className="max-w-full h-auto"  // 그림자 제거
+              className="w-5/6 h-auto"
               initial={{ opacity: 0, y: 100 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
