@@ -24,6 +24,7 @@ const Section1 = () => {
   };
 
   return (
+    <div className="bg-gradient-to-t from-indigo-100 to-white">
       <motion.div
           ref={ref}
           initial="hidden"
@@ -43,6 +44,7 @@ const Section1 = () => {
           />
         </div>
       </motion.div>
+    </div>
   );
 };
 

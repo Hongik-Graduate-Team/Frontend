@@ -21,7 +21,7 @@ const Section3 = () => {
   };
 
   return (
-    <div ref={ref} className="flex max-w-8xl min-h-screen items-center justify-center bg-gradient-to-t from-indigo-100 to-white">
+    <div ref={ref} className="flex max-w-8xl min-h-screen items-center justify-center bg-indigo-100">
     <motion.div
       ref={ref}
       initial="hidden"
