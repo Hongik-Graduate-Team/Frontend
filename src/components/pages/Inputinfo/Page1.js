@@ -10,9 +10,9 @@ function PageOne({ resumeData, handleChange, handleItemChange, addInputField, de
       <div className="border-b border-gray-900/10 mt-3 mb-3"></div>
       <div className="mb-4">
         <select
-          id="jobType"
-          name="jobType"
-          value={resumeData.jobType}
+          id="positionName"
+          name="positionName"
+          value={resumeData.positionName}
           onChange={handleChange}
           className="w-1/3 p-3 mt-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
           required
@@ -62,7 +62,7 @@ function PageOne({ resumeData, handleChange, handleItemChange, addInputField, de
                 <button
                   type="button"
                   onClick={() => addInputField('major', '')}
-                  className="mr-3 text-sm text-blue-500 focus:outline-none"
+                  className="text-sm text-blue-500 focus:outline-none"
                 >
                   추가
                 </button>
@@ -81,34 +81,32 @@ function PageOne({ resumeData, handleChange, handleItemChange, addInputField, de
             )}
           </div>
         ))}
-
-        <h3 className="mt-2 text-left text-lg font-semibold leading-9 tracking-tight text-gray-900">학점</h3>
-        {resumeData.gpa.map((gpa, index) => (
-          <div key={index} className="mb-10">
+      </div>
+      
+      <h3 className="mt-2 text-left text-lg font-semibold leading-9 tracking-tight text-gray-900">학점</h3>
+          <div className="mb-10">
             <div className="flex w-1/2 space-x-4">
               <input
-                type="text"
-                id={`gpa-score-${index}`}
+                type="number"
+                id={"score"}
                 name="score"
-                value={gpa.score}
-                onChange={(e) => handleItemChange('gpa', index, e)}
+                value={resumeData.gpa.score}
+                onChange={handleChange}
                 placeholder="취득 학점"
                 className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
               />
               <p className="p-3">/</p>
               <input
-                type="text"
-                id={`gpa-total-${index}`}
+                type="number"
+                id={"total"}
                 name="total"
-                value={gpa.total}
-                onChange={(e) => handleItemChange('gpa', index, e)}
+                value={resumeData.gpa.total}
+                onChange={handleChange}
                 placeholder="만점"
                 className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
               />
             </div>
           </div>
-        ))}
-      </div>
 
       <div className="mb-3">
         <h3 className="text-left text-lg font-semibold leading-9 tracking-tight text-gray-900">경력 사항</h3>
@@ -116,9 +114,9 @@ function PageOne({ resumeData, handleChange, handleItemChange, addInputField, de
           <div key={index} className="mb-3">
             <div className="flex space-x-4">
               <select
-                id={`type-${index}`}
-                name="type"
-                value={career.type}
+                id={`careerType-${index}`}
+                name="careerType"
+                value={career.careerType}
                 onChange={(e) => handleItemChange('careers', index, e)}
                 className="w-1/5 p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
               >
@@ -192,17 +190,17 @@ function PageOne({ resumeData, handleChange, handleItemChange, addInputField, de
             <div className="flex space-x-4">
               <input
                 type="text"
-                id={`language-${index}`}
-                name="language"
-                value={stack.language}
+                id={`stackLanguage-${index}`}
+                name="stackLanguage"
+                value={stack.stackLanguage}
                 onChange={(e) => handleItemChange('stacks', index, e)}
                 placeholder="언어"
                 className="w-3/4 p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
               />
               <select
-                id={`level-${index}`}
-                name="level"
-                value={stack.level}
+                id={`stackLevel-${index}`}
+                name="stackLevel"
+                value={stack.stackLevel}
                 onChange={(e) => handleItemChange('stacks', index, e)}
                 className="w-1/4 p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
               >
@@ -241,18 +239,18 @@ function PageOne({ resumeData, handleChange, handleItemChange, addInputField, de
             <div className="flex space-x-4">
               <input
                 type="text"
-                id={`award-type-${index}`}
-                name="type"
-                value={award.type}
+                id={`awardType-${index}`}
+                name="awardType"
+                value={award.awardType}
                 onChange={(e) => handleItemChange('awards', index, e)}
                 placeholder="대회명"
                 className="w-3/4 p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
               />
               <input
                 type="text"
-                id={`award-prize-${index}`}
-                name="prize"
-                value={award.prize}
+                id={`awardPrize-${index}`}
+                name="awardPrize"
+                value={award.awardPrize}
                 onChange={(e) => handleItemChange('awards', index, e)}
                 placeholder="입상 내역"
                 className="w-1/4 p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
@@ -287,19 +285,19 @@ function PageOne({ resumeData, handleChange, handleItemChange, addInputField, de
             <div className="flex space-x-4">
               <input
                 type="text"
-                id={`cert-type-${index}`}
-                name="type"
-                value={cert.type}
+                id={`certType-${index}`}
+                name="certType"
+                value={cert.certType}
                 onChange={(e) => handleItemChange('certs', index, e)}
                 placeholder="자격증명"
                 className="w-1/3 p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
               />
               <DatePicker
-                selected={cert.date}
-                onChange={(date) => handleDateChange('certs', index, 'date', date)}
+                selected={cert.certDate}
+                onChange={(date) => handleDateChange('certs', index, 'certDate', date)}
                 locale={ko}
                 dateFormat="yyyy/MM/dd"
-                className="w-2/3 p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                className="w-1/2 p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
                 placeholderText="취득일"
               />
             </div>
@@ -332,28 +330,28 @@ function PageOne({ resumeData, handleChange, handleItemChange, addInputField, de
             <div className="flex space-x-4">
               <input
                 type="text"
-                id={`languageCert-type-${index}`}
-                name="type"
-                value={languageCert.type}
+                id={`languageCertType-${index}`}
+                name="languageCertType"
+                value={languageCert.languageCertType}
                 onChange={(e) => handleItemChange('languageCerts', index, e)}
                 placeholder="어학 자격증명"
                 className="w-1/3 p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
               />
               <input
                 type="text"
-                id={`languageCert-level-${index}`}
-                name="level"
-                value={languageCert.level}
+                id={`languageCertLevel-${index}`}
+                name="languageCertLevel"
+                value={languageCert.languageCertLevel}
                 onChange={(e) => handleItemChange('languageCerts', index, e)}
                 placeholder="성적"
                 className="w-1/3 p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
               />
               <DatePicker
-                selected={languageCert.date}
-                onChange={(date) => handleDateChange('languageCerts', index, 'date', date)}
+                selected={languageCert.languageCertDate}
+                onChange={(date) => handleDateChange('languageCerts', index, 'languageCertDate', date)}
                 locale={ko}
                 dateFormat="yyyy/MM/dd"
-                className="w-2/3 p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                className="w-1/2 p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
                 placeholderText="취득일"
               />
             </div>

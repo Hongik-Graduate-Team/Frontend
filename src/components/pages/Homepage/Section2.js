@@ -29,7 +29,7 @@ const Section2 = () => {
   };
 
   return (
-    <div ref={ref} className="flex max-w-8xl min-h-screen items-center justify-center bg-indigo-50">
+    <div ref={ref} className="flex max-w-8xl min-h-screen items-center justify-center bg-indigo-100">
       <div className="flex w-3/4">
       <motion.div
         initial="hidden"

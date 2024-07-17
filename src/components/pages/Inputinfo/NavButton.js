@@ -3,11 +3,17 @@ import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 import InputTitleModal from "../../modal/InputTitleModal";
 
-function NavigationButtons({ page, setPage, handleSaveDraft, handleSubmit }) {
+function NavigationButtons({ page, setPage, handleSaveDraft, handleSubmit, validateForm }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleSaveAndOpenModal = async (e) => {
+    e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
+
     try {
       // 입력된 정보 저장
       await handleSubmit(e);

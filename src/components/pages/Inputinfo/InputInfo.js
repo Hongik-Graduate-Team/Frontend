@@ -7,23 +7,23 @@ import PageTwo from './Page2';
 import NavigationButtons from './NavButton';
 
 function InputInfo() {
-  const [page, setPage] = useState(1);  // 페이지 번호 상태 추가
+  const [page, setPage] = useState(1);
   const [resumeData, setResumeData] = useState({
-    jobType: '',
+    positionName: '',
     questions: [{ question: '', answer: '' }],
     major: [''],
-    gpa: [{ score:'', total:'' }],
-    careers: [{ type: '', content: '', startDate: null, endDate: null }],
-    stacks: [{ language: '', level: '' }],
-    awards: [{ type: '', prize: '' }],
-    certs: [{ type: '', date: null }],
-    languageCerts: [{ type: '', level: '', date: null }],
+    gpa: [{ score: '', total: '' }],
+    careers: [{ careerType: '', content: '', startDate: null, endDate: null }],
+    stacks: [{ stackLanguage: '', stackLevel: '' }],
+    awards: [{ awardType: '', awardPrize: '' }],
+    certs: [{ certType: '', certDate: null }],
+    languageCerts: [{ languageCertType: '', languageCertLevel: '', languageCertDate: null }],
   });
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    loadRecentData();  // 컴포넌트가 마운트될 때 최근 입력 불러오기
+    loadRecentData(); // 컴포넌트가 마운트될 때 최근 입력 불러오기
   }, []);
 
   const handleChange = (e) => {
@@ -32,16 +32,21 @@ function InputInfo() {
   };
 
   const handleDateChange = (section, index, dateType, date) => {
-    const updatedItems = resumeData[section].map((item, i) =>
-      i === index ? { ...item, [dateType]: date } : item
-    );
-    setResumeData({ ...resumeData, [section]: updatedItems });
+    const updatedItems = [...resumeData[section]];
+    updatedItems[index] = {
+      ...updatedItems[index],
+      [dateType]: date,
+    };
+    setResumeData({
+      ...resumeData,
+      [section]: updatedItems,
+    });
   };
 
   const handleItemChange = (section, index, e) => {
-    const { value } = e.target;
+    const { name, value } = e.target;
     const updatedItems = resumeData[section].map((item, i) =>
-      i === index ? { ...item, [e.target.name]: value } : item
+      i === index ? { ...item, [name]: value } : item
     );
     setResumeData({ ...resumeData, [section]: updatedItems });
   };
@@ -58,8 +63,57 @@ function InputInfo() {
     setResumeData({ ...resumeData, [section]: updatedItems });
   };
 
+  const validateForm = () => {
+    const requiredSections = ['positionName', 'questions'];
+  
+    // 필수 섹션 검사
+    for (const section of requiredSections) {
+      if (typeof resumeData[section] === 'string' && resumeData[section].trim() === '') {
+        alert(`모든 필수 항목을 입력해 주세요. (${section})`);
+        return false;
+      }
+  
+      if (Array.isArray(resumeData[section])) {
+        for (const item of resumeData[section]) {
+          for (const field in item) {
+            if (item[field] === null || item[field].trim() === '') {
+              alert(`모든 항목을 채워 주세요.`);
+              return false;
+            }
+          }
+        }
+      }
+    }
+  
+    // 선택 섹션 검사
+    const optionalSections = ['major', 'gpa', 'careers', 'stacks', 'awards', 'certs', 'languageCerts'];
+  
+    for (const section of optionalSections) {
+      const isEmpty = resumeData[section].every(item =>
+        Object.values(item).every(value => value === null || value.trim() === '')
+      );
+  
+      if (!isEmpty) {
+        for (const item of resumeData[section]) {
+          for (const field in item) {
+            if (item[field] === null || item[field].trim() === '') {
+              alert(`모든 항목을 채워 주세요.`);
+              return false;
+            }
+          }
+        }
+      }
+    }
+  
+    return true;
+  };
+  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validateForm()) {
+      return;
+    }
     try {
       const response = await axios.post('/inputInfo', resumeData);
       console.log('서버 응답:', response.data);
@@ -71,7 +125,7 @@ function InputInfo() {
 
   const loadRecentData = async () => {
     try {
-      const response = await axios.get('/getRecentData');  // 서버에서 최근 데이터를 가져오는 API 호출
+      const response = await axios.get('/getRecentData'); // 서버에서 최근 데이터를 가져오는 API 호출
       setResumeData(response.data);
     } catch (error) {
       console.error('최근 데이터 불러오기 오류:', error);
@@ -113,7 +167,8 @@ function InputInfo() {
           page={page}
           setPage={setPage}
           handleSaveDraft={handleSaveDraft}
-          handleSubmit={handleSubmit}  // handleSubmit 함수를 전달
+          handleSubmit={handleSubmit}
+          validateForm={validateForm}
         />
       </form>
     </div>
