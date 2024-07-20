@@ -1,5 +1,3 @@
-// GET /api/interviews - 사용자별 면접 목록 조회
-// GET /api/interviews/:id - 특정 면접의 상세 정보 조회
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
@@ -10,7 +8,12 @@ function PreviousInterviews({ onSelectInterview }) {
         const fetchInterviews = async () => {
             try {
                 const response = await axios.get('/api/mypage/interview');
-                setInterviews(response.data);
+                console.log('API Response:', response.data); // 응답 데이터 로그 출력
+                if (Array.isArray(response.data)) {
+                    setInterviews(response.data);
+                } else {
+                    console.error('API 응답이 배열이 아닙니다.');
+                }
             } catch (error) {
                 console.error('Error fetching interviews:', error);
             }
@@ -22,7 +25,7 @@ function PreviousInterviews({ onSelectInterview }) {
         <div>
             <h2 className="text-2xl font-bold mb-4">이전 면접 조회</h2>
             <ul>
-                {interviews.map((interview) => (
+                {Array.isArray(interviews) && interviews.map((interview) => (
                     <li
                         key={interview.interviewId}
                         onClick={() => onSelectInterview(interview.interviewId)}
@@ -39,4 +42,3 @@ function PreviousInterviews({ onSelectInterview }) {
 }
 
 export default PreviousInterviews;
-
