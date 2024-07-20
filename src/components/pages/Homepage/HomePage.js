@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom'; // for navigation
 import { AuthContext } from '../../../services/AuthContext';
 import MainHeader from '../../molecules/Header/MainHeader';
