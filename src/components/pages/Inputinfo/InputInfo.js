@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import MainHeader from '../../molecules/Header/MainHeader';
@@ -124,14 +124,14 @@ function InputInfo() {
     }
   };
 
-  const loadRecentData = async () => {
+/*  const loadRecentData = async () => {
     try {
       const response = await axios.get('/getRecentData'); // 서버에서 최근 데이터를 가져오는 API 호출
       setResumeData(response.data);
     } catch (error) {
       console.error('최근 데이터 불러오기 오류:', error);
     }
-  };
+  }; */
 
   const handleSaveDraft = async () => {
     try {
