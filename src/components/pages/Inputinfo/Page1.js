@@ -44,7 +44,7 @@ function PageOne({ resumeData, handleChange, handleItemChange, addInputField, de
 
       <div className="mb-3">
         <h3 className="mt-2 text-left text-lg font-semibold leading-9 tracking-tight text-gray-900">학적</h3>
-        {resumeData.major.map((major, index) => (
+        {resumeData.majors && resumeData.major.map((major, index) => (
           <div key={index} className="mb-3">
             <div className="flex space-x-4">
               <input
@@ -110,7 +110,7 @@ function PageOne({ resumeData, handleChange, handleItemChange, addInputField, de
 
       <div className="mb-3">
         <h3 className="text-left text-lg font-semibold leading-9 tracking-tight text-gray-900">경력 사항</h3>
-        {resumeData.careers.map((career, index) => (
+        {resumeData.careers && resumeData.careers.map((career, index) => (
           <div key={index} className="mb-3">
             <div className="flex space-x-4">
               <select
@@ -185,7 +185,7 @@ function PageOne({ resumeData, handleChange, handleItemChange, addInputField, de
 
       <div className="mb-3">
         <h3 className="text-left text-lg font-semibold leading-9 tracking-tight text-gray-900">기술 스택</h3>
-        {resumeData.stacks.map((stack, index) => (
+        {resumeData.stacks && resumeData.stacks.map((stack, index) => (
           <div key={index} className="mb-3">
             <div className="flex space-x-4">
               <input
@@ -234,7 +234,7 @@ function PageOne({ resumeData, handleChange, handleItemChange, addInputField, de
 
       <div className="mb-3">
         <h3 className="text-left text-lg font-semibold leading-9 tracking-tight text-gray-900">수상 내역</h3>
-        {resumeData.awards.map((award, index) => (
+        {resumeData.awards && resumeData.awards.map((award, index) => (
           <div key={index} className="mb-3">
             <div className="flex space-x-4">
               <input
@@ -280,7 +280,7 @@ function PageOne({ resumeData, handleChange, handleItemChange, addInputField, de
 
       <div className="mb-3">
         <h3 className="text-left text-lg font-semibold leading-9 tracking-tight text-gray-900">자격증</h3>
-        {resumeData.certs.map((cert, index) => (
+        {resumeData.certs && resumeData.certs.map((cert, index) => (
           <div key={index} className="mb-3">
             <div className="flex space-x-4">
               <input
@@ -325,7 +325,7 @@ function PageOne({ resumeData, handleChange, handleItemChange, addInputField, de
 
       <div className="mb-20">
         <h3 className="text-left text-lg font-semibold leading-9 tracking-tight text-gray-900">어학 자격증</h3>
-        {resumeData.languageCerts.map((languageCert, index) => (
+        {resumeData.languageCerts && resumeData.languageCerts.map((languageCert, index) => (
           <div key={index} className="mb-3">
             <div className="flex space-x-4">
               <input
