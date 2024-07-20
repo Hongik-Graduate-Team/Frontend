@@ -1,12 +1,18 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 const InputTitleModal = ({ isOpen, onClose, onSave }) => {
-    const [title, setTitle] = useState('');
+    const [interviewTitle, setInterviewTitle] = useState('');
 
-    const handleSave = () => {
-        onSave(title); // onSave 콜백 호출하여 면접 제목 저장 및 처리
-        setTitle(''); // 저장 후 input 초기화
-        onClose(); // 모달 닫기
+    const handleSave = async () => {
+        try {
+            const response = await axios.post('/api/interviews', { interviewTitle });
+            onSave(response.data); // 백엔드에서 생성된 면접 데이터를 반환한다고 가정
+            setInterviewTitle(''); // 저장 후 input 초기화
+            onClose(); // 모달 닫기
+        } catch (error) {
+            console.error('Error saving interview title:', error);
+        }
     };
 
     if (!isOpen) return null;
@@ -17,9 +23,9 @@ const InputTitleModal = ({ isOpen, onClose, onSave }) => {
                 <h2 className="text-xl font-bold mb-4">면접 제목 입력</h2>
                 <input
                     type="text"
-                    value={title}
+                    value={interviewTitle}
                     placeholder="사용할 면접 제목을 입력하세요."
-                    onChange={(e) => setTitle(e.target.value)}
+                    onChange={(e) => setInterviewTitle(e.target.value)}
                     className="w-full p-3 border border-gray-300 rounded-lg mb-4"
                 />
                 <div className="flex justify-end space-x-2">

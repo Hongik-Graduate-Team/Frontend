@@ -5,16 +5,13 @@ import SignInHeader from '../molecules/Header/SignInHeader'; // 경로를 실제
 import kakaoLogo from '../../assets/img/kakaoLogo.png'; // 이미지 파일을 import
 
 function SignInPage() {
-    // useState로 상태 관리
     const [loginData, setLoginData] = useState({
         email: "",
         password: ""
     });
 
-    // 페이지 이동 제어
     const navigate = useNavigate();
 
-    // 폼 데이터 변경 시 호출
     const handleChange = (event) => {
         const { name, value } = event.target;
         setLoginData({ ...loginData, [name]: value });
@@ -22,10 +19,10 @@ function SignInPage() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-
         try {
             const response = await axios.post('/signin', loginData);
             console.log('서버 응답:', response.data);
+            localStorage.setItem('access_token', response.data.access_token);
             navigate('/자소서 페이지'); // 로그인 성공 시 페이지 이동
         } catch (error) {
             console.error('서버 요청 오류:', error);
@@ -37,18 +34,18 @@ function SignInPage() {
         window.Kakao.Auth.login({
             success: function(authObj) {
                 console.log(authObj);
-                // Kakao API 호출 예시
                 window.Kakao.API.request({
                     url: '/v2/user/me',
                     success: function(res) {
                         console.log(res);
-                        // 백엔드 서버에 카카오 사용자 정보 전송
-                        axios.post('/kakao-login', {
+                        axios.post('/api/auth/kakao-login', {
                             kakaoId: res.id,
                             email: res.kakao_account.email,
-                            nickname: res.properties.nickname
+                            nickname: res.properties.nickname,
+                            accessToken: authObj.access_token // 카카오 액세스 토큰을 포함하여 백엔드로 전송
                         }).then(response => {
                             console.log('서버 응답:', response.data);
+                            localStorage.setItem('access_token', response.data.access_token);
                             navigate('/자소서 페이지'); // 로그인 성공 시 페이지 이동
                         }).catch(error => {
                             console.error('서버 요청 오류:', error);
@@ -119,6 +116,6 @@ function SignInPage() {
             </div>
         </div>
     );
-};
+}
 
 export default SignInPage;

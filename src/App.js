@@ -1,12 +1,12 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { AuthProvider } from './services/AuthContext'; // AuthProvider 가져오기
-import SignInPage from './components/pages/SignInPage.js';
-import SignUpPage from './components/pages/SignUpPage.js';
-import HomePage from './components/pages/Homepage/HomePage.js';
-import InputInfo from './components/pages/Inputinfo/InputInfo.js';
+import SignInPage from './components/pages/SignInPage';
+import SignUpPage from './components/pages/SignUpPage';
+import HomePage from './components/pages/Homepage/HomePage';
+import InputInfo from './components/pages/Inputinfo/InputInfo';
 import MyPage from './components/pages/MyPage/MyPage';
-import './index.css'
+import './index.css';
 
 // Kakao SDK 초기화
 window.Kakao.init('YOUR_KAKAO_JAVASCRIPT_KEY');

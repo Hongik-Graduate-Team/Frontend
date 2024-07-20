@@ -9,7 +9,7 @@ function PreviousInterviews({ onSelectInterview }) {
     useEffect(() => {
         const fetchInterviews = async () => {
             try {
-                const response = await axios.get('/api/interviews');
+                const response = await axios.get('/api/mypage/interview');
                 setInterviews(response.data);
             } catch (error) {
                 console.error('Error fetching interviews:', error);
@@ -24,12 +24,12 @@ function PreviousInterviews({ onSelectInterview }) {
             <ul>
                 {interviews.map((interview) => (
                     <li
-                        key={interview.id}
-                        onClick={() => onSelectInterview(interview.id)}
+                        key={interview.interviewId}
+                        onClick={() => onSelectInterview(interview.interviewId)}
                         className="p-4 border-b cursor-pointer hover:bg-gray-100"
                     >
-                        <h3 className="text-xl font-semibold">{interview.title}</h3>
-                        <p>직군: {interview.jobCategory}</p>
+                        <h3 className="text-xl font-semibold">{interview.interviewTitle}</h3>
+                        <p>직군: {interview.Position}</p>
                         <p>날짜: {new Date(interview.date).toLocaleDateString()}</p>
                     </li>
                 ))}
@@ -39,3 +39,4 @@ function PreviousInterviews({ onSelectInterview }) {
 }
 
 export default PreviousInterviews;
+
