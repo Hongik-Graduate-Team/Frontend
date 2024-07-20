@@ -23,9 +23,9 @@ function InputInfo() {
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    loadRecentData(); // 컴포넌트가 마운트될 때 최근 입력 불러오기
-  }, []);
+//  useEffect(() => {
+//    loadRecentData(); // 컴포넌트가 마운트될 때 최근 입력 불러오기
+//  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
