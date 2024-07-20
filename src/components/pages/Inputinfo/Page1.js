@@ -44,7 +44,7 @@ function PageOne({ resumeData, handleChange, handleItemChange, addInputField, de
 
       <div className="mb-3">
         <h3 className="mt-2 text-left text-lg font-semibold leading-9 tracking-tight text-gray-900">학적</h3>
-        {resumeData.majors && resumeData.major.map((major, index) => (
+        {resumeData.major && resumeData.major.map((major, index) => (
           <div key={index} className="mb-3">
             <div className="flex space-x-4">
               <input
@@ -171,7 +171,7 @@ function PageOne({ resumeData, handleChange, handleItemChange, addInputField, de
           >
             추가
           </button>
-          {resumeData.careers.length > 1 && (
+          {resumeData.careers && resumeData.careers.length > 1 && (
             <button
               type="button"
               onClick={() => deleteInputField('careers', resumeData.careers.length - 1)}
@@ -220,7 +220,7 @@ function PageOne({ resumeData, handleChange, handleItemChange, addInputField, de
           >
             추가
           </button>
-          {resumeData.stacks.length > 1 && (
+          {resumeData.stacks && resumeData.stacks.length > 1 && (
             <button
               type="button"
               onClick={() => deleteInputField('stacks', resumeData.stacks.length - 1)}
@@ -266,7 +266,7 @@ function PageOne({ resumeData, handleChange, handleItemChange, addInputField, de
           >
             추가
           </button>
-          {resumeData.awards.length > 1 && (
+          {resumeData.awards && resumeData.awards.length > 1 && (
             <button
               type="button"
               onClick={() => deleteInputField('awards', resumeData.awards.length - 1)}
@@ -311,7 +311,7 @@ function PageOne({ resumeData, handleChange, handleItemChange, addInputField, de
           >
             추가
           </button>
-          {resumeData.certs.length > 1 && (
+          {resumeData.certs && resumeData.certs.length > 1 && (
             <button
               type="button"
               onClick={() => deleteInputField('certs', resumeData.certs.length - 1)}
@@ -365,7 +365,7 @@ function PageOne({ resumeData, handleChange, handleItemChange, addInputField, de
           >
             추가
           </button>
-          {resumeData.languageCerts.length > 1 && (
+          {resumeData.languageCerts && resumeData.languageCerts.length > 1 && (
             <button
               type="button"
               onClick={() => deleteInputField('languageCerts', resumeData.languageCerts.length - 1)}

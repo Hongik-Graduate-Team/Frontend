@@ -8,11 +8,12 @@ import NavigationButtons from './NavButton';
 
 function InputInfo() {
   const [page, setPage] = useState(1);
+  
   const [resumeData, setResumeData] = useState({
     positionName: '',
     questions: [{ question: '', answer: '' }],
     major: [''],
-    gpa: [{ score: '', total: '' }],
+    gpa: { score: '', total: '' },
     careers: [{ careerType: '', content: '', startDate: null, endDate: null }],
     stacks: [{ stackLanguage: '', stackLevel: '' }],
     awards: [{ awardType: '', awardPrize: '' }],
