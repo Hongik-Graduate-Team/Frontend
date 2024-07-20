@@ -18,13 +18,13 @@ function SignInHeader() {
                 </div>
                 <div className="space-x-4">
                 <button
-                        onClick={() => handleNavigation('/inputinfo')}
+                        onClick={() => handleNavigation('/signup')}
                         className="text-gray-600 hover:underline"
                     >
                         회원가입
                     </button>
                     <button
-                        onClick={() => handleNavigation('/mypage')}
+                        onClick={() => handleNavigation('/signin')}
                         className="text-gray-600 hover:underline"
                     >
                         로그인
