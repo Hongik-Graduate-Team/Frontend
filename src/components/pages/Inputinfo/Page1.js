@@ -90,7 +90,7 @@ function PageOne({ resumeData, handleChange, handleItemChange, addInputField, de
                 type="number"
                 id={"score"}
                 name="score"
-                value={resumeData.gpa.score}
+                value={resumeData.gpa ? resumeData.gpa.score : ''}
                 onChange={handleChange}
                 placeholder="취득 학점"
                 className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
@@ -100,7 +100,7 @@ function PageOne({ resumeData, handleChange, handleItemChange, addInputField, de
                 type="number"
                 id={"total"}
                 name="total"
-                value={resumeData.gpa.total}
+                value={resumeData.gpa ? resumeData.gpa.total : ''}
                 onChange={handleChange}
                 placeholder="만점"
                 className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
