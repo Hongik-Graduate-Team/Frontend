@@ -6,7 +6,7 @@ function PageTwo({ resumeData, handleItemChange, addInputField, deleteInputField
       <h2 className="mt-3 text-left text-2xl font-bold leading-9 tracking-tight text-gray-900">자기소개서 입력</h2>
       <div className="border-b border-gray-900/10 mt-3 mb-3"></div>
       <div className="mb-20">
-        {resumeData.questions.map((question, index) => (
+        {resumeData.questions && resumeData.questions.map((question, index) => (
           <div key={index} className="mb-2">
             <input
               id={`question-${index}`}
