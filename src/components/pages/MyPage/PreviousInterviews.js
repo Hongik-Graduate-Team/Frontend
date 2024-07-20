@@ -1,3 +1,5 @@
+// GET /api/interviews - 사용자별 면접 목록 조회
+// GET /api/interviews/:id - 특정 면접의 상세 정보 조회
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
