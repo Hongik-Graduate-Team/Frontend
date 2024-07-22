@@ -38,7 +38,7 @@ function SignInPage() {
                     url: '/v2/user/me',
                     success: function(res) {
                         console.log(res);
-                        axios.post('/api/auth/kakao-login', {
+                        axios.post('https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=c04b061bca7c5b2db4d80b65c8f684fe&redirect_uri=https://main--namanba.netlify.app/login/oauth2/code/kakao', {
                             kakaoId: res.id,
                             email: res.kakao_account.email,
                             nickname: res.properties.nickname,
