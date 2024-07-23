@@ -33,13 +33,13 @@ function SignInPage() {
     };
 
     const handleKakaoLogin = () => {
-        const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=c04b061bca7c5b2db4d80b65c8f684fe&redirect_uri=${window.location.origin}/signin&response_type=code`;
+        const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=c04b061bca7c5b2db4d80b65c8f684fe&redirect_uri=https://deploy-preview-15--namanbatest.netlify.app/signin&response_type=code`;
         window.location.href = kakaoAuthUrl;
     };
 
     const handleKakaoAuth = useCallback(async (code) => {
         try {
-            const authResponse = await axios.get(`/login/oauth2/code/kakao?code=${code}`);
+            const authResponse = await axios.get(`http://3.35.186.197:8080/login/oauth2/code/kakao?code=${code}`);
             console.log('인가 코드 처리 응답:', authResponse.data);
 
             // 쿠키에서 액세스 토큰을 읽어옴
@@ -57,8 +57,8 @@ function SignInPage() {
             });
             console.log('사용자 정보 응답:', userInfoResponse.data);
 
-            // 닉네임을 받아서 보여주기
-            alert(`환영합니다, ${userInfoResponse.data.nickname}!`);
+            // // 닉네임을 받아서 보여주기
+            // alert(`환영합니다, ${userInfoResponse.data.nickname}!`);
 
             // 로그인 성공 시 페이지 이동
             navigate('/자소서 페이지');
