@@ -22,9 +22,8 @@ function SignInPage() {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            const response = await axios.post('/signin', loginData);
+            const response = await axios.post('/signin', loginData, { withCredentials: true });
             console.log('서버 응답:', response.data);
-            localStorage.setItem('access_token', response.data.access_token);
             navigate('/자소서 페이지'); // 로그인 성공 시 페이지 이동
         } catch (error) {
             console.error('서버 요청 오류:', error);
@@ -42,11 +41,10 @@ function SignInPage() {
             console.log('전송할 인가 코드:', code);
 
             // 인가 코드를 백엔드로 전달하여 액세스 토큰을 요청
-            const authResponse = await axios.post('http://3.35.186.197:8080/api/auth/kakao-login', { code });
+            const authResponse = await axios.post('http://3.35.186.197:8080/api/auth/kakao-login', { code }, { withCredentials: true });
             console.log('인가 코드 처리 응답:', authResponse.data);
 
-            // 액세스 토큰을 쿠키에 저장
-            Cookies.set('access_token', authResponse.data.access_token, { expires: 7 });
+            // 액세스 토큰은 쿠키에 저장되었기 때문에 따로 저장할 필요 없음
             console.log('쿠키에 저장된 액세스 토큰:', Cookies.get('access_token'));
 
             // 로그인 성공 시 페이지 이동
