@@ -70,7 +70,9 @@ function SignInPage() {
     useEffect(() => {
         const urlParams = new URLSearchParams(location.search);
         const code = urlParams.get('code');
+        console.log(code)
         if (code) {
+            console.log(code)
             handleKakaoAuth(code);
         }
     }, [location, handleKakaoAuth]);
