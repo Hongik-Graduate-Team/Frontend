@@ -1,9 +1,9 @@
-import React, {useState, useEffect, useCallback} from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+// src/pages/SignInPage.js
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import Cookies from 'js-cookie';
-import SignInHeader from '../molecules/Header/SignInHeader';
-import kakaoLogo from '../../assets/img/kakaoLogo.png';
+import SignInHeader from '../../molecules/Header/SignInHeader';
+import kakaoLogo from '../../../assets/img/kakaoLogo.png';
 
 function SignInPage() {
     const [loginData, setLoginData] = useState({
@@ -12,7 +12,6 @@ function SignInPage() {
     });
 
     const navigate = useNavigate();
-    const location = useLocation();
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -33,49 +32,10 @@ function SignInPage() {
     };
 
     const handleKakaoLogin = () => {
-        const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=c04b061bca7c5b2db4d80b65c8f684fe&redirect_uri=https://deploy-preview-15--namanbatest.netlify.app/signin&response_type=code`;
+        // 카카오 인증 서버로 리디렉션, 인가 코드는 RedirectionPage에서 처리
+        const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=c04b061bca7c5b2db4d80b65c8f684fe&redirect_uri=https://deploy-preview-15--namanbatest.netlify.app/redirect&response_type=code`;
         window.location.href = kakaoAuthUrl;
     };
-
-    const handleKakaoAuth = useCallback(async (code) => {
-        try {
-            const authResponse = await axios.get(`http://3.35.186.197:8080/login/oauth2/code/kakao?code=${code}`);
-            console.log('인가 코드 처리 응답:', authResponse.data);
-
-            // 쿠키에서 액세스 토큰을 읽어옴
-            const accessToken = Cookies.get('access_token');
-            console.log('쿠키에서 읽은 액세스 토큰:', accessToken);
-
-            // 사용자 정보를 가져오기 위해 백엔드로 액세스 토큰을 전달
-            const userInfoResponse = await axios.post('/api/auth/kakao-login', {}, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
-            });
-            console.log('사용자 정보 응답:', userInfoResponse.data);
-
-            // 닉네임을 받아서 보여주기
-            alert(`환영합니다, ${userInfoResponse.data.nickname}!`);
-
-            // 로그인 성공 시 페이지 이동
-            navigate('/자소서 페이지');
-        } catch (error) {
-            console.error('서버 요청 오류:', error);
-            alert('로그인에 실패했습니다. 다시 시도해주세요.');
-            navigate('/signin');
-        }
-    }, [navigate]);
-
-    // URL에서 인가 코드 파싱 및 처리
-    useEffect(() => {
-        const urlParams = new URLSearchParams(location.search);
-        const code = urlParams.get('code');
-        console.log(code)
-        if (code) {
-            console.log(code)
-            handleKakaoAuth(code);
-        }
-    }, [location, handleKakaoAuth]);
 
     return (
         <div className="flex flex-col">
