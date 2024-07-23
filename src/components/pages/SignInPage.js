@@ -38,12 +38,15 @@ function SignInPage() {
 
     const handleKakaoAuth = useCallback(async (code) => {
         try {
+
+            const authResponse = await axios.post('http://3.35.186.197:8080/api/auth/kakao-login', { code }, { withCredentials: true });
+
+
             console.log(1)
             console.log('전송할 인가 코드:', code);
             console.log(2)
 
             // 인가 코드를 백엔드로 전달하여 액세스 토큰을 요청
-            const authResponse = await axios.post('http://3.35.186.197:8080/api/auth/kakao-login', { code }, { withCredentials: true });
             console.log('인가 코드 처리 응답:', authResponse);
 
             // 액세스 토큰은 쿠키에 저장되었기 때문에 따로 저장할 필요 없음
