@@ -39,7 +39,7 @@ function SignInPage() {
 
     const handleKakaoAuth = useCallback(async (code) => {
         try {
-            const authResponse = await axios.get(`/login/oauth2/code/kakao?code=${code}`);
+            const authResponse = await axios.get(`http://3.35.186.197:8080/login/oauth2/code/kakao?code=${code}`);
             console.log('인가 코드 처리 응답:', authResponse.data);
 
             // 쿠키에서 액세스 토큰을 읽어옴
