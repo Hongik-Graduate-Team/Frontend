@@ -39,6 +39,8 @@ function SignInPage() {
 
     const handleKakaoAuth = useCallback(async (code) => {
         try {
+            console.log('전송할 인가 코드:', code);  // 인가 코드를 로그로 출력
+
             const authResponse = await axios.get(`http://3.35.186.197:8080/login/oauth2/code/kakao?code=${code}`);
             console.log('인가 코드 처리 응답:', authResponse.data);
 
@@ -56,9 +58,6 @@ function SignInPage() {
                 }
             });
             console.log('사용자 정보 응답:', userInfoResponse.data);
-
-            // // 닉네임을 받아서 보여주기
-            // alert(`환영합니다, ${userInfoResponse.data.nickname}!`);
 
             // 로그인 성공 시 페이지 이동
             navigate('/자소서 페이지');
