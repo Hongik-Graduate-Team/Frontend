@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import Cookies from 'js-cookie';
@@ -33,21 +33,24 @@ function SignInPage() {
     };
 
     const handleKakaoLogin = () => {
-        const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=c04b061bca7c5b2db4d80b65c8f684fe&redirect_uri=https://deploy-preview-15--namanbatest.netlify.app/signin&response_type=code`;
+        const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=c04b061bca7c5b2db4d80b65c8f684fe&redirect_uri=${window.location.origin}/signin&response_type=code`;
         window.location.href = kakaoAuthUrl;
     };
 
     const handleKakaoAuth = useCallback(async (code) => {
         try {
-            const authResponse = await axios.get(`http://3.35.186.197:8080/login/oauth2/code/kakao?code=${code}`);
+            const authResponse = await axios.get(`/login/oauth2/code/kakao?code=${code}`);
             console.log('인가 코드 처리 응답:', authResponse.data);
 
             // 쿠키에서 액세스 토큰을 읽어옴
             const accessToken = Cookies.get('access_token');
+            if (!accessToken) {
+                throw new Error('액세스 토큰을 찾을 수 없습니다.');
+            }
             console.log('쿠키에서 읽은 액세스 토큰:', accessToken);
 
             // 사용자 정보를 가져오기 위해 백엔드로 액세스 토큰을 전달
-            const userInfoResponse = await axios.post('/api/auth/kakao-login', {}, {
+            const userInfoResponse = await axios.get('/api/auth/kakao-login', {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }
@@ -70,9 +73,7 @@ function SignInPage() {
     useEffect(() => {
         const urlParams = new URLSearchParams(location.search);
         const code = urlParams.get('code');
-        console.log(code)
         if (code) {
-            console.log(code)
             handleKakaoAuth(code);
         }
     }, [location, handleKakaoAuth]);
