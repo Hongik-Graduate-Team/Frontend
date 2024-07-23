@@ -1,9 +1,9 @@
-// src/pages/SignInPage.js
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
-import SignInHeader from '../../molecules/Header/SignInHeader';
-import kakaoLogo from '../../../assets/img/kakaoLogo.png';
+import Cookies from 'js-cookie';  // 쿠키 관리
+import SignInHeader from '../molecules/Header/SignInHeader';
+import kakaoLogo from '../../assets/img/kakaoLogo.png';
 
 function SignInPage() {
     const [loginData, setLoginData] = useState({
@@ -12,6 +12,7 @@ function SignInPage() {
     });
 
     const navigate = useNavigate();
+    const location = useLocation();
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -32,10 +33,43 @@ function SignInPage() {
     };
 
     const handleKakaoLogin = () => {
-        // 카카오 인증 서버로 리디렉션, 인가 코드는 RedirectionPage에서 처리
-        const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=c04b061bca7c5b2db4d80b65c8f684fe&redirect_uri=https://deploy-preview-15--namanbatest.netlify.app/redirect&response_type=code`;
+        const kakaoAuthUrl = "https://kauth.kakao.com/oauth/authorize?client_id=c04b061bca7c5b2db4d80b65c8f684fe&redirect_uri=https://deploy-preview-15--namanbatest.netlify.app/signin&response_type=code";
         window.location.href = kakaoAuthUrl;
     };
+
+    const handleKakaoAuth = useCallback(async (code) => {
+        try {
+            console.log('전송할 인가 코드:', code);
+
+            // 인가 코드를 백엔드로 전달하여 액세스 토큰을 요청
+            const authResponse = await axios.post('http://3.35.186.197:8080/api/auth/kakao-login', { code });
+            console.log('인가 코드 처리 응답:', authResponse.data);
+
+            // 액세스 토큰을 쿠키에 저장
+            Cookies.set('access_token', authResponse.data.access_token, { expires: 7 });
+            console.log('쿠키에 저장된 액세스 토큰:', Cookies.get('access_token'));
+
+            // 로그인 성공 시 페이지 이동
+            navigate('/자소서 페이지');
+        } catch (error) {
+            console.error('서버 요청 오류:', error);
+            alert('로그인에 실패했습니다. 다시 시도해주세요.');
+            navigate('/signin');
+        }
+    }, [navigate]);
+
+    useEffect(() => {
+        const urlParams = new URLSearchParams(location.search);
+        const code = urlParams.get('code');
+        console.log('인가 코드:', code);
+
+        if (code) {
+            console.log('인가 코드가 존재하여 handleKakaoAuth 호출');
+            handleKakaoAuth(code);
+        } else {
+            console.log('인가 코드가 존재하지 않음');
+        }
+    }, [location, handleKakaoAuth]);
 
     return (
         <div className="flex flex-col">
