@@ -44,17 +44,10 @@ function SignInPage() {
             const authResponse = await axios.get(`http://3.35.186.197:8080/login/oauth2/code/kakao?code=${code}`);
             console.log('인가 코드 처리 응답:', authResponse.data);
 
-            // 쿠키에서 액세스 토큰을 읽어옴
-            const accessToken = Cookies.get('access_token');
-            if (!accessToken) {
-                throw new Error('액세스 토큰을 찾을 수 없습니다.');
-            }
-            console.log('쿠키에서 읽은 액세스 토큰:', accessToken);
-
             // 사용자 정보를 가져오기 위해 백엔드로 액세스 토큰을 전달
             const userInfoResponse = await axios.get('/api/auth/kakao-login', {
                 headers: {
-                    Authorization: `Bearer ${accessToken}`
+                    Authorization: `Bearer ${authResponse.data.access_token}`
                 }
             });
             console.log('사용자 정보 응답:', userInfoResponse.data);
@@ -72,6 +65,7 @@ function SignInPage() {
     useEffect(() => {
         const urlParams = new URLSearchParams(location.search);
         const code = urlParams.get('code');
+        console.log('인가 코드:', code);  // 인가 코드 파싱 확인
         if (code) {
             handleKakaoAuth(code);
         }
@@ -131,3 +125,4 @@ function SignInPage() {
 }
 
 export default SignInPage;
+
