@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
-import Cookies from 'js-cookie';
+import Cookies from 'js-cookie';  // 쿠키 관리
 import SignInHeader from '../molecules/Header/SignInHeader';
 import kakaoLogo from '../../assets/img/kakaoLogo.png';
 
@@ -39,25 +39,15 @@ function SignInPage() {
 
     const handleKakaoAuth = useCallback(async (code) => {
         try {
-            console.log('전송할 인가 코드:', code);  // 인가 코드를 로그로 출력
+            console.log('전송할 인가 코드:', code);
 
-            const authResponse = await axios.get(`http://3.35.186.197:8080/login/oauth2/code/kakao?code=${code}`);
+            // 인가 코드를 백엔드로 전달하여 액세스 토큰을 요청
+            const authResponse = await axios.post('/api/auth/kakao-login', { code });
             console.log('인가 코드 처리 응답:', authResponse.data);
 
-            // 쿠키에서 액세스 토큰을 읽어옴
-            const accessToken = Cookies.get('access_token');
-            if (!accessToken) {
-                throw new Error('액세스 토큰을 찾을 수 없습니다.');
-            }
-            console.log('쿠키에서 읽은 액세스 토큰:', accessToken);
-
-            // 사용자 정보를 가져오기 위해 백엔드로 액세스 토큰을 전달
-            const userInfoResponse = await axios.get('/api/auth/kakao-login', {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
-            });
-            console.log('사용자 정보 응답:', userInfoResponse.data);
+            // 액세스 토큰을 쿠키에 저장
+            Cookies.set('access_token', authResponse.data.access_token, { expires: 7 });
+            console.log('쿠키에 저장된 액세스 토큰:', Cookies.get('access_token'));
 
             // 로그인 성공 시 페이지 이동
             navigate('/자소서 페이지');
@@ -68,13 +58,16 @@ function SignInPage() {
         }
     }, [navigate]);
 
-    // URL에서 인가 코드 파싱 및 처리
     useEffect(() => {
         const urlParams = new URLSearchParams(location.search);
         const code = urlParams.get('code');
-        console.log('인가 코드:', code);  // 인가 코드 파싱 확인
+        console.log('인가 코드:', code);
+
         if (code) {
+            console.log('인가 코드가 존재하여 handleKakaoAuth 호출');
             handleKakaoAuth(code);
+        } else {
+            console.log('인가 코드가 존재하지 않음');
         }
     }, [location, handleKakaoAuth]);
 
