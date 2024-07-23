@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
-import SignInHeader from '../molecules/Header/SignInHeader'; // 경로를 실제 파일 위치에 맞게 변경하세요.
-import kakaoLogo from '../../assets/img/kakaoLogo.png'; // 이미지 파일을 import
+import Cookies from 'js-cookie';
+import SignInHeader from '../molecules/Header/SignInHeader';
+import kakaoLogo from '../../assets/img/kakaoLogo.png';
 
 function SignInPage() {
     const [loginData, setLoginData] = useState({
@@ -11,6 +12,16 @@ function SignInPage() {
     });
 
     const navigate = useNavigate();
+    const location = useLocation();
+
+    // URL에서 인가 코드 파싱 및 처리
+    useEffect(() => {
+        const urlParams = new URLSearchParams(location.search);
+        const code = urlParams.get('code');
+        if (code) {
+            handleKakaoAuth(code);
+        }
+    }, [location]);
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -31,38 +42,37 @@ function SignInPage() {
     };
 
     const handleKakaoLogin = () => {
-        window.Kakao.Auth.login({
-            success: function(authObj) {
-                console.log(authObj);
-                window.Kakao.API.request({
-                    url: '/v2/user/me',
-                    success: function(res) {
-                        console.log(res);
-                        axios.post('https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=c04b061bca7c5b2db4d80b65c8f684fe&redirect_uri=https://main--namanba.netlify.app/login/oauth2/code/kakao', {
-                            kakaoId: res.id,
-                            email: res.kakao_account.email,
-                            nickname: res.properties.nickname,
-                            accessToken: authObj.access_token // 카카오 액세스 토큰을 포함하여 백엔드로 전송
-                        }).then(response => {
-                            console.log('서버 응답:', response.data);
-                            localStorage.setItem('access_token', response.data.access_token);
-                            navigate('/자소서 페이지'); // 로그인 성공 시 페이지 이동
-                        }).catch(error => {
-                            console.error('서버 요청 오류:', error);
-                            alert('로그인에 실패했습니다. 다시 시도해주세요.');
-                        });
-                    },
-                    fail: function(error) {
-                        console.log(error);
-                        alert('카카오 로그인에 실패했습니다. 다시 시도해주세요.');
-                    }
-                });
-            },
-            fail: function(err) {
-                console.log(err);
-                alert('카카오 로그인에 실패했습니다. 다시 시도해주세요.');
-            }
-        });
+        const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=c04b061bca7c5b2db4d80b65c8f684fe&redirect_uri=${window.location.origin}/signin&response_type=code`;
+        window.location.href = kakaoAuthUrl;
+    };
+
+    const handleKakaoAuth = async (code) => {
+        try {
+            const authResponse = await axios.get(`http://3.35.186.197:8080/login/oauth2/code/kakao?code=${code}`);
+            console.log('인가 코드 처리 응답:', authResponse.data);
+
+            // 쿠키에서 액세스 토큰을 읽어옴
+            const accessToken = Cookies.post('access_token');
+            console.log('쿠키에서 읽은 액세스 토큰:', accessToken);
+
+            // 사용자 정보를 가져오기 위해 백엔드로 액세스 토큰을 전달
+            const userInfoResponse = await axios.get('/api/auth/kakao-login', {}, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            });
+            console.log('사용자 정보 응답:', userInfoResponse.data);
+
+            // // 닉네임을 받아서 보여주기
+            // alert(`환영합니다, ${userInfoResponse.data.nickname}!`);
+
+            // 로그인 성공 시 페이지 이동
+            navigate('/자소서 페이지');
+        } catch (error) {
+            console.error('서버 요청 오류:', error);
+            alert('로그인에 실패했습니다. 다시 시도해주세요.');
+            navigate('/signin');
+        }
     };
 
     return (
@@ -119,3 +129,4 @@ function SignInPage() {
 }
 
 export default SignInPage;
+
