@@ -42,7 +42,7 @@ function SignInPage() {
     };
 
     const handleKakaoLogin = () => {
-        const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=YOUR_CLIENT_ID&redirect_uri=${window.location.origin}/signin&response_type=code`;
+        const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=c04b061bca7c5b2db4d80b65c8f684fe&redirect_uri=${window.location.origin}/signin&response_type=code`;
         window.location.href = kakaoAuthUrl;
     };
 
