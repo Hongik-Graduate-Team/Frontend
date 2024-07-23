@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
-import Cookies from 'js-cookie'; // 쿠키 관련 라이브러리 임포트
+import Cookies from 'js-cookie';
 import SignInHeader from '../molecules/Header/SignInHeader';
 import kakaoLogo from '../../assets/img/kakaoLogo.png';
 
@@ -132,4 +132,3 @@ function SignInPage() {
 }
 
 export default SignInPage;
-
