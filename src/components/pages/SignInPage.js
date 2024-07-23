@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
-import Cookies from 'js-cookie';  // 쿠키 관리
+import Cookies from 'js-cookie';
 import SignInHeader from '../molecules/Header/SignInHeader';
 import kakaoLogo from '../../assets/img/kakaoLogo.png';
 
@@ -24,7 +24,7 @@ function SignInPage() {
         try {
             const response = await axios.post('/signin', loginData, { withCredentials: true });
             console.log('서버 응답:', response.data);
-            navigate('/자소서 페이지'); // 로그인 성공 시 페이지 이동
+            navigate('/자소서 페이지');
         } catch (error) {
             console.error('서버 요청 오류:', error);
             alert('로그인에 실패했습니다. 다시 시도해주세요.');
@@ -42,7 +42,7 @@ function SignInPage() {
 
             // 인가 코드를 백엔드로 전달하여 액세스 토큰을 요청
             const authResponse = await axios.post('http://3.35.186.197:8080/api/auth/kakao-login', { code }, { withCredentials: true });
-            console.log('인가 코드 처리 응답:', authResponse.data);
+            console.log('인가 코드 처리 응답:', authResponse);
 
             // 액세스 토큰은 쿠키에 저장되었기 때문에 따로 저장할 필요 없음
             console.log('쿠키에 저장된 액세스 토큰:', Cookies.get('access_token'));
@@ -51,10 +51,16 @@ function SignInPage() {
             navigate('/자소서 페이지');
         } catch (error) {
             console.error('서버 요청 오류:', error);
+            if (error.response) {
+                console.error('서버 응답 데이터:', error.response.data);
+                console.error('서버 응답 상태:', error.response.status);
+                console.error('서버 응답 헤더:', error.response.headers);
+            }
             alert('로그인에 실패했습니다. 다시 시도해주세요.');
             navigate('/signin');
         }
     }, [navigate]);
+
 
     useEffect(() => {
         const urlParams = new URLSearchParams(location.search);
@@ -123,4 +129,5 @@ function SignInPage() {
 }
 
 export default SignInPage;
+
 
