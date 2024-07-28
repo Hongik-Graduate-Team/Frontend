@@ -40,14 +40,15 @@ function SignInPage() {
         try {
             console.log('전송할 인가 코드:', code);
 
-            const authResponse = await axios.get('https://namanba.shop/login/oauth2/code/kakao', { code }, { withCredentials: true });
-            // 인가 코드를 백엔드로 전달하여 액세스 토큰을 요청
+            const authResponse = await axios.get('https://namanba.shop/login/oauth2/code/kakao', {
+                params: { code },
+                withCredentials: true
+            });
+
             console.log('인가 코드 처리 응답:', authResponse);
 
-            // 액세스 토큰은 쿠키에 저장되었기 때문에 따로 저장할 필요 없음
             console.log('쿠키에 저장된 액세스 토큰:', Cookies.get('access_token'));
 
-            // 로그인 성공 시 페이지 이동
             navigate('/자소서 페이지');
         } catch (error) {
             console.error('서버 요청 오류:', error);
@@ -60,6 +61,7 @@ function SignInPage() {
             navigate('/signin');
         }
     }, [navigate]);
+
 
 
     useEffect(() => {
