@@ -22,7 +22,7 @@ function SignInPage() {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            const response = await axios.post('/signin', loginData, { withCredentials: true });
+            const response = await axios.post('https://namanba.shop/signin', loginData, { withCredentials: true });
             console.log('서버 응답:', response.data);
             navigate('/자소서 페이지');
         } catch (error) {
