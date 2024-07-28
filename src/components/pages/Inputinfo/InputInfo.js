@@ -13,7 +13,7 @@ function InputInfo() {
   const [resumeData, setResumeData] = useState({
     position: '',
     questions: [{ question: '', answer: '' }],
-    majors: [''],
+    majors: [{ majorName: '' }] ,
     gpa: { score: '', total: '' },
     careers: [{ careerType: '', content: '', startDate: null, endDate: null }],
     stacks: [{ stackLanguage: '', stackLevel: '' }],
@@ -39,38 +39,19 @@ function InputInfo() {
     // 초기 데이터를 API에서 불러오는 함수
     const loadData = async () => {
       try {
-        const [
-          positionRes,
-          questionsRes,
-          majorsRes,
-          gpaRes,
-          careersRes,
-          stacksRes,
-          awardsRes,
-          certsRes,
-          languageCertsRes,
-        ] = await Promise.all([
-          axios.get('/api/position'),
-          axios.get('/api/questions'),
-          axios.get('/api/majors'),
-          axios.get('/api/gpa'),
-          axios.get('/api/careers'),
-          axios.get('/api/stacks'),
-          axios.get('/api/awards'),
-          axios.get('/api/certs'),
-          axios.get('/api/languageCerts'),
-        ]);
+        const response = await axios.get('/api/portfolio');
+        const data = response.data;
 
         setResumeData({
-          position: positionRes.data,
-          questions: questionsRes.data,
-          majors: majorsRes.data,
-          gpa: gpaRes.data,
-          careers: careersRes.data,
-          stacks: stacksRes.data,
-          awards: awardsRes.data,
-          certs: certsRes.data,
-          languageCerts: languageCertsRes.data,
+          position: data.position || '',
+          questions: data.questions || [{ question: '', answer: '' }],
+          majors: data.majors || [{ majorName: '' }],
+          gpa: data.gpa || { score: '', total: '' },
+          careers: data.careers || [{ careerType: '', content: '', startDate: null, endDate: null }],
+          stacks: data.stacks || [{ stackLanguage: '', stackLevel: '' }],
+          awards: data.awards || [{ awardType: '', awardPrize: '' }],
+          certs: data.certs || [{ certType: '', certDate: null }],
+          languageCerts: data.languageCerts || [{ languageCertType: '', languageCertLevel: '', languageCertDate: null }]
         });
       } catch (error) {
         console.error('데이터를 불러오는데 실패했습니다:', error);
@@ -153,7 +134,7 @@ function InputInfo() {
   };
 
   const validateForm = () => {
-    const requiredSections = ['positionName', 'questions'];
+    const requiredSections = ['position', 'questions'];
   
     // 필수 섹션 검사
     for (const section of requiredSections) {
@@ -207,10 +188,10 @@ function InputInfo() {
   };
 
   const apiDeleteCalls = async (data, endpoint) => {
-    const deletePromises = data.map(item =>
-      axios.delete(`/api/${endpoint}/${item.id}`)
-    );
-    return deletePromises;
+    const ids = data.map(item => item.id);
+    if (ids.length > 0) {
+      await axios.delete(`/api/${endpoint}`, { data: ids });
+    }
   };
   
   const handleSubmit = async (e) => {
@@ -229,24 +210,29 @@ function InputInfo() {
       ];
   
       const apiEndpoints = {
-        positions: 'position',
+        position: 'portfolio/position',
         questions: 'questions',
         majors: 'majors',
-        gpa: 'gpa',
+        gpa: 'gpas',
         careers: 'careers',
         stacks: 'stacks',
         awards: 'awards',
         certs: 'certs',
-        languageCerts: 'languageCerts'
+        languageCerts: 'language-certs'
       };
   
       let allPromises = [];
   
       for (const section of sections) {
         const endpoint = apiEndpoints[section];
-        const createOrUpdatePromises = await apiCalls(resumeData[section], endpoint);
-        const deletePromises = await apiDeleteCalls(deletedItems[section], endpoint);
-        allPromises = [...allPromises, ...createOrUpdatePromises, ...deletePromises];
+
+        if (section === 'position') {
+          allPromises.push(axios.put(`/api/${endpoint}`, null, { params: { name: resumeData[section] } }));
+        } else {
+          const createOrUpdatePromises = await apiCalls(resumeData[section], endpoint);
+          const deletePromises = await apiDeleteCalls(deletedItems[section], endpoint);
+          allPromises = [...allPromises, ...createOrUpdatePromises, ...deletePromises];
+        }
       }
   
       // 모든 API 요청을 병렬로 실행

@@ -29,7 +29,8 @@ function PageOne({ resumeData, handleChange, handleItemChange, addInputField, de
           <option value="app">앱개발자</option>
           <option value="game">게임개발자</option>
           <option value="software">소프트웨어개발자</option>
-          <option value="hardware">하드웨어개발자QA</option>
+          <option value="hardware">하드웨어개발자</option>
+          <option value="qa">QA</option>
           <option value="system-engineer">시스템엔지니어</option>
           <option value="network-engineer">네트워크엔지니어</option>
           <option value="security-engineer">보안엔지니어</option>
@@ -48,13 +49,12 @@ function PageOne({ resumeData, handleChange, handleItemChange, addInputField, de
 
       <div className="mb-10">
         <h3 className="mt-2 text-left text-lg font-semibold leading-9 tracking-tight text-gray-900">학적</h3>
-        {resumeData.majors && resumeData.majors.map((major, index) => (
+        {resumeData.majors.map((major, index) => (
           <div key={index} className="mb-3 flex space-x-4">
             <input
-              type="text"
               id={`major-${index}`}
-              name="major"
-              value={major}
+              name="majorName"
+              value={major.majorName}
               onChange={(e) => handleItemChange('majors', index, e)}
               placeholder="전공"
               className="w-1/2 p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
@@ -63,7 +63,7 @@ function PageOne({ resumeData, handleChange, handleItemChange, addInputField, de
               {resumeData.majors.length < 2 && index === resumeData.majors.length - 1 && (
                 <button
                   type="button"
-                  onClick={() => addInputField('majors', '')}
+                  onClick={() => addInputField('majors', {majorName:''})}
                 >
                   <img src={addIcon} alt="추가 아이콘" className='w-5'/>
                 </button>
@@ -86,7 +86,7 @@ function PageOne({ resumeData, handleChange, handleItemChange, addInputField, de
             <div className="flex w-1/2 space-x-4">
               <input
                 type="number"
-                id={"score"}
+                id="score"
                 name="score"
                 value={resumeData.gpa.score}
                 onChange={handleChange}
@@ -96,7 +96,7 @@ function PageOne({ resumeData, handleChange, handleItemChange, addInputField, de
               <p className="p-3 mt-1">/</p>
               <input
                 type="number"
-                id={"total"}
+                id="total"
                 name="total"
                 value={resumeData.gpa.total}
                 onChange={handleChange}
@@ -358,7 +358,7 @@ function PageOne({ resumeData, handleChange, handleItemChange, addInputField, de
             {resumeData.languageCerts && resumeData.languageCerts.length > 1 && (
               <button
                 type="button"
-                onClick={() => deleteInputField('languageCerts', resumeData.languageCerts.length - 1)}
+                onClick={() => deleteInputField('languageCerts', index)}
               >
                 <img src={deleteIcon} alt="삭제 아이콘" className='mt-1 ml-4 w-5'/>
               </button>
