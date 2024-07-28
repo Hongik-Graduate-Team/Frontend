@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import MainHeader from '../../molecules/Header/MainHeader';
@@ -8,30 +8,103 @@ import NavigationButtons from './NavButton';
 
 function InputInfo() {
   const [page, setPage] = useState(1);
+  const [isFormChanged, setIsFormChanged] = useState(false);
   
   const [resumeData, setResumeData] = useState({
-    positionName: '',
+    position: '',
     questions: [{ question: '', answer: '' }],
-    major: [''],
+    majors: [''],
     gpa: { score: '', total: '' },
     careers: [{ careerType: '', content: '', startDate: null, endDate: null }],
     stacks: [{ stackLanguage: '', stackLevel: '' }],
     awards: [{ awardType: '', awardPrize: '' }],
     certs: [{ certType: '', certDate: null }],
-    languageCerts: [{ languageCertType: '', languageCertLevel: '', languageCertDate: null }],
+    languageCerts: [{ languageCertType: '', languageCertLevel: '', languageCertDate: null }]
+  });
+
+  const [deletedItems, setDeletedItems] = useState({
+    questions: [],
+    majors: [],
+    careers: [],
+    stacks: [],
+    awards: [],
+    certs: [],
+    languageCerts: []
   });
 
   const navigate = useNavigate();
 
-//  useEffect(() => {
-//    loadRecentData(); // 컴포넌트가 마운트될 때 최근 입력 불러오기
-//  }, []);
+  // 컴포넌트가 마운트 될 때 데이터 불러오기
+  useEffect(() => {
+    // 초기 데이터를 API에서 불러오는 함수
+    const loadData = async () => {
+      try {
+        const [
+          positionRes,
+          questionsRes,
+          majorsRes,
+          gpaRes,
+          careersRes,
+          stacksRes,
+          awardsRes,
+          certsRes,
+          languageCertsRes,
+        ] = await Promise.all([
+          axios.get('/api/position'),
+          axios.get('/api/questions'),
+          axios.get('/api/majors'),
+          axios.get('/api/gpa'),
+          axios.get('/api/careers'),
+          axios.get('/api/stacks'),
+          axios.get('/api/awards'),
+          axios.get('/api/certs'),
+          axios.get('/api/languageCerts'),
+        ]);
 
+        setResumeData({
+          position: positionRes.data,
+          questions: questionsRes.data,
+          majors: majorsRes.data,
+          gpa: gpaRes.data,
+          careers: careersRes.data,
+          stacks: stacksRes.data,
+          awards: awardsRes.data,
+          certs: certsRes.data,
+          languageCerts: languageCertsRes.data,
+        });
+      } catch (error) {
+        console.error('데이터를 불러오는데 실패했습니다:', error);
+      }
+    };
+
+    loadData();
+  }, []);
+
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      if (isFormChanged) {
+        const confirmationMessage = '저장되지 않은 변경 사항이 있습니다. 정말로 페이지를 떠나시겠습니까?';
+        e.preventDefault();
+        e.returnValue = confirmationMessage;
+        return confirmationMessage;
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [isFormChanged]);
+
+   // 일반적인 입력값 변경 핸들러
   const handleChange = (e) => {
     const { name, value } = e.target;
     setResumeData({ ...resumeData, [name]: value });
+    setIsFormChanged(true);
   };
 
+  // 날짜 변경 핸들러
   const handleDateChange = (section, index, dateType, date) => {
     const updatedItems = [...resumeData[section]];
     updatedItems[index] = {
@@ -42,16 +115,20 @@ function InputInfo() {
       ...resumeData,
       [section]: updatedItems,
     });
+    setIsFormChanged(true);
   };
 
+  // 섹션별 아이템 변경 핸들러
   const handleItemChange = (section, index, e) => {
     const { name, value } = e.target;
     const updatedItems = resumeData[section].map((item, i) =>
       i === index ? { ...item, [name]: value } : item
     );
     setResumeData({ ...resumeData, [section]: updatedItems });
+    setIsFormChanged(true);
   };
 
+  // 새로운 입력 필드 추가
   const addInputField = (section, newItem) => {
     setResumeData({
       ...resumeData,
@@ -59,8 +136,19 @@ function InputInfo() {
     });
   };
 
+  // 입력 필드 삭제 핸들러
   const deleteInputField = (section, index) => {
     const updatedItems = resumeData[section].filter((item, i) => i !== index);
+    const deletedItem = resumeData[section][index];
+    
+    // id가 있는 항목만 삭제 추적
+    if (deletedItem.id) {
+      setDeletedItems({
+        ...deletedItems,
+        [section]: [...deletedItems[section], deletedItem]
+      });
+    }
+
     setResumeData({ ...resumeData, [section]: updatedItems });
   };
 
@@ -87,7 +175,7 @@ function InputInfo() {
     }
   
     // 선택 섹션 검사
-    const optionalSections = ['major', 'gpa', 'careers', 'stacks', 'awards', 'certs', 'languageCerts'];
+    const optionalSections = ['majors', 'gpa', 'careers', 'stacks', 'awards', 'certs', 'languageCerts'];
   
     for (const section of optionalSections) {
       const isEmpty = resumeData[section].every(item =>
@@ -108,44 +196,75 @@ function InputInfo() {
   
     return true;
   };
-  
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!validateForm()) {
-      return;
-    }
-    try {
-      const response = await axios.post('/inputInfo', resumeData);
-      console.log('서버 응답:', response.data);
-      navigate('/startInterview');
-    } catch (error) {
-      console.error('서버 요청 오류:', error);
-    }
+  const apiCalls = async (data, endpoint) => {
+    const createOrUpdatePromises = data.map(item =>
+      item.id
+        ? axios.put(`/api/${endpoint}/${item.id}`, item)
+        : axios.post(`/api/${endpoint}`, item)
+    );
+    return createOrUpdatePromises;
   };
 
-/*  const loadRecentData = async () => {
+  const apiDeleteCalls = async (data, endpoint) => {
+    const deletePromises = data.map(item =>
+      axios.delete(`/api/${endpoint}/${item.id}`)
+    );
+    return deletePromises;
+  };
+  
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
-      const response = await axios.get('/getRecentData'); // 서버에서 최근 데이터를 가져오는 API 호출
-      setResumeData(response.data);
+      const sections = [
+        'position',
+        'questions',
+        'majors',
+        'gpa',
+        'careers',
+        'stacks',
+        'awards',
+        'certs',
+        'languageCerts'
+      ];
+  
+      const apiEndpoints = {
+        positions: 'position',
+        questions: 'questions',
+        majors: 'majors',
+        gpa: 'gpa',
+        careers: 'careers',
+        stacks: 'stacks',
+        awards: 'awards',
+        certs: 'certs',
+        languageCerts: 'languageCerts'
+      };
+  
+      let allPromises = [];
+  
+      for (const section of sections) {
+        const endpoint = apiEndpoints[section];
+        const createOrUpdatePromises = await apiCalls(resumeData[section], endpoint);
+        const deletePromises = await apiDeleteCalls(deletedItems[section], endpoint);
+        allPromises = [...allPromises, ...createOrUpdatePromises, ...deletePromises];
+      }
+  
+      // 모든 API 요청을 병렬로 실행
+      await Promise.all(allPromises);
+  
+      console.log('모든 요청이 성공적으로 완료되었습니다.');
+      setIsFormChanged(false);
+      navigate('/startInterview'); // 면접 시작 페이지로 이동
+  
     } catch (error) {
-      console.error('최근 데이터 불러오기 오류:', error);
-    }
-  }; */
-
-  const handleSaveDraft = async () => {
-    try {
-      const response = await axios.post('/saveDraft', resumeData);
-      console.log('임시 저장 성공:', response.data);
-    } catch (error) {
-      console.error('임시 저장 오류:', error);
+      console.error('서버 요청 오류:', error);
     }
   };
 
   return (
     <div>
       <MainHeader />
-      <form onSubmit={handleSubmit} className="max-w-4xl mx-auto mt-5 p-3">
+      <form onSubmit={handleSubmit} className="max-w-4xl mx-auto mb-10 mt-5 p-3">
         {page === 1 && (
           <PageOne
             resumeData={resumeData}
@@ -167,9 +286,8 @@ function InputInfo() {
         <NavigationButtons
           page={page}
           setPage={setPage}
-          handleSaveDraft={handleSaveDraft}
-          handleSubmit={handleSubmit}
           validateForm={validateForm}
+          handleSubmit={handleSubmit}
         />
       </form>
     </div>
