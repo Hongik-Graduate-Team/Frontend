@@ -40,7 +40,7 @@ function SignInPage() {
         try {
             console.log('전송할 인가 코드:', code);
 
-            const authResponse = await axios.post('http://3.35.186.197:8080/login/oauth2/code/kakao', { code }, { withCredentials: true });
+            const authResponse = await axios.post('https://namanba.shop/login/oauth2/code/kakao', { code }, { withCredentials: true });
             // 인가 코드를 백엔드로 전달하여 액세스 토큰을 요청
             console.log('인가 코드 처리 응답:', authResponse);
 
