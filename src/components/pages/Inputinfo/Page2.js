@@ -1,10 +1,14 @@
 import React from 'react';
+import deleteIcon from '../../../assets/img/delete.png'
+import addIcon from '../../../assets/img/add.png' 
 
 function PageTwo({ resumeData, handleItemChange, addInputField, deleteInputField }) {
   return (
     <>
-      <h2 className="mt-3 text-left text-2xl font-bold leading-9 tracking-tight text-gray-900">자기소개서 입력</h2>
-      <div className="border-b border-gray-900/10 mt-3 mb-3"></div>
+      <h2 className="mt-3 text-left text-2xl font-bold leading-9 tracking-tight text-gray-900">자기소개서 입력
+        <span className='text-red-400'> *</span>
+      </h2>
+      <div className="border-b border-gray-900/10 mt-3 mb-4"></div>
       <div className="mb-20">
         {resumeData.questions && resumeData.questions.map((question, index) => (
           <div key={index} className="mb-2">
@@ -14,7 +18,7 @@ function PageTwo({ resumeData, handleItemChange, addInputField, deleteInputField
               value={question.question}
               onChange={(e) => handleItemChange('questions', index, e)}
               placeholder="질문"
-              className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
+              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
               required
             />
             <textarea
@@ -27,23 +31,22 @@ function PageTwo({ resumeData, handleItemChange, addInputField, deleteInputField
               rows="5"
               required
             />
-            <div className="text-right mt-2">
+            <div className="text-right mt-1">
               {resumeData.questions.length < 5 && index === resumeData.questions.length - 1 && (
                 <button
                   type="button"
                   onClick={() => addInputField('questions', { question: '', answer: '' })}
-                  className="mr-3 text-sm text-blue-500 focus:outline-none"
                 >
-                  추가
+                  <img src={addIcon} alt="추가 아이콘" className='w-5'/>
                 </button>
               )}
-              {resumeData.questions.length > 1 && index === resumeData.questions.length - 1 && (
+              {resumeData.questions.length > 1 && (
                 <button
                   type="button"
                   onClick={() => deleteInputField('questions', index)}
-                  className="text-sm text-red-400 focus:outline-none"
+                  className="ml-2"
                 >
-                  삭제
+                  <img src={deleteIcon} alt="삭제 아이콘" className='w-5'/>
                 </button>
               )}
             </div>
