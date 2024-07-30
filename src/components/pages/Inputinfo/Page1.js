@@ -63,7 +63,7 @@ function PageOne({ resumeData, handleChange, handleItemChange, addInputField, de
               {resumeData.majors.length < 2 && index === resumeData.majors.length - 1 && (
                 <button
                   type="button"
-                  onClick={() => addInputField('majors', {majorName:''})}
+                  onClick={() => addInputField('majors', {majorId:null, majorName:''})}
                 >
                   <img src={addIcon} alt="추가 아이콘" className='w-5'/>
                 </button>
@@ -111,7 +111,7 @@ function PageOne({ resumeData, handleChange, handleItemChange, addInputField, de
           <h3 className="text-left text-lg font-semibold leading-9 tracking-tight text-gray-900">경력 사항</h3>
           <button
             type="button"
-            onClick={() => addInputField('careers', { type: '', content: '', startDate: null, endDate: null })}
+            onClick={() => addInputField('careers', { careerId: null ,careerType: '', content: '', startDate: null, endDate: null })}
           >
             <img src={addIcon} alt="추가 아이콘" className='mt-2 w-5'/>
           </button>
@@ -184,7 +184,7 @@ function PageOne({ resumeData, handleChange, handleItemChange, addInputField, de
           <h3 className="text-left text-lg font-semibold leading-9 tracking-tight text-gray-900">기술 스택</h3>
           <button
             type="button"
-            onClick={() => addInputField('stacks', { stackLanguage: '', stackLevel: '' })}
+            onClick={() => addInputField('stacks', { stackId: null,stackLanguage: '', stackLevel: '' })}
           >
             <img src={addIcon} alt="추가 아이콘" className='mt-2 w-5'/>
           </button>
@@ -232,7 +232,7 @@ function PageOne({ resumeData, handleChange, handleItemChange, addInputField, de
             <h3 className="text-left text-lg font-semibold leading-9 tracking-tight text-gray-900">수상 내역</h3>
             <button
               type="button"
-              onClick={() => addInputField('awards', { awardType: '', awardPrize: '' })}
+              onClick={() => addInputField('awards', { awardId: null,awardType: '', awardPrize: '' })}
             >
               <img src={addIcon} alt="추가 아이콘" className='mt-2 w-5'/>
             </button>
@@ -277,7 +277,7 @@ function PageOne({ resumeData, handleChange, handleItemChange, addInputField, de
           <h3 className="text-left text-lg font-semibold leading-9 tracking-tight text-gray-900">자격증</h3>
           <button
             type="button"
-            onClick={() => addInputField('certs', { type: '', date: null })}
+            onClick={() => addInputField('certs', { certId: null, certType: '', certDate: null })}
           >
             <img src={addIcon} alt="추가 아이콘" className='mt-2 w-5'/>
           </button>
@@ -306,7 +306,7 @@ function PageOne({ resumeData, handleChange, handleItemChange, addInputField, de
             {resumeData.certs.length > 1 && (
               <button
                 type="button"
-                onClick={() => deleteInputField('certs', resumeData.certs.length - 1)}
+                onClick={() => deleteInputField('certs', index)}
               >
                 <img src={deleteIcon} alt="삭제 아이콘" className='mt-1 ml-4 w-5'/>
               </button>
@@ -320,7 +320,7 @@ function PageOne({ resumeData, handleChange, handleItemChange, addInputField, de
           <h3 className="text-left text-lg font-semibold leading-9 tracking-tight text-gray-900">어학 자격증</h3>
           <button
             type="button"
-            onClick={() => addInputField('languageCerts', { type: '', level: '', date: null })}
+            onClick={() => addInputField('languageCerts', { languageCertId: null, languageCertType: '', languageCertLevel: '', languageCertDate: null })}
           >
             <img src={addIcon} alt="추가 아이콘" className='mt-2 w-5'/>
           </button>
