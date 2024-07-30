@@ -35,7 +35,7 @@ function PageTwo({ resumeData, handleItemChange, addInputField, deleteInputField
               {resumeData.questions.length < 5 && index === resumeData.questions.length - 1 && (
                 <button
                   type="button"
-                  onClick={() => addInputField('questions', { question: '', answer: '' })}
+                  onClick={() => addInputField('questions', { resumeId:null, question: '', answer: '' })}
                 >
                   <img src={addIcon} alt="추가 아이콘" className='w-5'/>
                 </button>

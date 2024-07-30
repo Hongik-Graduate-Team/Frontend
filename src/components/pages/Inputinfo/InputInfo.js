@@ -12,14 +12,14 @@ function InputInfo() {
   
   const [resumeData, setResumeData] = useState({
     position: '',
-    questions: [{ question: '', answer: '' }],
-    majors: [{ majorName: '' }] ,
+    questions: [{ resumeId: null, question: '', answer: '' }],
+    majors: [{ majorId: null, majorName: '' }] ,
     gpa: { score: '', total: '' },
-    careers: [{ careerType: '', content: '', startDate: null, endDate: null }],
-    stacks: [{ stackLanguage: '', stackLevel: '' }],
-    awards: [{ awardType: '', awardPrize: '' }],
-    certs: [{ certType: '', certDate: null }],
-    languageCerts: [{ languageCertType: '', languageCertLevel: '', languageCertDate: null }]
+    careers: [{ careerId: null, careerType: '', content: '', startDate: null, endDate: null }],
+    stacks: [{ stackId: null, stackLanguage: '', stackLevel: '' }],
+    awards: [{ awardId: null, awardType: '', awardPrize: '' }],
+    certs: [{ certId: null, certType: '', certDate: null }],
+    languageCerts: [{ languageCertId: null, languageCertType: '', languageCertLevel: '', languageCertDate: null }]
   });
 
   const [deletedItems, setDeletedItems] = useState({
@@ -39,19 +39,19 @@ function InputInfo() {
     // 초기 데이터를 API에서 불러오는 함수
     const loadData = async () => {
       try {
-        const response = await axios.get('/api/portfolio');
+        const response = await axios.get('https://namanba.shop/api/portfolio');
         const data = response.data;
 
         setResumeData({
           position: data.position || '',
-          questions: data.questions || [{ question: '', answer: '' }],
-          majors: data.majors || [{ majorName: '' }],
+          questions: data.questions || [{ resumeId: null, question: '', answer: '' }],
+          majors: data.majors || [{ majorId: null, majorName: '' }],
           gpa: data.gpa || { score: '', total: '' },
-          careers: data.careers || [{ careerType: '', content: '', startDate: null, endDate: null }],
-          stacks: data.stacks || [{ stackLanguage: '', stackLevel: '' }],
-          awards: data.awards || [{ awardType: '', awardPrize: '' }],
-          certs: data.certs || [{ certType: '', certDate: null }],
-          languageCerts: data.languageCerts || [{ languageCertType: '', languageCertLevel: '', languageCertDate: null }]
+          careers: data.careers || [{ careerId: null, careerType: '', content: '', startDate: null, endDate: null }],
+          stacks: data.stacks || [{ stackId: null, stackLanguage: '', stackLevel: '' }],
+          awards: data.awards || [{ awardId: null, awardType: '', awardPrize: '' }],
+          certs: data.certs || [{ certId: null, certType: '', certDate: null }],
+          languageCerts: data.languageCerts || [{ languageCertId: null, languageCertType: '', languageCertLevel: '', languageCertDate: null }]
         });
       } catch (error) {
         console.error('데이터를 불러오는데 실패했습니다:', error);
@@ -123,7 +123,7 @@ function InputInfo() {
     const deletedItem = resumeData[section][index];
     
     // id가 있는 항목만 삭제 추적
-    if (deletedItem.id) {
+    if (deletedItem.resumeId || deletedItem.majorId || deletedItem.careerId || deletedItem.stackId || deletedItem.awardId || deletedItem.certId || deletedItem.languageCertId) {
       setDeletedItems({
         ...deletedItems,
         [section]: [...deletedItems[section], deletedItem]
@@ -131,6 +131,7 @@ function InputInfo() {
     }
 
     setResumeData({ ...resumeData, [section]: updatedItems });
+    setIsFormChanged(true);
   };
 
   const validateForm = () => {
@@ -179,18 +180,21 @@ function InputInfo() {
   };
 
   const apiCalls = async (data, endpoint) => {
-    const createOrUpdatePromises = data.map(item =>
-      item.id
-        ? axios.put(`/api/${endpoint}/${item.id}`, item)
-        : axios.post(`/api/${endpoint}`, item)
-    );
+    const createOrUpdatePromises = data.map(item => {
+      const id = item.resumeId || item.majorId || item.careerId || item.stackId || item.awardId || item.certId || item.languageCertId;
+      if (id) {
+        return axios.put(`https://namanba.shop/api/${endpoint}/${id}`, item);
+      } else {
+        return axios.post(`https://namanba.shop/api/${endpoint}`, item);
+      }
+    });
     return createOrUpdatePromises;
   };
 
   const apiDeleteCalls = async (data, endpoint) => {
-    const ids = data.map(item => item.id);
+    const ids = data.map(item => item.resumeId || item.majorId || item.careerId || item.stackId || item.awardId || item.certId || item.languageCertId).filter(id => id);
     if (ids.length > 0) {
-      await axios.delete(`/api/${endpoint}`, { data: ids });
+      await axios.delete(`https://namanba.shop/api/${endpoint}`, { data: ids });
     }
   };
   
@@ -217,7 +221,7 @@ function InputInfo() {
         careers: 'careers',
         stacks: 'stacks',
         awards: 'awards',
-        certs: 'certs',
+        certs: 'certifications',
         languageCerts: 'language-certs'
       };
   
@@ -227,7 +231,7 @@ function InputInfo() {
         const endpoint = apiEndpoints[section];
 
         if (section === 'position') {
-          allPromises.push(axios.put(`/api/${endpoint}`, null, { params: { name: resumeData[section] } }));
+          allPromises.push(axios.put(`https://namanba.shop/api/${endpoint}`, null, { params: { name: resumeData[section] } }));
         } else {
           const createOrUpdatePromises = await apiCalls(resumeData[section], endpoint);
           const deletePromises = await apiDeleteCalls(deletedItems[section], endpoint);

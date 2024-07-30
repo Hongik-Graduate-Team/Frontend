@@ -22,6 +22,16 @@ function NavigationButtons({ page, setPage, handleSubmit, validateForm }) {
     }
   };
 
+  const handleTempSave = async () => {
+    try {
+      // 임시 저장
+      await handleSubmit(); // 임시 저장 처리
+      alert('임시 저장되었습니다.');
+    } catch (error) {
+      console.error('Error saving resume data:', error);
+    }
+  };
+
   const handleStartInterview = async (title) => {
     try {
       // 제목을 백엔드로 전송
@@ -44,13 +54,20 @@ function NavigationButtons({ page, setPage, handleSubmit, validateForm }) {
         </button>
       )}
       {page === 2 && (
-        <div className="flex justify-center">
+        <div className="flex justify-center space-x-4">
+          <button
+            type="button"
+            className="px-4 py-2 text-white bg-gray-400 rounded-lg hover:bg-gray-500"
+            onClick={handleTempSave}
+          >
+            임시 저장
+          </button>
           <button
             type="button"
             className="px-4 py-2 text-white bg-indigo-500 rounded-lg hover:bg-indigo-600"
             onClick={handleSaveAndOpenModal}
           >
-            저장하고 면접 시작
+            저장 및 면접 시작
           </button>
         </div>
       )}
