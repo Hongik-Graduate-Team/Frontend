@@ -6,6 +6,7 @@ import SignUpPage from './components/pages/SignUpPage';
 import HomePage from './components/pages/Homepage/HomePage';
 import InputInfo from './components/pages/Inputinfo/InputInfo';
 import MyPage from './components/pages/MyPage/MyPage';
+import InterviewPreparationPage from "./components/pages/Interview/InterviewPreparationPage";
 import './index.css';
 
 // Kakao SDK 초기화
@@ -21,6 +22,7 @@ function App() {
                     <Route path="/signup" element={<SignUpPage />} />
                     <Route path="/inputinfo" element={<InputInfo />} />
                     <Route path="/mypage" element={<MyPage />} />
+                    <Route path="/interviewpreparation" element={<InterviewPreparationPage />} />
                 </Routes>
             </Router>
         </AuthProvider>
