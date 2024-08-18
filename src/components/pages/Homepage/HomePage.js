@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { useNavigate } from 'react-router-dom'; // for navigation
+import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../../services/AuthContext';
 import MainHeader from '../../molecules/Header/MainHeader';
 import SignInHeader from '../../molecules/Header/SignInHeader';
@@ -9,7 +9,7 @@ import Section3 from './Section3';
 import MainImg from '../../../assets/img/main.png';
 
 const HomePage = () => {
-    const { isLoggedIn } = useContext(AuthContext);
+    const { isLoggedIn } = useContext(AuthContext);  // AuthContext에서 로그인 상태 가져오기
     const navigate = useNavigate();
 
     const handleStartInterview = () => {
@@ -22,6 +22,7 @@ const HomePage = () => {
 
     return (
         <div>
+            {/* 로그인 상태에 따라 다른 헤더를 렌더링 */}
             {isLoggedIn ? <MainHeader /> : <SignInHeader />}
             <div className="flex flex-col items-center w-full">
                 <div className="flex justify-center items-center w-full max-w-7xl">
@@ -50,4 +51,3 @@ const HomePage = () => {
 };
 
 export default HomePage;
-
