@@ -26,7 +26,7 @@ function SignInPage() {
             // 로그인 성공시 토큰 저장 및 로그인 상태 갱신
             const token = response.data.token; // 응답에서 토큰을 받아온다고 가정
             localStorage.setItem('userToken', token);
-            setIsLoggedIn(true);
+            // setIsLoggedIn(true);
 
             navigate('/자소서 페이지'); // 로그인 후 이동할 페이지로 리디렉트
         } catch (error) {
@@ -39,27 +39,6 @@ function SignInPage() {
     const handleKakaoLogin = () => {
         window.location.href = 'https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=c04b061bca7c5b2db4d80b65c8f684fe&redirect_uri=https://namanba.shop/login/oauth2/code/kakao';
     };
-
-    // // URL에서 카카오 토큰 추출 및 처리
-    // useEffect(() => {
-    //     const params = new URLSearchParams(window.location.search);
-    //     const token = params.get('token');
-
-    //     console.log('URL에서 추출된 토큰:', token);
-
-    //     if (token) {
-    //         console.log('카카오 로그인 성공. 토큰:', token);
-
-    //         // 토큰을 localStorage에 저장
-    //         localStorage.setItem('userToken', token);
-
-    //         // 로그인 상태를 true로 설정
-    //         setIsLoggedIn(true);
-
-    //         // 로그인 후 이동할 페이지로 리디렉트 (필요한 페이지로 수정)
-    //         navigate('/');
-    //     }
-    // }, [setIsLoggedIn, navigate]);
 
     return (
         <div className="flex flex-col">
