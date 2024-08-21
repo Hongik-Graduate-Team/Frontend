@@ -6,11 +6,28 @@ import SignInHeader from '../../molecules/Header/SignInHeader';
 import Section1 from './Section1';
 import Section2 from './Section2';
 import Section3 from './Section3';
-import MainImg from '../../../assets/img/main.png';
 
 const HomePage = () => {
+    const { setIsLoggedIn } = useContext(AuthContext); // 로그인 상태 업데이트 함수 가져오기
     const { isLoggedIn } = useContext(AuthContext);  // AuthContext에서 로그인 상태 가져오기
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        const token = params.get('token');
+
+        console.log('URL에서 추출된 토큰:', token);
+
+        if (token) {
+            console.log('카카오 로그인 성공. 토큰:', token);
+
+            // 토큰을 localStorage에 저장
+            localStorage.setItem('userToken', token);
+
+            // 로그인 상태를 true로 설정
+            setIsLoggedIn(true);
+        }
+    }, [setIsLoggedIn, navigate]);
 
     const handleStartInterview = () => {
         if (isLoggedIn) {
