@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../../services/AuthContext';
 import MainHeader from '../../molecules/Header/MainHeader';
@@ -6,6 +6,7 @@ import SignInHeader from '../../molecules/Header/SignInHeader';
 import Section1 from './Section1';
 import Section2 from './Section2';
 import Section3 from './Section3';
+import MainImg from '../../../assets/img/main.png';
 
 const HomePage = () => {
     const { setIsLoggedIn } = useContext(AuthContext); // 로그인 상태 업데이트 함수 가져오기
