@@ -45,6 +45,8 @@ function SignInPage() {
         const params = new URLSearchParams(window.location.search);
         const token = params.get('token');
 
+        console.log('URL에서 추출된 토큰:', token);
+
         if (token) {
             console.log('카카오 로그인 성공. 토큰:', token);
 
@@ -55,7 +57,7 @@ function SignInPage() {
             setIsLoggedIn(true);
 
             // 로그인 후 이동할 페이지로 리디렉트 (필요한 페이지로 수정)
-            navigate('/자소서 페이지');
+            navigate('/');
         }
     }, [setIsLoggedIn, navigate]);
 
