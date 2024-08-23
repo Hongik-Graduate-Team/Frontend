@@ -1,7 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import * as tf from '@tensorflow/tfjs';
-import * as faceLandmarksDetection from '@tensorflow-models/face-landmarks-detection';
+import * as faceapi from 'face-api.js';
 import MainHeader from '../../molecules/Header/MainHeader';
 
 const InterviewPreparationPage = () => {
@@ -16,127 +15,101 @@ const InterviewPreparationPage = () => {
     };
 
     useEffect(() => {
-        const videoElement = videoRef.current;
-
-        // 카메라와 마이크 설정 함수
         const setupMediaDevices = async () => {
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({
                     video: true,
                     audio: {
-                        echoCancellation: true, // 에코 취소 기능 활성화
-                        noiseSuppression: true, // 잡음 억제 기능 활성화
-                        autoGainControl: true, // 자동 게인 조절 기능 활성화
+                        echoCancellation: true,
+                        noiseSuppression: true,
+                        autoGainControl: true,
                     }
                 });
 
-                // 비디오 스트림에서 오디오 트랙 제거
                 const videoStream = new MediaStream(stream.getVideoTracks());
-                if (videoElement) {
-                    videoElement.srcObject = videoStream; // 비디오 요소에 스트림 할당
+                if (videoRef.current) {
+                    const videoElement = videoRef.current;
+                    videoElement.srcObject = videoStream;
+
                     videoElement.onloadedmetadata = () => {
-                        if (videoElement) {
-                            videoElement.play().catch(error => console.error('Video play error:', error)); // play() 호출 및 에러 처리
-                        }
+                        videoElement.play().catch(error => console.error('Video play error:', error));
+
+                        // 모델 로드 후 detectFace 호출
+                        loadFaceApiModel();
                     };
                 }
 
                 setupAudio(stream); // 오디오 설정
-                detectFace(); // 얼굴 인식 설정
             } catch (error) {
                 console.error('Error accessing media devices.', error);
-                alert('카메라와 마이크 권한이 필요합니다.'); // 권한 요청 실패 시 알림
+                alert('카메라와 마이크 권한이 필요합니다.');
             }
         };
 
-        // 오디오 설정 함수
         const setupAudio = (stream) => {
-            const audioContext = new (window.AudioContext || window.webkitAudioContext)(); // 오디오 컨텍스트 생성
-            const analyser = audioContext.createAnalyser(); // 오디오 분석기 생성
-            const microphone = audioContext.createMediaStreamSource(stream); // 마이크 스트림 소스 생성
-            microphone.connect(analyser); // 마이크와 분석기 연결
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const analyser = audioContext.createAnalyser();
+            const microphone = audioContext.createMediaStreamSource(stream);
+            microphone.connect(analyser);
 
-            // 마이크를 오디오 출력 장치(스피커)로 연결하지 않음
-
-            analyser.fftSize = 512; // FFT 크기 설정
+            analyser.fftSize = 512;
             const bufferLength = analyser.frequencyBinCount;
             const dataArray = new Uint8Array(bufferLength);
 
-            // 음성 검출 함수
             const detectVoice = () => {
-                analyser.getByteFrequencyData(dataArray); // 주파수 데이터 가져오기
-                const sum = dataArray.reduce((a, b) => a + b, 0); // 모든 주파수 데이터 합계
-                const average = sum / dataArray.length; // 평균 계산
+                analyser.getByteFrequencyData(dataArray);
+                const sum = dataArray.reduce((a, b) => a + b, 0);
+                const average = sum / dataArray.length;
 
-                // 음성 검출 여부 설정
-                if (average > 30) { // 적절한 임계값 설정 (테스트 후 조정 가능)
+                if (average > 30) {
                     setVoiceDetected(true);
                 } else {
                     setVoiceDetected(false);
                 }
 
-                requestAnimationFrame(detectVoice); // 다음 프레임에 detectVoice 함수 호출
+                requestAnimationFrame(detectVoice);
             };
 
-            detectVoice(); // 음성 검출 시작
+            detectVoice();
         };
 
-        // 얼굴 인식 설정 함수
-        const detectFace = async () => {
-            try {
-                await tf.setBackend('wasm'); // WASM 백엔드로 설정
-                await tf.ready();
-                console.log('TensorFlow initialized with WASM backend');
-              } catch (error) {
-                console.error('Error initializing TensorFlow:', error);
-                await tf.setBackend('cpu'); // WASM 실패 시 CPU 백엔드로 전환
-              }
+        const loadFaceApiModel = async () => {
+            // TinyFaceDetector 모델 로드
+            await faceapi.nets.tinyFaceDetector.loadFromUri('/models');
 
-            // MediaPipeFaceMesh 모델을 사용하여 얼굴 감지기 생성
-            const model = await faceLandmarksDetection.createDetector(faceLandmarksDetection.SupportedModels.MediaPipeFaceMesh, {
-                runtime: 'mediapipe',
-                refineLandmarks: true,
-                solutionPath: `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh`
-            });
+            // 모델 로드 후 얼굴 인식 시작
+            detectFace();
+        };
+
+        const detectFace = async () => {
+            const videoElement = videoRef.current;
 
             const detect = async () => {
-                if (videoElement.readyState >= 2) { // 비디오가 준비되었을 때
-                    const predictions = await model.estimateFaces(videoElement);
-                    if (predictions.length > 0) {
-                        setFaceDetected(true); // 얼굴 감지됨
-                    } else {
-                        setFaceDetected(false); // 얼굴 감지되지 않음
-                    }
+                if (videoElement && videoElement.readyState >= 2) {
+                    const detections = await faceapi.detectAllFaces(videoElement, new faceapi.TinyFaceDetectorOptions());
 
-                    const canvas = canvasRef.current;
-                    const ctx = canvas.getContext('2d');
-                    if (ctx) {
-                        ctx.clearRect(0, 0, canvas.width, canvas.height);
-                        predictions.forEach(prediction => {
-                            const keypoints = prediction.keypoints;
-                            keypoints.forEach(({ x, y }) => {
-                                ctx.beginPath();
-                                ctx.arc(x * canvas.width, y * canvas.height, 2, 0, 2 * Math.PI);
-                                ctx.fillStyle = 'red';
-                                ctx.fill();
-                            });
-                        });
+                    if (detections.length > 0) {
+                        setFaceDetected(true);
+                    } else {
+                        setFaceDetected(false);
                     }
                 }
-                requestAnimationFrame(detect); // 다음 프레임에 detect 함수 호출
+
+                requestAnimationFrame(detect);
             };
 
-            detect(); // 얼굴 감지 시작
+            detect();
         };
 
-        setupMediaDevices(); // 미디어 장치 설정 시작
+        setupMediaDevices();
 
         return () => {
+            const videoElement = videoRef.current;
             if (videoElement && videoElement.srcObject) {
                 const stream = videoElement.srcObject;
                 const tracks = stream.getTracks();
-                tracks.forEach(track => track.stop()); // 모든 미디어 트랙 중지
-                videoElement.srcObject = null; // srcObject 제거
+                tracks.forEach(track => track.stop());
+                videoElement.srcObject = null;
             }
         };
     }, []);
@@ -171,4 +144,4 @@ const InterviewPreparationPage = () => {
     );
 };
 
-export default InterviewPreparationPage; // 컴포넌트 내보내기
+export default InterviewPreparationPage;
