@@ -9,6 +9,7 @@ import NavigationButtons from './NavButton';
 function InputInfo() {
   const [page, setPage] = useState(1);
   const [isFormChanged, setIsFormChanged] = useState(false);
+  const [kakaoToken, setKakaoToken] = useState(null);
   
   const [resumeData, setResumeData] = useState({
     position: '',
@@ -36,10 +37,17 @@ function InputInfo() {
 
   // 컴포넌트가 마운트 될 때 데이터 불러오기
   useEffect(() => {
+    const token = localStorage.getItem('userToken');  // 로컬 스토리지에서 토큰 가져오기
+    setKakaoToken(token);
+
     // 초기 데이터를 API에서 불러오는 함수
     const loadData = async () => {
       try {
-        const response = await axios.get('https://namanba.shop/api/portfolio');
+        const response = await axios.get('https://namanba.shop/api/portfolio', {
+          headers: {
+            Authorization: `Bearer ${token}`  // 토큰을 헤더에 포함
+          }
+        });
         const data = response.data;
 
         setResumeData({
@@ -61,6 +69,7 @@ function InputInfo() {
     loadData();
   }, []);
 
+  // 페이지가 바뀔 때 경고창 표시
   useEffect(() => {
     const handleBeforeUnload = (e) => {
       if (isFormChanged) {
@@ -81,7 +90,17 @@ function InputInfo() {
    // 일반적인 입력값 변경 핸들러
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setResumeData({ ...resumeData, [name]: value });
+    if (name === "score" || name === "total") {   // 학점(gpa) 필드 업데이트
+      setResumeData((prevData) => ({
+          ...prevData,
+          gpa: {
+              ...prevData.gpa,
+              [name]: value,
+          },
+      }));
+  } else {    // 다른 일반적인 필드 업데이트
+      setResumeData({ ...resumeData, [name]: value });
+  }
     setIsFormChanged(true);
   };
 
@@ -140,34 +159,36 @@ function InputInfo() {
     // 필수 섹션 검사
     for (const section of requiredSections) {
       if (typeof resumeData[section] === 'string' && resumeData[section].trim() === '') {
-        alert(`모든 필수 항목을 입력해 주세요. (${section})`);
+        alert(`모든 필수 항목을 입력해 주세요.`);
         return false;
       }
   
       if (Array.isArray(resumeData[section])) {
         for (const item of resumeData[section]) {
-          for (const field in item) {
-            if (item[field] === null || item[field].trim() === '') {
-              alert(`모든 항목을 채워 주세요.`);
-              return false;
-            }
+          if (!item.question || item.question.trim() === '' || !item.answer || item.answer.trim() === '') {
+            alert(`모든 필수 항목을 입력해 주세요.`);
+            return false;
           }
         }
       }
     }
   
-    // 선택 섹션 검사
-    const optionalSections = ['majors', 'gpa', 'careers', 'stacks', 'awards', 'certs', 'languageCerts'];
-  
-    for (const section of optionalSections) {
-      const isEmpty = resumeData[section].every(item =>
-        Object.values(item).every(value => value === null || value.trim() === '')
+  // 선택 섹션 검사
+  const optionalSections = ['majors', 'gpa', 'careers', 'stacks', 'awards', 'certs', 'languageCerts'];
+
+  for (const section of optionalSections) {
+    if (Array.isArray(resumeData[section])) {
+      const isSectionEmpty = resumeData[section].every(item =>
+        Object.values(item).every(value => value === null || (typeof value === 'string' && value.trim() === ''))
       );
-  
-      if (!isEmpty) {
+
+      if (!isSectionEmpty) {
         for (const item of resumeData[section]) {
-          for (const field in item) {
-            if (item[field] === null || item[field].trim() === '') {
+          // `resumeId`와 같은 불필요한 필드는 검증에서 제외
+          const keysToValidate = Object.keys(item).filter(key => !key.includes('Id'));
+
+          for (const key of keysToValidate) {
+            if (item[key] === null || (typeof item[key] === 'string' && item[key].trim() === '')) {
               alert(`모든 항목을 채워 주세요.`);
               return false;
             }
@@ -175,6 +196,7 @@ function InputInfo() {
         }
       }
     }
+  }
   
     return true;
   };
@@ -183,9 +205,17 @@ function InputInfo() {
     const createOrUpdatePromises = data.map(item => {
       const id = item.resumeId || item.majorId || item.careerId || item.stackId || item.awardId || item.certId || item.languageCertId;
       if (id) {
-        return axios.put(`https://namanba.shop/api/${endpoint}/${id}`, item);
+        return axios.put(`https://namanba.shop/api/${endpoint}/${id}`, item, {
+          headers: {
+            Authorization: `Bearer ${kakaoToken}`  // 요청마다 토큰 포함
+          }
+        });
       } else {
-        return axios.post(`https://namanba.shop/api/${endpoint}`, item);
+        return axios.post(`https://namanba.shop/api/${endpoint}`, item, {
+          headers: {
+            Authorization: `Bearer ${kakaoToken}`  // 요청마다 토큰 포함
+          }
+        });
       }
     });
     return createOrUpdatePromises;
@@ -194,7 +224,12 @@ function InputInfo() {
   const apiDeleteCalls = async (data, endpoint) => {
     const ids = data.map(item => item.resumeId || item.majorId || item.careerId || item.stackId || item.awardId || item.certId || item.languageCertId).filter(id => id);
     if (ids.length > 0) {
-      await axios.delete(`https://namanba.shop/api/${endpoint}`, { data: ids });
+      await axios.delete(`https://namanba.shop/api/${endpoint}`, {
+        data: ids,
+        headers: {
+          Authorization: `Bearer ${kakaoToken}`  // 삭제 요청에도 토큰 포함
+        }
+      });
     }
   };
   
@@ -231,7 +266,14 @@ function InputInfo() {
         const endpoint = apiEndpoints[section];
 
         if (section === 'position') {
-          allPromises.push(axios.put(`https://namanba.shop/api/${endpoint}`, null, { params: { name: resumeData[section] } }));
+          allPromises.push(
+            axios.put(`https://namanba.shop/api/${endpoint}`, null, {
+              headers: {
+                Authorization: `Bearer ${kakaoToken}`  // 모든 요청에 토큰 추가
+              },
+              params: { name: resumeData[section] }
+            })
+          );
         } else {
           const createOrUpdatePromises = await apiCalls(resumeData[section], endpoint);
           const deletePromises = await apiDeleteCalls(deletedItems[section], endpoint);
@@ -253,7 +295,7 @@ function InputInfo() {
 
   return (
     <div>
-      <MainHeader />
+      <MainHeader isFormChanged={isFormChanged} />
       <form onSubmit={handleSubmit} className="max-w-4xl mx-auto mb-10 mt-5 p-3">
         {page === 1 && (
           <PageOne
