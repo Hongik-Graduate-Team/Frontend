@@ -20,9 +20,16 @@ function MainHeader({ isFormChanged }) {
 
 
     const handleLogout = () => {
+        if (isFormChanged) {
+            const confirmLogout = window.confirm('저장되지 않은 변경 사항이 있습니다. 로그아웃하시겠습니까?');
+            if (!confirmLogout) {
+                return;
+            }
+        }
+
         localStorage.removeItem('userToken'); // 토큰 삭제
         setIsLoggedIn(false); // 로그아웃 시 로그인 상태를 갱신
-        handlePageNavigation('/') // 홈 페이지로 이동
+        navigate('/') // 홈 페이지로 이동
     };
 
     return (
