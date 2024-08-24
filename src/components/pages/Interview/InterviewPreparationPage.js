@@ -15,6 +15,8 @@ const InterviewPreparationPage = () => {
     };
 
     useEffect(() => {
+        const videoElement = videoRef.current; // videoRef.current의 값을 저장합니다.
+
         const setupMediaDevices = async () => {
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({
@@ -27,7 +29,6 @@ const InterviewPreparationPage = () => {
                 });
 
                 const videoStream = new MediaStream(stream.getVideoTracks());
-                const videoElement = videoRef.current;
 
                 if (videoElement) {
                     videoElement.srcObject = videoStream;
@@ -83,8 +84,6 @@ const InterviewPreparationPage = () => {
         };
 
         const detectFace = async () => {
-            const videoElement = videoRef.current;
-
             const detect = async () => {
                 if (videoElement && videoElement.readyState >= 2) {
                     const detections = await faceapi.detectAllFaces(videoElement, new faceapi.TinyFaceDetectorOptions());
@@ -105,7 +104,6 @@ const InterviewPreparationPage = () => {
         setupMediaDevices();
 
         return () => {
-            const videoElement = videoRef.current;
             if (videoElement && videoElement.srcObject) {
                 const stream = videoElement.srcObject;
                 const tracks = stream.getTracks();
@@ -114,6 +112,7 @@ const InterviewPreparationPage = () => {
             }
         };
     }, [videoRef]); // videoRef를 의존성 배열에 추가
+
 
     // useEffect(() => {
     //     const setupMediaDevices = async () => {
