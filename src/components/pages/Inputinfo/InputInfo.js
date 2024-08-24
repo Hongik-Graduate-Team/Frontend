@@ -69,7 +69,7 @@ function InputInfo() {
     loadData();
   }, []);
 
-  // 페이지가 바뀔 때 경고창 표시
+  // 페이지가 이동 시 경고창 표시
   useEffect(() => {
     const handleBeforeUnload = (e) => {
       if (isFormChanged) {
@@ -79,11 +79,22 @@ function InputInfo() {
         return confirmationMessage;
       }
     };
-
+  
+    const handlePopState = (e) => {
+      if (isFormChanged) {
+        const confirmLeave = window.confirm('저장되지 않은 변경 사항이 있습니다. 정말로 페이지를 떠나시겠습니까?');
+        if (!confirmLeave) {
+          window.history.pushState(null, '', window.location.href);
+        }
+      }
+    };
+  
     window.addEventListener('beforeunload', handleBeforeUnload);
-
+    window.addEventListener('popstate', handlePopState);
+  
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener('popstate', handlePopState);
     };
   }, [isFormChanged]);
 
