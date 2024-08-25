@@ -8,14 +8,20 @@ function EditProfile() {
         email: '',
         password: ''
     });
-
     const [editingField, setEditingField] = useState(null);
+    const [kakaoToken, setKakaoToken] = useState(null);
 
     useEffect(() => {
-        // 로그인 한 사용자의 정보를 가져와서 userData 상태를 설정
+        const token = localStorage.getItem('userToken');
+        setKakaoToken(token);
+
         const fetchUserData = async () => {
             try {
-                const response = await axios.get('/user'); // 실제 API 경로로 변경
+                const response = await axios.get('/api/user', {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
                 setUserData(response.data);
             } catch (error) {
                 console.error('사용자 정보 로드 오류:', error);
@@ -33,20 +39,26 @@ function EditProfile() {
         setEditingField(field);
     };
 
-    const handleSave = (field) => {
-        // 서버로 수정된 데이터 전송 로직 추가
-        setEditingField(null);
+    const handleSave = async (field) => {
+        try {
+            await axios.put(`/api/user/${field}`, { [field]: userData[field] }, {
+                headers: {
+                    Authorization: `Bearer ${kakaoToken}`
+                }
+            });
+            setEditingField(null);
+        } catch (error) {
+            console.error('저장 오류:', error);
+        }
     };
 
     const handleCancel = () => {
-        // 편집 취소 로직 추가 (예: 원래 데이터를 다시 불러오기)
         setEditingField(null);
     };
 
     return (
         <div>
             <h2 className="text-2xl font-bold mb-4">내 정보 수정</h2>
-            {/* ID 필드는 항상 비활성화 */}
             <div className="mb-4 flex flex-col sm:flex-row sm:items-center">
                 <label className="block text-m font-medium leading-6 text-gray-900 w-full sm:w-1/4 mb-2 sm:mb-0">
                     아이디
@@ -60,8 +72,6 @@ function EditProfile() {
                     />
                 </div>
             </div>
-
-            {/* 다른 필드 처리 */}
             {['name', 'email', 'password'].map((field) => (
                 <div key={field} className="mb-4 flex flex-col sm:flex-row sm:items-center">
                     <label className="block text-m font-medium leading-6 text-gray-900 w-full sm:w-1/4 mb-2 sm:mb-0">
@@ -103,3 +113,4 @@ function EditProfile() {
 }
 
 export default EditProfile;
+

@@ -1,23 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-// GET /api/interviews - 사용자별 면접 목록 조회
-// GET /api/interviews/:id - 특정 면접의 상세 정보 조회
-
 function InterviewDetails({ interviewId }) {
     const [interviewDetails, setInterviewDetails] = useState(null);
+    const [setKakaoToken] = useState(null);
 
     useEffect(() => {
+        const token = localStorage.getItem('userToken');
+        setKakaoToken(token);
+
         const fetchInterviewDetails = async () => {
             try {
-                const response = await axios.get(`/api/mypage/interview/${interviewId}`);
-                setInterviewDetails(response.data.data); // 응답 데이터의 'data' 속성 추출
+                const response = await axios.get(`/api/mypage/interview/${interviewId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                setInterviewDetails(response.data.data);
             } catch (error) {
                 console.error('Error fetching interview details:', error);
             }
         };
         fetchInterviewDetails();
-    }, [interviewId]);
+    }, [interviewId,setKakaoToken]);
 
     if (!interviewDetails) {
         return <div>Loading...</div>;
@@ -44,3 +49,4 @@ function InterviewDetails({ interviewId }) {
 }
 
 export default InterviewDetails;
+
