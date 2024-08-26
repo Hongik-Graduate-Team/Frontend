@@ -1,5 +1,5 @@
 import React, { useState , useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import MainHeader from '../../molecules/Header/MainHeader';
 import PageOne from './Page1';
@@ -34,7 +34,6 @@ function InputInfo() {
   });
 
   const navigate = useNavigate();
-  const location = useLocation();
 
   // 컴포넌트가 마운트 될 때 데이터 불러오기
   useEffect(() => {
@@ -85,13 +84,11 @@ function InputInfo() {
       if (isFormChanged) {
         const confirmLeave = window.confirm('저장되지 않은 변경 사항이 있습니다. 정말로 페이지를 떠나시겠습니까?');
         if (!confirmLeave) {
-          navigate(location.pathname);
-        } else {
-          navigate(-1);
+          // 뒤로가기를 막기 위해 현재 URL을 다시 추가합니다.
+          window.history.pushState(null, '', window.location.href);
         }
       }
     };
-
 
     window.addEventListener('beforeunload', handleBeforeUnload);
     window.addEventListener('popstate', handlePopState);
@@ -100,7 +97,7 @@ function InputInfo() {
       window.removeEventListener('beforeunload', handleBeforeUnload);
       window.removeEventListener('popstate', handlePopState);
     };
-  }, [isFormChanged, navigate, location.pathname]);
+  }, [isFormChanged]);
 
    // 일반적인 입력값 변경 핸들러
   const handleChange = (e) => {
