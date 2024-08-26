@@ -1,5 +1,5 @@
 import React, { useState , useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import MainHeader from '../../molecules/Header/MainHeader';
 import PageOne from './Page1';
@@ -34,6 +34,7 @@ function InputInfo() {
   });
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   // 컴포넌트가 마운트 될 때 데이터 불러오기
   useEffect(() => {
@@ -75,7 +76,7 @@ function InputInfo() {
       if (isFormChanged) {
         const confirmationMessage = '저장되지 않은 변경 사항이 있습니다. 정말로 페이지를 떠나시겠습니까?';
         e.preventDefault();
-        e.returnValue = confirmationMessage; // 대부분의 브라우저에서 필요
+        e.returnValue = confirmationMessage;
         return confirmationMessage;
       }
     };
@@ -84,12 +85,13 @@ function InputInfo() {
       if (isFormChanged) {
         const confirmLeave = window.confirm('저장되지 않은 변경 사항이 있습니다. 정말로 페이지를 떠나시겠습니까?');
         if (!confirmLeave) {
-          window.history.pushState(null, '', window.location.href); // 현재 위치 유지
+          navigate(location.pathname);
         } else {
-          navigate(-1); // 뒤로 가기
+          navigate(-1);
         }
       }
     };
+
 
     window.addEventListener('beforeunload', handleBeforeUnload);
     window.addEventListener('popstate', handlePopState);
@@ -98,7 +100,7 @@ function InputInfo() {
       window.removeEventListener('beforeunload', handleBeforeUnload);
       window.removeEventListener('popstate', handlePopState);
     };
-  }, [isFormChanged, navigate]);
+  }, [isFormChanged, navigate, location.pathname]);
 
    // 일반적인 입력값 변경 핸들러
   const handleChange = (e) => {
@@ -214,7 +216,7 @@ function InputInfo() {
     // GPA 섹션 검사
     const { score, total } = resumeData.gpa;
     if ((score && !total) || (!score && total)) {
-      alert('모든 필수 항목을 입력해 주세요.');
+      alert('모든 항목을 입력해 주세요.');
       return false;
     }
   
