@@ -90,6 +90,8 @@ function InputInfo() {
       }
     };
 
+    window.history.pushState(null, '', window.location.href);
+
     window.addEventListener('beforeunload', handleBeforeUnload);
     window.addEventListener('popstate', handlePopState);
 
