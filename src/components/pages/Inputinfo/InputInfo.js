@@ -69,34 +69,36 @@ function InputInfo() {
     loadData();
   }, []);
 
-  // 페이지가 이동 시 경고창 표시
+  // 페이지 이동 시 경고창 표시
   useEffect(() => {
     const handleBeforeUnload = (e) => {
       if (isFormChanged) {
         const confirmationMessage = '저장되지 않은 변경 사항이 있습니다. 정말로 페이지를 떠나시겠습니까?';
         e.preventDefault();
-        e.returnValue = confirmationMessage;
+        e.returnValue = confirmationMessage; // 대부분의 브라우저에서 필요
         return confirmationMessage;
       }
     };
-  
+
     const handlePopState = (e) => {
       if (isFormChanged) {
         const confirmLeave = window.confirm('저장되지 않은 변경 사항이 있습니다. 정말로 페이지를 떠나시겠습니까?');
         if (!confirmLeave) {
-          window.history.pushState(null, '', window.location.href);
+          window.history.pushState(null, '', window.location.href); // 현재 위치 유지
+        } else {
+          navigate(-1); // 뒤로 가기
         }
       }
     };
-  
+
     window.addEventListener('beforeunload', handleBeforeUnload);
     window.addEventListener('popstate', handlePopState);
-  
+
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
       window.removeEventListener('popstate', handlePopState);
     };
-  }, [isFormChanged]);
+  }, [isFormChanged, navigate]);
 
    // 일반적인 입력값 변경 핸들러
   const handleChange = (e) => {
@@ -185,29 +187,36 @@ function InputInfo() {
     }
   
   // 선택 섹션 검사
-  const optionalSections = ['majors', 'gpa', 'careers', 'stacks', 'awards', 'certs', 'languageCerts'];
+    const optionalSections = ['majors', 'careers', 'stacks', 'awards', 'certs', 'languageCerts'];
 
-  for (const section of optionalSections) {
-    if (Array.isArray(resumeData[section])) {
-      const isSectionEmpty = resumeData[section].every(item =>
-        Object.values(item).every(value => value === null || (typeof value === 'string' && value.trim() === ''))
-      );
+    for (const section of optionalSections) {
+      if (Array.isArray(resumeData[section])) {
+        const isSectionEmpty = resumeData[section].every(item =>
+          Object.values(item).every(value => value === null || (typeof value === 'string' && value.trim() === ''))
+        );
 
-      if (!isSectionEmpty) {
-        for (const item of resumeData[section]) {
-          // `resumeId`와 같은 불필요한 필드는 검증에서 제외
-          const keysToValidate = Object.keys(item).filter(key => !key.includes('Id'));
+        if (!isSectionEmpty) {
+          for (const item of resumeData[section]) {
+            // `resumeId`와 같은 불필요한 필드는 검증에서 제외
+            const keysToValidate = Object.keys(item).filter(key => !key.includes('Id'));
 
-          for (const key of keysToValidate) {
-            if (item[key] === null || (typeof item[key] === 'string' && item[key].trim() === '')) {
-              alert(`모든 항목을 채워 주세요.`);
-              return false;
+           for (const key of keysToValidate) {
+             if (item[key] === null || (typeof item[key] === 'string' && item[key].trim() === '')) {
+                alert(`모든 항목을 입력해 주세요.`);
+                return false;
+              }
             }
           }
         }
       }
     }
-  }
+
+    // GPA 섹션 검사
+    const { score, total } = resumeData.gpa;
+    if ((score && !total) || (!score && total)) {
+      alert('모든 필수 항목을 입력해 주세요.');
+      return false;
+    }
   
     return true;
   };
