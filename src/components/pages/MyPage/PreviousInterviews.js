@@ -5,41 +5,41 @@ import axios from 'axios';
 
 function PreviousInterviews({ onSelectInterview }) {
     const [interviews, setInterviews] = useState([]);
+    const [setKakaoToken] = useState(null);
 
     useEffect(() => {
+        const token = localStorage.getItem('userToken');
+        setKakaoToken(token);
+
         const fetchInterviews = async () => {
             try {
-                const response = await axios.get('/api/mypage/interview');
-                console.log('API Response:', response.data); // 응답 데이터 로그 출력
-                if (Array.isArray(response.data)) {
-                    setInterviews(response.data);
-                } else {
-                    console.error('API 응답이 배열이 아닙니다.');
-                }
+                const response = await axios.get('/api/mypage/interview', {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                setInterviews(response.data.data);
             } catch (error) {
-                console.error('Error fetching interviews:', error);
+                console.error('면접 목록 로드 오류:', error);
             }
         };
         fetchInterviews();
-    }, []);
+    }, [setKakaoToken]);
+
+    if (interviews.length === 0) {
+        return <div>No interviews found.</div>;
+    }
 
     return (
-        <div>
-            <h2 className="text-2xl font-bold mb-4">이전 면접 조회</h2>
-            <ul>
-                {Array.isArray(interviews) && interviews.map((interview) => (
-                    <li
-                        key={interview.interviewId}
-                        onClick={() => onSelectInterview(interview.interviewId)}
-                        className="p-4 border-b cursor-pointer hover:bg-gray-100"
-                    >
-                        <h3 className="text-xl font-semibold">{interview.interviewTitle}</h3>
-                        <p>직군: {interview.Position}</p>
-                        <p>날짜: {new Date(interview.date).toLocaleDateString()}</p>
-                    </li>
-                ))}
-            </ul>
-        </div>
+        <ul>
+            {interviews.map((interview) => (
+                <li key={interview.id} onClick={() => onSelectInterview(interview.id)}>
+                    <div>{interview.company}</div>
+                    <div>{interview.position}</div>
+                    <div>{new Date(interview.date).toLocaleDateString()}</div>
+                </li>
+            ))}
+        </ul>
     );
 }
 
