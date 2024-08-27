@@ -39,6 +39,7 @@ function InputInfo() {
   useEffect(() => {
     const token = localStorage.getItem('userToken');  // 로컬 스토리지에서 토큰 가져오기
     setKakaoToken(token);
+    console.log(token);
 
     // 초기 데이터를 API에서 불러오는 함수
     const loadData = async () => {
