@@ -15,11 +15,11 @@ function InputInfo() {
     position: '',
     questions: [{ resumeId: null, question: '', answer: '' }],
     majors: [{ majorId: null, majorName: '' }] ,
-    gpa: { score: '', total: '' },
+    gpas: { score: '', total: '' },
     careers: [{ careerId: null, careerType: '', content: '', startDate: null, endDate: null }],
     stacks: [{ stackId: null, stackLanguage: '', stackLevel: '' }],
     awards: [{ awardId: null, awardType: '', awardPrize: '' }],
-    certs: [{ certId: null, certType: '', certDate: null }],
+    certifications: [{ certId: null, certType: '', certDate: null }],
     languageCerts: [{ languageCertId: null, languageCertType: '', languageCertLevel: '', languageCertDate: null }]
   });
 
@@ -39,7 +39,6 @@ function InputInfo() {
   useEffect(() => {
     const token = localStorage.getItem('userToken');  // 로컬 스토리지에서 토큰 가져오기
     setKakaoToken(token);
-    console.log(token);
 
     // 초기 데이터를 API에서 불러오는 함수
     const loadData = async () => {
@@ -55,11 +54,11 @@ function InputInfo() {
           position: data.position || '',
           questions: data.questions || [{ resumeId: null, question: '', answer: '' }],
           majors: data.majors || [{ majorId: null, majorName: '' }],
-          gpa: data.gpa || { score: '', total: '' },
+          gpas: data.gpa || { score: '', total: '' },
           careers: data.careers || [{ careerId: null, careerType: '', content: '', startDate: null, endDate: null }],
           stacks: data.stacks || [{ stackId: null, stackLanguage: '', stackLevel: '' }],
           awards: data.awards || [{ awardId: null, awardType: '', awardPrize: '' }],
-          certs: data.certs || [{ certId: null, certType: '', certDate: null }],
+          certifications: data.certs || [{ certId: null, certType: '', certDate: null }],
           languageCerts: data.languageCerts || [{ languageCertId: null, languageCertType: '', languageCertLevel: '', languageCertDate: null }]
         });
       } catch (error) {
@@ -108,8 +107,8 @@ function InputInfo() {
     if (name === "score" || name === "total") {   // 학점(gpa) 필드 업데이트
       setResumeData((prevData) => ({
           ...prevData,
-          gpa: {
-              ...prevData.gpa,
+          gpas: {
+              ...prevData.gpas,
               [name]: value,
           },
       }));
@@ -214,7 +213,7 @@ function InputInfo() {
     }
 
     // GPA 섹션 검사
-    const { score, total } = resumeData.gpa;
+    const { score, total } = resumeData.gpas;
     if ((score && !total) || (!score && total)) {
       alert('모든 항목을 입력해 주세요.');
       return false;
@@ -297,6 +296,7 @@ function InputInfo() {
             })
           );
         } else {
+          console.log(resumeData);
           const createOrUpdatePromises = await apiCalls(resumeData[section], endpoint);
           const deletePromises = await apiDeleteCalls(deletedItems[section], endpoint);
           allPromises = [...allPromises, ...createOrUpdatePromises, ...deletePromises];

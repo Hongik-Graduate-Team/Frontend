@@ -88,7 +88,7 @@ function PageOne({ resumeData, handleChange, handleItemChange, addInputField, de
                 type="number"
                 id="score"
                 name="score"
-                value={resumeData.gpa.score}
+                value={resumeData.gpas.score}
                 onChange={handleChange}
                 placeholder="취득 학점"
                 className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
@@ -98,7 +98,7 @@ function PageOne({ resumeData, handleChange, handleItemChange, addInputField, de
                 type="number"
                 id="total"
                 name="total"
-                value={resumeData.gpa.total}
+                value={resumeData.gpas.total}
                 onChange={handleChange}
                 placeholder="만점"
                 className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
@@ -277,36 +277,36 @@ function PageOne({ resumeData, handleChange, handleItemChange, addInputField, de
           <h3 className="text-left text-lg font-semibold leading-9 tracking-tight text-gray-900">자격증</h3>
           <button
             type="button"
-            onClick={() => addInputField('certs', { certId: null, certType: '', certDate: null })}
+            onClick={() => addInputField('certifications', { certId: null, certType: '', certDate: null })}
           >
             <img src={addIcon} alt="추가 아이콘" className='mt-2 w-5'/>
           </button>
         </div>
-        {resumeData.certs && resumeData.certs.map((cert, index) => (
+        {resumeData.certifications && resumeData.certifications.map((certification, index) => (
           <div key={index} className="mb-3 flex items-center">
             <div className="flex w-2/3 space-x-4">
               <input
                 type="text"
                 id={`certType-${index}`}
                 name="certType"
-                value={cert.certType}
-                onChange={(e) => handleItemChange('certs', index, e)}
+                value={certification.certType}
+                onChange={(e) => handleItemChange('certifications', index, e)}
                 placeholder="자격증명"
                 className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
               />
               <DatePicker
-                selected={cert.certDate}
-                onChange={(date) => handleDateChange('certs', index, 'certDate', date)}
+                selected={certification.certDate}
+                onChange={(date) => handleDateChange('certifications', index, 'certDate', date)}
                 locale={ko}
                 dateFormat="yyyy/MM/dd"
                 className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
                 placeholderText="취득일"
               />
             </div>
-            {resumeData.certs.length > 1 && (
+            {resumeData.certifications.length > 1 && (
               <button
                 type="button"
-                onClick={() => deleteInputField('certs', index)}
+                onClick={() => deleteInputField('certifications', index)}
               >
                 <img src={deleteIcon} alt="삭제 아이콘" className='mt-1 ml-4 w-5'/>
               </button>
