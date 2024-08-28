@@ -19,7 +19,8 @@ function InputInfo() {
     careers: [{ careerId: null, careerType: '', content: '', startDate: null, endDate: null }],
     stacks: [{ stackId: null, stackLanguage: '', stackLevel: '' }],
     awards: [{ awardId: null, awardType: '', awardPrize: '' }],
-    certifications: [{ certId: null, certType: '', certDate: null }],
+    
+    ifications: [{ certId: null, certType: '', certDate: null }],
     languageCerts: [{ languageCertId: null, languageCertType: '', languageCertLevel: '', languageCertDate: null }]
   });
 
@@ -29,7 +30,7 @@ function InputInfo() {
     careers: [],
     stacks: [],
     awards: [],
-    certs: [],
+    certifications: [],
     languageCerts: []
   });
 
@@ -58,7 +59,7 @@ function InputInfo() {
           careers: data.careers || [{ careerId: null, careerType: '', content: '', startDate: null, endDate: null }],
           stacks: data.stacks || [{ stackId: null, stackLanguage: '', stackLevel: '' }],
           awards: data.awards || [{ awardId: null, awardType: '', awardPrize: '' }],
-          certifications: data.certs || [{ certId: null, certType: '', certDate: null }],
+          certifications: data.certifications || [{ certId: null, certType: '', certDate: null }],
           languageCerts: data.languageCerts || [{ languageCertId: null, languageCertType: '', languageCertLevel: '', languageCertDate: null }]
         });
       } catch (error) {
@@ -188,7 +189,7 @@ function InputInfo() {
     }
   
   // 선택 섹션 검사
-    const optionalSections = ['majors', 'careers', 'stacks', 'awards', 'certs', 'languageCerts'];
+    const optionalSections = ['majors', 'careers', 'stacks', 'awards', 'certifications', 'languageCerts'];
 
     for (const section of optionalSections) {
       if (Array.isArray(resumeData[section])) {
@@ -261,11 +262,11 @@ function InputInfo() {
         'position',
         'questions',
         'majors',
-        'gpa',
+        'gpas',
         'careers',
         'stacks',
         'awards',
-        'certs',
+        'certifications',
         'languageCerts'
       ];
   
@@ -273,11 +274,11 @@ function InputInfo() {
         position: 'portfolio/position',
         questions: 'questions',
         majors: 'majors',
-        gpa: 'gpas',
+        gpas: 'gpas',
         careers: 'careers',
         stacks: 'stacks',
         awards: 'awards',
-        certs: 'certifications',
+        certifications: 'certifications',
         languageCerts: 'language-certs'
       };
   
