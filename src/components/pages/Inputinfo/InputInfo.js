@@ -289,7 +289,7 @@ function InputInfo() {
 
         if (section === 'position') {
           allPromises.push(
-            axios.put(`https://namanba.shop/api/${endpoint}`, null, {
+            axios.put(`https://namanba.shop/api/portfolio/position`, null, {
               headers: {
                 Authorization: `Bearer ${kakaoToken}`  // 모든 요청에 토큰 추가
               },
