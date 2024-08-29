@@ -309,7 +309,7 @@ function InputInfo() {
   
       // 'position' 업데이트 처리
       allPromises.push(
-        axios.put('https://namanba.shop/api/portfolio/position', null, {
+        axios.post('https://namanba.shop/api/portfolio/position', null, {
           headers: {
             Authorization: `Bearer ${kakaoToken}`,
             'Content-Type': 'application/json',
