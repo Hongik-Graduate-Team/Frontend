@@ -281,7 +281,7 @@ function InputInfo() {
   
       const apiEndpoints = {
         position: 'portfolio/position',
-        questions: 'questions',
+        questions: 'resumes',
         majors: 'majors',
         gpas: 'gpas',
         careers: 'careers',
@@ -314,7 +314,7 @@ function InputInfo() {
             Authorization: `Bearer ${kakaoToken}`,
             'Content-Type': 'application/json',
           },
-          params: { name: resumeData.position }
+          params: { positionName: resumeData.position }
         })
       );
   
