@@ -234,7 +234,6 @@ function InputInfo() {
         return axios.patch(`https://namanba.shop/api/${endpoint}/${itemId}`, item, {
           headers: {
             Authorization: `Bearer ${kakaoToken}`,
-            'Content-Type': 'application/json',
           }
         });
       } else {
@@ -243,10 +242,9 @@ function InputInfo() {
             delete item[key];
           }
           });
-        return axios.post(`https://namanba.shop/api/${endpoint}`, item, {
+        return axios.post(`https://namanba.shop/api/${endpoint}`, data, {
           headers: {
             Authorization: `Bearer ${kakaoToken}`,
-            'Content-Type': 'application/json',
           }
         });
       }
@@ -258,7 +256,6 @@ function InputInfo() {
       return axios.delete(`https://namanba.shop/api/${endpoint}/${item.resumeId || item.majorId || item.careerId || item.stackId || item.awardId || item.certId || item.languageCertId}`, {
         headers: {
           Authorization: `Bearer ${kakaoToken}`,
-          'Content-Type': 'application/json',
         }
       });
     });
@@ -312,7 +309,6 @@ function InputInfo() {
         axios.post('https://namanba.shop/api/portfolio/position', null, {
           headers: {
             Authorization: `Bearer ${kakaoToken}`,
-            'Content-Type': 'application/json',
           },
           params: { positionName: resumeData.position }
         })
