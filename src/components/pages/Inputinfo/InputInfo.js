@@ -19,8 +19,7 @@ function InputInfo() {
     careers: [{ careerId: null, careerType: '', content: '', startDate: null, endDate: null }],
     stacks: [{ stackId: null, stackLanguage: '', stackLevel: '' }],
     awards: [{ awardId: null, awardType: '', awardPrize: '' }],
-    
-    ifications: [{ certId: null, certType: '', certDate: null }],
+    certifications: [{ certId: null, certType: '', certDate: null }],
     languageCerts: [{ languageCertId: null, languageCertType: '', languageCertLevel: '', languageCertDate: null }]
   });
 
@@ -149,6 +148,7 @@ function InputInfo() {
       ...resumeData,
       [section]: [...resumeData[section], newItem],
     });
+    setIsFormChanged(true);
   };
 
   // 입력 필드 삭제 핸들러
@@ -223,36 +223,32 @@ function InputInfo() {
     return true;
   };
 
-  const apiCalls = async (data, endpoint) => {
-    const createOrUpdatePromises = data.map(item => {
-      const id = item.resumeId || item.majorId || item.careerId || item.stackId || item.awardId || item.certId || item.languageCertId;
-      if (id) {
-        return axios.put(`https://namanba.shop/api/${endpoint}/${id}`, item, {
+  const apiCalls = (data, endpoint) => {
+    return data.map(item => {
+      if (item.resumeId || item.majorId || item.careerId || item.stackId || item.awardId || item.certId || item.languageCertId) {
+        return axios.patch(`https://namanba.shop/api/${endpoint}`, item, {
           headers: {
-            Authorization: `Bearer ${kakaoToken}`  // 요청마다 토큰 포함
+            Authorization: `Bearer ${kakaoToken}`
           }
         });
       } else {
         return axios.post(`https://namanba.shop/api/${endpoint}`, item, {
           headers: {
-            Authorization: `Bearer ${kakaoToken}`  // 요청마다 토큰 포함
+            Authorization: `Bearer ${kakaoToken}`
           }
         });
       }
     });
-    return createOrUpdatePromises;
   };
 
-  const apiDeleteCalls = async (data, endpoint) => {
-    const ids = data.map(item => item.resumeId || item.majorId || item.careerId || item.stackId || item.awardId || item.certId || item.languageCertId).filter(id => id);
-    if (ids.length > 0) {
-      await axios.delete(`https://namanba.shop/api/${endpoint}`, {
-        data: ids,
+  const apiDeleteCalls = (data, endpoint) => {
+    return data.map(item => {
+      return axios.delete(`https://namanba.shop/api/${endpoint}/${item.resumeId || item.majorId || item.careerId || item.stackId || item.awardId || item.certId || item.languageCertId}`, {
         headers: {
-          Authorization: `Bearer ${kakaoToken}`  // 삭제 요청에도 토큰 포함
+          Authorization: `Bearer ${kakaoToken}`
         }
       });
-    }
+    });
   };
   
   const handleSubmit = async (e) => {
@@ -283,26 +279,23 @@ function InputInfo() {
       };
   
       let allPromises = [];
-  
+
       for (const section of sections) {
         const endpoint = apiEndpoints[section];
-
-        if (section === 'position') {
-          allPromises.push(
-            axios.put(`https://namanba.shop/api/portfolio/position`, null, {
-              headers: {
-                Authorization: `Bearer ${kakaoToken}`  // 모든 요청에 토큰 추가
-              },
-              params: { name: resumeData[section] }
-            })
-          );
-        } else {
-          console.log(resumeData);
-          const createOrUpdatePromises = await apiCalls(resumeData[section], endpoint);
-          const deletePromises = await apiDeleteCalls(deletedItems[section], endpoint);
-          allPromises = [...allPromises, ...createOrUpdatePromises, ...deletePromises];
-        }
+        const createOrUpdatePromises = apiCalls(resumeData[section], endpoint);
+        const deletePromises = apiDeleteCalls(deletedItems[section], endpoint);
+        allPromises = [...allPromises, ...createOrUpdatePromises, ...deletePromises];
       }
+  
+      // 'position' 업데이트 처리
+      allPromises.push(
+        axios.put('https://namanba.shop/api/portfolio/position', null, {
+          headers: {
+            Authorization: `Bearer ${kakaoToken}`
+          },
+          params: { name: resumeData.position }
+        })
+      );
   
       // 모든 API 요청을 병렬로 실행
       await Promise.all(allPromises);
@@ -313,6 +306,7 @@ function InputInfo() {
   
     } catch (error) {
       console.error('서버 요청 오류:', error);
+      alert('저장 중 오류가 발생했습니다.');
     }
   };
 
