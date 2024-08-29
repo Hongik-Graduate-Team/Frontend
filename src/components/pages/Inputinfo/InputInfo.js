@@ -282,8 +282,13 @@ function InputInfo() {
 
       for (const section of sections) {
         const endpoint = apiEndpoints[section];
-        const createOrUpdatePromises = apiCalls(resumeData[section], endpoint);
-        const deletePromises = apiDeleteCalls(deletedItems[section], endpoint);
+        const sectionData = Array.isArray(resumeData[section]) ? resumeData[section] : [];
+        const deleteData = Array.isArray(deletedItems[section]) ? deletedItems[section] : [];
+
+        console.log(sectionData);
+
+        const createOrUpdatePromises = apiCalls(sectionData, endpoint);
+        const deletePromises = apiDeleteCalls(deleteData, endpoint);
         allPromises = [...allPromises, ...createOrUpdatePromises, ...deletePromises];
       }
   
