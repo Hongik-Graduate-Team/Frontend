@@ -120,10 +120,12 @@ function InputInfo() {
 
   // 날짜 변경 핸들러
   const handleDateChange = (section, index, dateType, date) => {
+    const formattedDate = date.toISOString().split('T')[0];
+
     const updatedItems = [...resumeData[section]];
     updatedItems[index] = {
       ...updatedItems[index],
-      [dateType]: date,
+      [dateType]: formattedDate,
     };
     setResumeData({
       ...resumeData,
