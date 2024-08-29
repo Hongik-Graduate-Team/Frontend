@@ -225,13 +225,21 @@ function InputInfo() {
 
   const apiCalls = (data, endpoint) => {
     return data.map(item => {
-      if (item.resumeId || item.majorId || item.careerId || item.stackId || item.awardId || item.certId || item.languageCertId) {
-        return axios.patch(`https://namanba.shop/api/${endpoint}`, item, {
+
+      const itemId = item.resumeId || item.majorId || item.careerId || item.stackId || item.awardId || item.certId || item.languageCertId;
+
+      if (itemId) {
+        return axios.patch(`https://namanba.shop/api/${endpoint}/${itemId}`, item, {
           headers: {
             Authorization: `Bearer ${kakaoToken}`
           }
         });
       } else {
+          Object.keys(item).forEach(key => {
+            if (key.includes('Id') && item[key] === null) {
+            delete item[key];
+          }
+          });
         return axios.post(`https://namanba.shop/api/${endpoint}`, item, {
           headers: {
             Authorization: `Bearer ${kakaoToken}`
@@ -280,12 +288,14 @@ function InputInfo() {
   
       let allPromises = [];
 
+      sections.forEach(section => {
+        console.log(`Sending data for section: ${section}`, resumeData[section]);
+      });
+
       for (const section of sections) {
         const endpoint = apiEndpoints[section];
         const sectionData = Array.isArray(resumeData[section]) ? resumeData[section] : [];
         const deleteData = Array.isArray(deletedItems[section]) ? deletedItems[section] : [];
-
-        console.log(sectionData);
 
         const createOrUpdatePromises = apiCalls(sectionData, endpoint);
         const deletePromises = apiDeleteCalls(deleteData, endpoint);
