@@ -150,7 +150,7 @@ function PageOne({ resumeData, handleChange, handleItemChange, addInputField, de
                 startDate={career.startDate}
                 endDate={career.endDate}
                 locale={ko}
-                dateFormat="yyyy/MM/dd"
+                dateFormat="yyyy-MM-dd"
                 className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
                 placeholderText="시작일"
               />
@@ -162,7 +162,7 @@ function PageOne({ resumeData, handleChange, handleItemChange, addInputField, de
                 endDate={career.endDate}
                 minDate={career.startDate}
                 locale={ko}
-                dateFormat="yyyy/MM/dd"
+                dateFormat="yyyy-MM-dd"
                 className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
                 placeholderText="종료일"
               />
@@ -298,7 +298,7 @@ function PageOne({ resumeData, handleChange, handleItemChange, addInputField, de
                 selected={certification.certDate}
                 onChange={(date) => handleDateChange('certifications', index, 'certDate', date)}
                 locale={ko}
-                dateFormat="yyyy/MM/dd"
+                dateFormat="yyyy-MM-dd"
                 className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
                 placeholderText="취득일"
               />
@@ -350,7 +350,7 @@ function PageOne({ resumeData, handleChange, handleItemChange, addInputField, de
                 selected={languageCert.languageCertDate}
                 onChange={(date) => handleDateChange('languageCerts', index, 'languageCertDate', date)}
                 locale={ko}
-                dateFormat="yyyy/MM/dd"
+                dateFormat="yyyy-MM-dd"
                 className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
                 placeholderText="취득일"
               />
