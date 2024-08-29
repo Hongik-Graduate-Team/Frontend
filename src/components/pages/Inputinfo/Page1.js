@@ -22,7 +22,7 @@ function PageOne({ resumeData, handleChange, handleItemChange, addInputField, de
           required
         >
           <option value="">직군을 선택하세요</option>
-          <option value="backend">백엔드 개발자</option>
+          <option value="backend-developer">백엔드 개발자</option>
           <option value="frontend">프론트엔드 개발자</option>
           <option value="web">웹개발자</option>
           <option value="web-publisher">웹 퍼블리셔</option>
