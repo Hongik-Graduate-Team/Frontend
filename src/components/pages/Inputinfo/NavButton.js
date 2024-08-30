@@ -14,9 +14,11 @@ function NavigationButtons({ page, setPage, handleSubmit, validateForm }) {
     }
     try {
       // 입력된 정보 저장
-      await handleSubmit(e);
+      const isSaveSuccessful = await handleSubmit(e);
       // 저장 후 모달창 열기
-      setIsModalOpen(true);
+      if (isSaveSuccessful) {
+        setIsModalOpen(true);
+      }
     } catch (error) {
       console.error('Error saving resume data:', error);
     }
