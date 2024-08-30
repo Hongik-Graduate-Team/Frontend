@@ -226,29 +226,43 @@ function InputInfo() {
   };
 
   const apiCalls = (data, endpoint) => {
-    return data.map(item => {
+    const hasId = item => item.resumeId || item.majorId || item.careerId || item.stackId || item.awardId || item.certId || item.languageCertId;
+    const dataToPost = data.filter(item => !hasId(item));
+    const dataToPut = data.filter(hasId);
 
-      const itemId = item.resumeId || item.majorId || item.careerId || item.stackId || item.awardId || item.certId || item.languageCertId;
+    let promises = [];
 
-      if (itemId) {
-        return axios.patch(`https://namanba.shop/api/${endpoint}/${itemId}`, item, {
+    if (dataToPost.length > 0) {
+      const dataToPostCleaned = dataToPost.map(item => {    // post시 id 제거
+        const cleanedItem = { ...item };
+        Object.keys(cleanedItem).forEach(key => {
+          if (key.includes('Id') && cleanedItem[key] === null) {
+            delete cleanedItem[key];
+          }
+        });
+        return cleanedItem;
+      });
+
+      promises.push(
+        axios.post(`https://namanba.shop/api/${endpoint}`, dataToPostCleaned, {
           headers: {
             Authorization: `Bearer ${kakaoToken}`,
           }
-        });
-      } else {
-          Object.keys(item).forEach(key => {
-            if (key.includes('Id') && item[key] === null) {
-            delete item[key];
-          }
-          });
-        return axios.post(`https://namanba.shop/api/${endpoint}`, data, {
+        })
+      );
+    }
+
+    promises.push(
+      ...dataToPut.map(item => 
+        axios.put(`https://namanba.shop/api/${endpoint}/${hasId(item)}`, item, {
           headers: {
             Authorization: `Bearer ${kakaoToken}`,
           }
-        });
-      }
-    });
+        })
+      )
+    );
+  
+    return promises;
   };
 
   const apiDeleteCalls = (data, endpoint) => {
@@ -289,10 +303,6 @@ function InputInfo() {
       };
   
       let allPromises = [];
-
-      sections.forEach(section => {
-        console.log(`Sending data for section: ${section}`, resumeData[section]);
-      });
 
       for (const section of sections) {
         const endpoint = apiEndpoints[section];
