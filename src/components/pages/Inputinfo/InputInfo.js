@@ -49,12 +49,13 @@ function InputInfo() {
           }
         });
         const data = response.data;
+        console.log('Fetched data:', data); // 데이터 확인용 로그
 
         setResumeData({
           position: data.position || '',
           questions: data.questions || [{ resumeId: null, question: '', answer: '' }],
           majors: data.majors || [{ majorId: null, majorName: '' }],
-          gpas: data.gpa || { score: '', total: '' },
+          gpas: data.gpas || { score: '', total: '' },
           careers: data.careers || [{ careerId: null, careerType: '', content: '', startDate: null, endDate: null }],
           stacks: data.stacks || [{ stackId: null, stackLanguage: '', stackLevel: '' }],
           awards: data.awards || [{ awardId: null, awardType: '', awardPrize: '' }],
@@ -316,7 +317,7 @@ function InputInfo() {
   
       // 'position' 업데이트 처리
       allPromises.push(
-        axios.post('https://namanba.shop/api/portfolio/position', null, {
+        axios.put('https://namanba.shop/api/portfolio/position', null, {
           headers: {
             Authorization: `Bearer ${kakaoToken}`,
           },
