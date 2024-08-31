@@ -58,17 +58,18 @@ function InputInfo() {
       console.log("fetched data:", data);
 
       if (data) {
-        setResumeData({
+        setResumeData(prevState => ({
+          ...prevState,
           position: data.position || '',
-          questions: Array.isArray(data.resumes) && data.resumes.length > 0 ? data.resumes : [{ resumeId: null, question: '', answer: '' }],
-          majors: Array.isArray(data.majors) && data.majors.length > 0 ? data.majors : [{ majorId: null, majorName: '' }],
-          gpas: data.gpas && data.gpas.length > 0 ? data.gpas[0] : { score: '', total: '' },
-          careers: Array.isArray(data.careers) && data.careers.length > 0 ? data.careers : [{ careerId: null, careerType: '', content: '', startDate: null, endDate: null }],
-          stacks: Array.isArray(data.stacks) && data.stacks.length > 0 ? data.stacks : [{ stackId: null, stackLanguage: '', stackLevel: '' }],
-          awards: Array.isArray(data.awards) && data.awards.length > 0 ? data.awards : [{ awardId: null, awardType: '', awardPrize: '' }],
-          certifications: Array.isArray(data.certifications) && data.certifications.length > 0 ? data.certifications : [{ certId: null, certType: '', certDate: null }],
-          languageCerts: Array.isArray(data.languageCerts) && data.languageCerts.length > 0 ? data.languageCerts : [{ languageCertId: null, languageCertType: '', languageCertLevel: '', languageCertDate: null }],
-        });
+          questions: data.resumes.length ? [...data.resumes] : [{ resumeId: null, question: '', answer: '' }],
+          majors: data.majors.length ? [...data.majors] : [{ majorId: null, majorName: '' }],
+          gpas: data.gpas.length ? data.gpas[0] : { score: '', total: '' },
+          careers: data.careers.length ? [...data.careers] : [{ careerId: null, careerType: '', content: '', startDate: null, endDate: null }],
+          stacks: data.stacks.length ? [...data.stacks] : [{ stackId: null, stackLanguage: '', stackLevel: '' }],
+          awards: data.awards.length ? [...data.awards] : [{ awardId: null, awardType: '', awardPrize: '' }],
+          certifications: data.certifications.length ? [...data.certifications] : [{ certId: null, certType: '', certDate: null }],
+          languageCerts: data.languageCerts.length ? [...data.languageCerts] : [{ languageCertId: null, languageCertType: '', languageCertLevel: '', languageCertDate: null }],
+        }));
       }
     } catch (error) {
       console.error('데이터를 불러오는데 실패했습니다:', error);
