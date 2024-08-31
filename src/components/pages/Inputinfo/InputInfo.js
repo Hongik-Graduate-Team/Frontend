@@ -50,8 +50,17 @@ function InputInfo() {
         });
         const data = response.data;
 
-        setResumeData(data);  // 전체 데이터를 직접 설정
-        console.log('Resume data after set:', data);
+        setResumeData({
+          position: data.position || '',
+          questions: Array.isArray(data.resumes) && data.resumes.length > 0 ? data.resumes : [{ resumeId: null, question: '', answer: '' }],
+          majors: Array.isArray(data.majors) && data.majors.length > 0 ? data.majors : [{ majorId: null, majorName: '' }],
+          gpas: data.gpas.length > 0 ? data.gpas[0] : { score: '', total: '' }, // 만약 gpas가 배열이라면 첫 번째 항목을 사용
+          careers: Array.isArray(data.careers) && data.careers.length > 0 ? data.careers : [{ careerId: null, careerType: '', content: '', startDate: null, endDate: null }],
+          stacks: Array.isArray(data.stacks) && data.stacks.length > 0 ? data.stacks : [{ stackId: null, stackLanguage: '', stackLevel: '' }],
+          awards: Array.isArray(data.awards) && data.awards.length > 0 ? data.awards : [{ awardId: null, awardType: '', awardPrize: '' }],
+          certifications: Array.isArray(data.certifications) && data.certifications.length > 0 ? data.certifications : [{ certId: null, certType: '', certDate: null }],
+          languageCerts: Array.isArray(data.languageCerts) && data.languageCerts.length > 0 ? data.languageCerts : [{ languageCertId: null, languageCertType: '', languageCertLevel: '', languageCertDate: null }]
+        });
       
       } catch (error) {
         console.error('데이터를 불러오는데 실패했습니다:', error);
@@ -60,6 +69,10 @@ function InputInfo() {
 
     loadData();
   }, []);
+
+  useEffect(() => {
+    console.log(resumeData);
+  }, [resumeData])
 
   // 페이지 이동 시 경고창 표시
   useEffect(() => {
