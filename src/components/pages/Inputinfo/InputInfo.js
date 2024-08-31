@@ -201,24 +201,26 @@ function InputInfo() {
     }
   
   // 선택 섹션 검사
-    const optionalSections = ['majors', 'careers', 'stacks', 'awards', 'certifications', 'languageCerts'];
+  const optionalSections = ['majors', 'careers', 'stacks', 'awards', 'certifications', 'languageCerts'];
 
-    for (const section of optionalSections) {
-      if (Array.isArray(resumeData[section])) {
-        const isSectionEmpty = resumeData[section].every(item =>
-          Object.values(item).every(value => value === null || (typeof value === 'string' && value.trim() === ''))
-        );
+  for (const section of optionalSections) {
+    if (Array.isArray(resumeData[section])) {
+      // 섹션이 부분적으로 채워졌는지 확인
+      const isSectionFilled = resumeData[section].some(item =>
+        Object.values(item).some(value => value !== null && value !== '' && value !== undefined)
+      );
 
-        if (!isSectionEmpty) {
-          for (const item of resumeData[section]) {
-            // `resumeId`와 같은 불필요한 필드는 검증에서 제외
-            const keysToValidate = Object.keys(item).filter(key => !key.includes('Id'));
+      // 섹션이 부분적으로 채워진 경우에만 검증 실행
+      if (isSectionFilled) {
+        for (const item of resumeData[section]) {
+          // `Id`가 포함된 필드는 검증에서 제외
+          const keysToValidate = Object.keys(item).filter(key => !key.includes('Id'));
 
-           for (const key of keysToValidate) {
-             if (item[key] === null || (typeof item[key] === 'string' && item[key].trim() === '')) {
-                alert(`모든 항목을 입력해 주세요.`);
-                return false;
-              }
+          for (const key of keysToValidate) {
+            if (item[key] === null || (typeof item[key] === 'string' && item[key].trim() === '')) {
+              alert(`모든 항목을 입력해 주세요.`);
+              return false;
+            }
             }
           }
         }
