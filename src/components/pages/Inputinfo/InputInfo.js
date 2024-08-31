@@ -54,29 +54,30 @@ function InputInfo() {
           Authorization: `Bearer ${token}`  // 토큰을 헤더에 포함
         },
       });
-      const data = response.data;
+      const data = response.data.data;
       console.log("fetched data:", data);
 
       if (data) {
-        setResumeData(prevState => ({
-          ...prevState,
+        setResumeData({
           position: data.position || '',
-          questions: Array.isArray(data.resumes) && data.resumes.length ? [...data.resumes] : [{ resumeId: null, question: '', answer: '' }],
-          majors: Array.isArray(data.majors) && data.majors.length ? [...data.majors] : [{ majorId: null, majorName: '' }],
-          gpas: Array.isArray(data.gpas) && data.gpas.length ? data.gpas[0] : { score: '', total: '' },
-          careers: Array.isArray(data.careers) && data.careers.length ? [...data.careers] : [{ careerId: null, careerType: '', content: '', startDate: null, endDate: null }],
-          stacks: Array.isArray(data.stacks) && data.stacks.length ? [...data.stacks] : [{ stackId: null, stackLanguage: '', stackLevel: '' }],
-          awards: Array.isArray(data.awards) && data.awards.length ? [...data.awards] : [{ awardId: null, awardType: '', awardPrize: '' }],
-          certifications: Array.isArray(data.certifications) && data.certifications.length ? [...data.certifications] : [{ certId: null, certType: '', certDate: null }],
-          languageCerts: Array.isArray(data.languageCerts) && data.languageCerts.length ? [...data.languageCerts] : [{ languageCertId: null, languageCertType: '', languageCertLevel: '', languageCertDate: null }],
-        }));
+          questions: data.resumes || [{ resumeId: null, question: '', answer: '' }],
+          majors: data.majors || [{ majorId: null, majorName: '' }],
+          gpas: data.gpas.length > 0 ? data.gpas[0] : { score: '', total: '' },
+          careers: data.careers || [{ careerId: null, careerType: '', content: '', startDate: null, endDate: null }],
+          stacks: data.stacks || [{ stackId: null, stackLanguage: '', stackLevel: '' }],
+          awards: data.awards || [{ awardId: null, awardType: '', awardPrize: '' }],
+          certifications: data.certifications || [{ certId: null, certType: '', certDate: null }],
+          languageCerts: data.languageCerts || [{ languageCertId: null, languageCertType: '', languageCertLevel: '', languageCertDate: null }],
+        });
       }
     } catch (error) {
       console.error('데이터를 불러오는데 실패했습니다:', error);
     }
   };
 
-  console.log("Updated data:", resumeData);
+  useEffect(() => {
+  console.log("Resume Data updated: ", resumeData);
+}, [resumeData]);
 
   // 페이지 이동 시 경고창 표시
   useEffect(() => {
