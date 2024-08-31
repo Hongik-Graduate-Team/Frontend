@@ -62,8 +62,19 @@ function InputInfo() {
           languageCerts: data.languageCerts || [{ languageCertId: null, languageCertType: '', languageCertLevel: '', languageCertDate: null }]
         });
 
-        console.log(resumeData);
-        
+              // 업데이트된 resumeData를 콘솔에 출력
+      console.log('Updated resumeData:', {
+        position: data.position || '',
+        questions: data.resumes || [{ resumeId: null, question: '', answer: '' }],
+        majors: data.majors || [{ majorId: null, majorName: '' }],
+        gpas: data.gpas || { score: '', total: '' },
+        careers: data.careers || [{ careerId: null, careerType: '', content: '', startDate: null, endDate: null }],
+        stacks: data.stacks || [{ stackId: null, stackLanguage: '', stackLevel: '' }],
+        awards: data.awards || [{ awardId: null, awardType: '', awardPrize: '' }],
+        certifications: data.certifications || [{ certId: null, certType: '', certDate: null }],
+        languageCerts: data.languageCerts || [{ languageCertId: null, languageCertType: '', languageCertLevel: '', languageCertDate: null }]
+      });
+
       } catch (error) {
         console.error('데이터를 불러오는데 실패했습니다:', error);
       }
