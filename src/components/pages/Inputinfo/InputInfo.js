@@ -49,11 +49,10 @@ function InputInfo() {
           }
         });
         const data = response.data;
-        console.log('Fetched data:', data); // 데이터 확인용 로그
 
         setResumeData({
           position: data.position || '',
-          questions: data.questions || [{ resumeId: null, question: '', answer: '' }],
+          questions: data.resumes || [{ resumeId: null, question: '', answer: '' }],
           majors: data.majors || [{ majorId: null, majorName: '' }],
           gpas: data.gpas || { score: '', total: '' },
           careers: data.careers || [{ careerId: null, careerType: '', content: '', startDate: null, endDate: null }],
@@ -62,6 +61,9 @@ function InputInfo() {
           certifications: data.certifications || [{ certId: null, certType: '', certDate: null }],
           languageCerts: data.languageCerts || [{ languageCertId: null, languageCertType: '', languageCertLevel: '', languageCertDate: null }]
         });
+
+        console.log(resumeData);
+        
       } catch (error) {
         console.error('데이터를 불러오는데 실패했습니다:', error);
       }
