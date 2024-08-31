@@ -50,19 +50,8 @@ function InputInfo() {
         });
         const data = response.data;
 
-      if (data) {
-        setResumeData({
-          position: data.position || '',
-          questions: data.resumes || [{ resumeId: null, question: '', answer: '' }],
-          majors: data.majors || [{ majorId: null, majorName: '' }],
-          gpas: data.gpas || { score: '', total: '' },
-          careers: data.careers || [{ careerId: null, careerType: '', content: '', startDate: null, endDate: null }],
-          stacks: data.stacks || [{ stackId: null, stackLanguage: '', stackLevel: '' }],
-          awards: data.awards || [{ awardId: null, awardType: '', awardPrize: '' }],
-          certifications: data.certifications || [{ certId: null, certType: '', certDate: null }],
-          languageCerts: data.languageCerts || [{ languageCertId: null, languageCertType: '', languageCertLevel: '', languageCertDate: null }]
-        });
-      }
+        setResumeData(data);  // 전체 데이터를 직접 설정
+        console.log('Resume data after set:', data);
       
       } catch (error) {
         console.error('데이터를 불러오는데 실패했습니다:', error);
@@ -71,10 +60,6 @@ function InputInfo() {
 
     loadData();
   }, []);
-
-  useEffect(() => {
-    console.log('Updated resumeData:', resumeData);
-  }, [resumeData]);
 
   // 페이지 이동 시 경고창 표시
   useEffect(() => {
