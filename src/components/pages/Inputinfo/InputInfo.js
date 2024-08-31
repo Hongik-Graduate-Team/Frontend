@@ -205,17 +205,19 @@ function InputInfo() {
 
   for (const section of optionalSections) {
     if (Array.isArray(resumeData[section])) {
-      // 섹션이 완전히 비어있는지 확인
+      // 선택 섹션이 비어있는지 검사
       const isSectionEmpty = resumeData[section].every(item =>
-        Object.values(item).every(value => value === null || value === '' || value === undefined)
+        Object.keys(item).filter(key => !key.includes('Id')).every(key => 
+          item[key] === null || item[key] === '' || item[key] === undefined
+        )
       );
 
-      // 섹션이 완전히 비어있다면 검증하지 않음
+      // 섹션이 완전히 비어 있다면 검증을 건너뜀
       if (isSectionEmpty) {
         continue; // 다음 섹션으로 넘어감
       }
 
-      // 부분적으로 채워졌을 때만 검증
+      // 섹션이 비어 있지 않으면 검증
       for (const item of resumeData[section]) {
         const keysToValidate = Object.keys(item).filter(key => !key.includes('Id')); // 'Id' 필드는 제외
         for (const key of keysToValidate) {
