@@ -277,15 +277,16 @@ function InputInfo() {
   };
   
   const apiDeleteCalls = (data, endpoint) => {
-    const idsToDelete = data.map(item => item.awardId);  // item의 ID만 추출하여 전송
+    const idsToDelete = data.map(item => item.awardId).filter(id => id !== null && id !== undefined);
   
     if (idsToDelete.length > 0) {
+      // DELETE 요청을 보내면서, IDs를 JSON 배열 형식으로 전송
       return [
         axios.delete(`https://namanba.shop/api/${endpoint}`, {
           headers: {
             Authorization: `Bearer ${kakaoToken}`,
           },
-          data: idsToDelete  // 여기서는 ID 배열을 그대로 전송
+          data: idsToDelete
         })
       ];
     }

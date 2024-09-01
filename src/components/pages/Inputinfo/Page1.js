@@ -22,25 +22,25 @@ function PageOne({ resumeData, handleChange, handleItemChange, addInputField, de
           required
         >
           <option value="">직군을 선택하세요</option>
-          <option value="backend">백엔드 개발자</option>
-          <option value="frontend">프론트엔드 개발자</option>
-          <option value="web">웹개발자</option>
-          <option value="web-publisher">웹 퍼블리셔</option>
-          <option value="app">앱개발자</option>
-          <option value="game">게임개발자</option>
-          <option value="software">소프트웨어개발자</option>
-          <option value="hardware">하드웨어개발자</option>
-          <option value="qa">QA</option>
-          <option value="system-engineer">시스템엔지니어</option>
-          <option value="network-engineer">네트워크엔지니어</option>
-          <option value="security-engineer">보안엔지니어</option>
-          <option value="cloud-engineer">클라우드엔지니어</option>
-          <option value="it-consulting">IT 컨설팅</option>
-          <option value="dba">DBA</option>
-          <option value="data-engineer">데이터엔지니어</option>
-          <option value="data-scientist">데이터사이언티스트</option>
-          <option value="ml-engineer">머신러닝엔지니어</option>
-          <option value="blockchain">블록체인 개발자</option>
+          <option value="백엔드 개발자">백엔드 개발자</option>
+          <option value="프론트엔드 개발자">프론트엔드 개발자</option>
+          <option value="웹개발자">웹개발자</option>
+          <option value="웹 퍼블리셔">웹 퍼블리셔</option>
+          <option value="앱개발자">앱개발자</option>
+          <option value="게임개발자">게임개발자</option>
+          <option value="소프트웨어개발자">소프트웨어개발자</option>
+          <option value="하드웨어개발자">하드웨어개발자</option>
+          <option value="QA">QA</option>
+          <option value="시스템엔지니어">시스템엔지니어</option>
+          <option value="네트워크엔지니어">네트워크엔지니어</option>
+          <option value="보안엔지니어">보안엔지니어</option>
+          <option value="클라우드엔지니어">클라우드엔지니어</option>
+          <option value="IT 컨설팅">IT 컨설팅</option>
+          <option value="DBA">DBA</option>
+          <option value="데이터엔지니어">데이터엔지니어</option>
+          <option value="데이터사이언티스트">데이터사이언티스트</option>
+          <option value="머신러닝엔지니어">머신러닝엔지니어</option>
+          <option value="블록체인 개발자">블록체인 개발자</option>
         </select>
       </div>
 
