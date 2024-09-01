@@ -60,14 +60,14 @@ function InputInfo() {
       if (data) {
         setResumeData({
           position: data.position || '',
-          questions: data.resumes || [{ resumeId: null, question: '', answer: '' }],
-          majors: data.majors || [{ majorId: null, majorName: '' }],
+          questions: data.resumes.length > 0 ? data.resumes : [{ resumeId: null, question: '', answer: '' }],
+          majors: data.majors.length > 0 ? data.majors : [{ majorId: null, majorName: '' }],
           gpas: data.gpas.length > 0 ? data.gpas[0] : { score: '', total: '' },
-          careers: data.careers || [{ careerId: null, careerType: '', content: '', startDate: null, endDate: null }],
-          stacks: data.stacks || [{ stackId: null, stackLanguage: '', stackLevel: '' }],
-          awards: data.awards || [{ awardId: null, awardType: '', awardPrize: '' }],
-          certifications: data.certifications || [{ certId: null, certType: '', certDate: null }],
-          languageCerts: data.languageCerts || [{ languageCertId: null, languageCertType: '', languageCertLevel: '', languageCertDate: null }],
+          careers: data.careers.length > 0 ? data.careers : [{ careerId: null, careerType: '', content: '', startDate: null, endDate: null }],
+          stacks: data.stacks.length > 0 ? data.stacks : [{ stackId: null, stackLanguage: '', stackLevel: '' }],
+          awards: data.awards.length > 0 ? data.awards : [{ awardId: null, awardType: '', awardPrize: '' }],
+          certifications: data.certifications.length > 0 ? data.certifications : [{ certId: null, certType: '', certDate: null }],
+          languageCerts: data.languageCerts.length > 0 ? data.languageCerts : [{ languageCertId: null, languageCertType: '', languageCertLevel: '', languageCertDate: null }],
         });
       }
     } catch (error) {
@@ -234,10 +234,12 @@ function InputInfo() {
     }
   }
     // GPA 섹션 검사
-    const { score, total } = resumeData.gpas;
-    if ((score && !total) || (!score && total)) {
-      alert('모든 항목을 입력해 주세요.');
-      return false;
+    if (resumeData.gpas) {
+      const { score, total } = resumeData.gpas;
+      if ((score && !total) || (!score && total)) {
+        alert('모든 항목을 입력해 주세요.');
+        return false;
+      }
     }
   
     return true;
