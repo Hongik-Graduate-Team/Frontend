@@ -260,7 +260,7 @@ function InputInfo() {
       promises.push(
         axios.post(`https://namanba.shop/api/${endpoint}`, dataToPostCleaned, {
           headers: {
-            Authorization: `Bearer ${kakaoToken}`,
+            Authorization: `Bearer ${token}`,
           }
         })
       );
@@ -270,7 +270,7 @@ function InputInfo() {
       ...dataToPut.map(item => 
         axios.put(`https://namanba.shop/api/${endpoint}/${hasId(item)}`, item, {
           headers: {
-            Authorization: `Bearer ${kakaoToken}`,
+            Authorization: `Bearer ${token}`,
           }
         })
       )
@@ -281,9 +281,10 @@ function InputInfo() {
 
   const apiDeleteCalls = (data, endpoint) => {
     return data.map(item => {
-      return axios.delete(`https://namanba.shop/api/${endpoint}/${item.resumeId || item.majorId || item.careerId || item.stackId || item.awardId || item.certId || item.languageCertId}`, {
+      const itemId = item[`${endpoint.slice(0, -1)}Id`];
+      return axios.delete(`https://namanba.shop/api/${endpoint}/${item.id}`, {
         headers: {
-          Authorization: `Bearer ${kakaoToken}`,
+          Authorization: `Bearer ${token}`,
         }
       });
     });
