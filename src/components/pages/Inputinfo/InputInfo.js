@@ -266,27 +266,28 @@ function InputInfo() {
       );
     }
 
-    promises.push(
-      ...dataToPut.map(item => 
-        axios.put(`https://namanba.shop/api/${endpoint}/${hasId(item)}`, item, {
+    if (dataToPut.length > 0) {
+      promises.push(
+        axios.put(`https://namanba.shop/api/${endpoint}`, dataToPut, {
           headers: {
             Authorization: `Bearer ${kakaoToken}`,
           }
         })
-      )
-    );
+      );
+    }
   
     return promises;
   };
 
   const apiDeleteCalls = (data, endpoint) => {
-    return data.map(item => {
-      const itemId = item[`${endpoint.slice(0, -1)}Id`];
-      return axios.delete(`https://namanba.shop/api/${endpoint}/${itemId}`, {
-        headers: {
-          Authorization: `Bearer ${kakaoToken}`,
-        }
-      });
+    const idsToDelete = data.map(item => item[`${endpoint.slice(0, -1)}Id`]);
+    
+    // DELETE 요청에 ID 목록을 Body로 전달
+    return axios.delete(`https://namanba.shop/api/${endpoint}`, {
+      headers: {
+        Authorization: `Bearer ${kakaoToken}`,
+      },
+      data: idsToDelete
     });
   };
   
