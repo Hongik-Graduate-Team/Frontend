@@ -246,8 +246,8 @@ function InputInfo() {
   };
 
   const apiCalls = (data, endpoint) => {
-    const hasId = item => item.awardId;
-    
+    const hasId = item => item.awardId;  // 다른 id 검사 추가 필요
+  
     const dataToPost = data.filter(item => !hasId(item));
     const dataToPut = data.filter(hasId);
   
@@ -259,6 +259,8 @@ function InputInfo() {
           headers: {
             Authorization: `Bearer ${kakaoToken}`,
           }
+        }).catch(error => {
+          console.error(`POST ${endpoint} 요청 오류:`, error);
         })
       );
     }
@@ -269,6 +271,8 @@ function InputInfo() {
           headers: {
             Authorization: `Bearer ${kakaoToken}`,
           }
+        }).catch(error => {
+          console.error(`PUT ${endpoint} 요청 오류:`, error);
         })
       );
     }
@@ -280,13 +284,14 @@ function InputInfo() {
     const idsToDelete = data.map(item => item.awardId).filter(id => id !== null && id !== undefined);
   
     if (idsToDelete.length > 0) {
-      // DELETE 요청을 보내면서, IDs를 JSON 배열 형식으로 전송
       return [
         axios.delete(`https://namanba.shop/api/${endpoint}`, {
           headers: {
             Authorization: `Bearer ${kakaoToken}`,
           },
           data: idsToDelete
+        }).catch(error => {
+          console.error(`DELETE ${endpoint} 요청 오류:`, error);
         })
       ];
     }
