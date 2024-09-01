@@ -260,7 +260,7 @@ function InputInfo() {
       promises.push(
         axios.post(`https://namanba.shop/api/${endpoint}`, dataToPostCleaned, {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${kakaoToken}`,
           }
         })
       );
@@ -270,7 +270,7 @@ function InputInfo() {
       ...dataToPut.map(item => 
         axios.put(`https://namanba.shop/api/${endpoint}/${hasId(item)}`, item, {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${kakaoToken}`,
           }
         })
       )
@@ -282,9 +282,9 @@ function InputInfo() {
   const apiDeleteCalls = (data, endpoint) => {
     return data.map(item => {
       const itemId = item[`${endpoint.slice(0, -1)}Id`];
-      return axios.delete(`https://namanba.shop/api/${endpoint}/${item.id}`, {
+      return axios.delete(`https://namanba.shop/api/${endpoint}/${itemId}`, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${kakaoToken}`,
         }
       });
     });
