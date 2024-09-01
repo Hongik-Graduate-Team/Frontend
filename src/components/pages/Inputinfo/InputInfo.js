@@ -245,10 +245,27 @@ function InputInfo() {
     return true;
   };
 
-  const apiCalls = (data, endpoint) => {
-    const hasId = item => item.awardId;  // 다른 id 검사 추가 필요
+  const findIdField = (item) => {
+    return Object.keys(item).find(key => key.includes('Id'));
+  };
   
-    const dataToPost = data.filter(item => !hasId(item));
+  const removeIdField = (item) => {
+    const idField = findIdField(item);
+    if (idField) {
+      const { [idField]: _, ...rest } = item;
+      return rest;
+    }
+    return item;
+  };
+  
+  const apiCalls = (data, endpoint) => {
+    const hasId = item => {
+      const idField = findIdField(item);
+      return idField && item[idField];
+    };
+  
+    // Separate data into items for POST and PUT requests
+    const dataToPost = data.filter(item => !hasId(item)).map(removeIdField); // Remove ID fields from items to be posted
     const dataToPut = data.filter(hasId);
   
     let promises = [];
@@ -281,7 +298,10 @@ function InputInfo() {
   };
   
   const apiDeleteCalls = (data, endpoint) => {
-    const idsToDelete = data.map(item => item.awardId).filter(id => id !== null && id !== undefined);
+    const idsToDelete = data.map(item => {
+      const idField = findIdField(item);
+      return idField ? item[idField] : null;
+    }).filter(id => id !== null && id !== undefined);
   
     if (idsToDelete.length > 0) {
       return [
@@ -302,7 +322,6 @@ function InputInfo() {
     e.preventDefault();
     try {
       const sections = [
-        'position',
         'questions',
         'majors',
         'gpas',
@@ -314,7 +333,6 @@ function InputInfo() {
       ];
   
       const apiEndpoints = {
-        position: 'portfolio/position',
         questions: 'resumes',
         majors: 'majors',
         gpas: 'gpas',
@@ -344,6 +362,8 @@ function InputInfo() {
             Authorization: `Bearer ${kakaoToken}`,
           },
           params: { positionName: resumeData.position }
+        }).catch(error => {
+          console.error('PUT position 요청 오류:', error);
         })
       );
   
@@ -351,7 +371,7 @@ function InputInfo() {
   
       console.log('모든 요청이 성공적으로 완료되었습니다.');
       setIsFormChanged(false);
-      navigate('/interviewpreparation'); // 면접 시작 페이지로 이동
+      navigate('/interviewpreparation'); // 면접 준비 페이지로 이동
   
     } catch (error) {
       console.error('서버 요청 오류:', error);
