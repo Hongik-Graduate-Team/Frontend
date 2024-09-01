@@ -246,25 +246,16 @@ function InputInfo() {
   };
 
   const apiCalls = (data, endpoint) => {
-    const hasId = item => item.resumeId || item.majorId || item.careerId || item.stackId || item.awardId || item.certId || item.languageCertId;
+    const hasId = item => item.awardId;
+    
     const dataToPost = data.filter(item => !hasId(item));
     const dataToPut = data.filter(hasId);
   
     let promises = [];
   
     if (dataToPost.length > 0) {
-      const dataToPostCleaned = dataToPost.map(item => {    
-        const cleanedItem = { ...item };
-        Object.keys(cleanedItem).forEach(key => {
-          if (key.includes('Id') && cleanedItem[key] === null) {
-            delete cleanedItem[key];
-          }
-        });
-        return cleanedItem;
-      });
-  
       promises.push(
-        axios.post(`https://namanba.shop/api/${endpoint}`, dataToPostCleaned, {
+        axios.post(`https://namanba.shop/api/${endpoint}`, dataToPost, {
           headers: {
             Authorization: `Bearer ${kakaoToken}`,
           }
@@ -286,7 +277,7 @@ function InputInfo() {
   };
   
   const apiDeleteCalls = (data, endpoint) => {
-    const idsToDelete = data.map(item => item.awardId);
+    const idsToDelete = data.map(item => item.awardId);  // item의 ID만 추출하여 전송
   
     if (idsToDelete.length > 0) {
       return [
@@ -294,7 +285,7 @@ function InputInfo() {
           headers: {
             Authorization: `Bearer ${kakaoToken}`,
           },
-          data: idsToDelete
+          data: idsToDelete  // 여기서는 ID 배열을 그대로 전송
         })
       ];
     }
