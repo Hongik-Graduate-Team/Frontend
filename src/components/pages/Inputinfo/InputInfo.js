@@ -168,15 +168,19 @@ function InputInfo() {
     const updatedItems = resumeData[section].filter((item, i) => i !== index);
     const deletedItem = resumeData[section][index];
     
-    // id가 있는 항목만 삭제 추적
-    if (deletedItem.resumeId || deletedItem.majorId || deletedItem.careerId || deletedItem.stackId || deletedItem.awardId || deletedItem.certId || deletedItem.languageCertId) {
-      setDeletedItems({
-        ...deletedItems,
-        [section]: [...deletedItems[section], deletedItem]
-      });
+    // ID가 있는 항목만 삭제 추적
+    const idKey = Object.keys(deletedItem).find(key => key.includes('Id'));
+    if (idKey && deletedItem[idKey] !== null) {
+        setDeletedItems(prevState => ({
+            ...prevState,
+            [section]: [...prevState[section], deletedItem]
+        }));
     }
 
-    setResumeData({ ...resumeData, [section]: updatedItems });
+    setResumeData(prevData => ({
+        ...prevData,
+        [section]: updatedItems
+    }));
     setIsFormChanged(true);
   };
 
@@ -243,11 +247,11 @@ function InputInfo() {
     const hasId = item => item.resumeId || item.majorId || item.careerId || item.stackId || item.awardId || item.certId || item.languageCertId;
     const dataToPost = data.filter(item => !hasId(item));
     const dataToPut = data.filter(hasId);
-
+  
     let promises = [];
-
+  
     if (dataToPost.length > 0) {
-      const dataToPostCleaned = dataToPost.map(item => {    // post시 id 제거
+      const dataToPostCleaned = dataToPost.map(item => {    
         const cleanedItem = { ...item };
         Object.keys(cleanedItem).forEach(key => {
           if (key.includes('Id') && cleanedItem[key] === null) {
@@ -256,7 +260,7 @@ function InputInfo() {
         });
         return cleanedItem;
       });
-
+  
       promises.push(
         axios.post(`https://namanba.shop/api/${endpoint}`, dataToPostCleaned, {
           headers: {
@@ -265,32 +269,32 @@ function InputInfo() {
         })
       );
     }
-
-    promises.push(
-      ...dataToPut.map(item => 
-          axios.put(`https://namanba.shop/api/${endpoint}`, item, {
-              headers: {
-                  Authorization: `Bearer ${kakaoToken}`,
-              }
-          })
-      )
-    );
+  
+    if (dataToPut.length > 0) {
+      promises.push(
+        axios.put(`https://namanba.shop/api/${endpoint}`, dataToPut, {
+          headers: {
+            Authorization: `Bearer ${kakaoToken}`,
+          }
+        })
+      );
+    }
   
     return promises;
   };
-
+  
   const apiDeleteCalls = (data, endpoint) => {
-    const idsToDelete = data.map(item => item[`${endpoint.slice(0, -1)}Id`]);
-
+    const idsToDelete = data.map(item => item.awardId);
+  
     if (idsToDelete.length > 0) {
-        return [
-            axios.delete(`https://namanba.shop/api/${endpoint}`, {
-                headers: {
-                    Authorization: `Bearer ${kakaoToken}`,
-                },
-                data: idsToDelete
-            })
-        ];
+      return [
+        axios.delete(`https://namanba.shop/api/${endpoint}`, {
+          headers: {
+            Authorization: `Bearer ${kakaoToken}`,
+          },
+          data: idsToDelete
+        })
+      ];
     }
     return [];
   };
@@ -323,12 +327,12 @@ function InputInfo() {
       };
   
       let allPromises = [];
-
+  
       for (const section of sections) {
         const endpoint = apiEndpoints[section];
         const sectionData = Array.isArray(resumeData[section]) ? resumeData[section] : [];
         const deleteData = Array.isArray(deletedItems[section]) ? deletedItems[section] : [];
-
+  
         const createOrUpdatePromises = apiCalls(sectionData, endpoint);
         const deletePromises = apiDeleteCalls(deleteData, endpoint);
         allPromises = [...allPromises, ...createOrUpdatePromises, ...deletePromises];
@@ -344,12 +348,11 @@ function InputInfo() {
         })
       );
   
-      // 모든 API 요청을 병렬로 실행
       await Promise.all(allPromises);
   
       console.log('모든 요청이 성공적으로 완료되었습니다.');
       setIsFormChanged(false);
-      navigate('/startInterview'); // 면접 시작 페이지로 이동
+      navigate('/interviewpreparation'); // 면접 시작 페이지로 이동
   
     } catch (error) {
       console.error('서버 요청 오류:', error);
