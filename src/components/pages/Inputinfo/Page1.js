@@ -84,14 +84,14 @@ function PageOne({ resumeData, handleChange, handleItemChange, addInputField, de
       <h3 className="mt-2 text-left text-lg font-semibold leading-9 tracking-tight text-gray-900">학점</h3>
           <div className="mb-10">
             <div className="flex w-1/2 space-x-4">
-            {resumeData.gpas && resumeData.gpas[0] && (
+            {resumeData.gpas && resumeData.gpas.length > 0 && (
               <>
               <input
                 type="number"
                 id="score"
                 name="score"
                 value={resumeData.gpas[0].score}
-                onChange={handleChange}
+                onChange={(e) => handleChange(e, 0)}
                 placeholder="취득 학점"
                 className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
               />
@@ -101,7 +101,7 @@ function PageOne({ resumeData, handleChange, handleItemChange, addInputField, de
                 id="total"
                 name="total"
                 value={resumeData.gpas[0].total}
-                onChange={handleChange}
+                onChange={(e) => handleChange(e, 0)}
                 placeholder="만점"
                 className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
               />

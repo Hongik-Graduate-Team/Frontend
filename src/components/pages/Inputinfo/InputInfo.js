@@ -116,22 +116,24 @@ function InputInfo() {
   }, [isFormChanged]);
 
    // 일반적인 입력값 변경 핸들러
-   const handleChange = (e) => {
-    const { name, value } = e.target;
-  
-    if (name === "score" || name === "total") {
-      setResumeData((prevData) => ({
-        ...prevData,
-        gpas: prevData.gpas.map((gpa, index) =>
-          index === 0 ? { ...gpa, [name]: value } : gpa
-        ),
-      }));
-    } else {  // 일반적인 필드 업데이트
-      setResumeData({ ...resumeData, [name]: value });
-    }
-  
-    setIsFormChanged(true);
-  };
+const handleChange = (e, index) => {
+  const { name, value } = e.target;
+
+  // GPA 필드인 경우 인덱스를 이용해 업데이트
+  if (name === "score" || name === "total") {
+    setResumeData((prevData) => ({
+      ...prevData,
+      gpas: prevData.gpas.map((gpa, idx) =>
+        idx === index ? { ...gpa, [name]: value } : gpa
+      ),
+    }));
+  } else {
+    // GPA 필드가 아닌 경우 일반적인 필드 업데이트
+    setResumeData({ ...resumeData, [name]: value });
+  }
+
+  setIsFormChanged(true);
+};
 
   // 날짜 변경 핸들러
   const handleDateChange = (section, index, dateType, date) => {
