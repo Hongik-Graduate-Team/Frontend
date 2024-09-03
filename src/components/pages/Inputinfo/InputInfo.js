@@ -36,48 +36,59 @@ function InputInfo() {
 
   const navigate = useNavigate();
 
-  // 컴포넌트가 마운트 될 때 데이터 불러오기
   useEffect(() => {
-    const token = localStorage.getItem('userToken');  // 로컬 스토리지에서 토큰 가져오기
-    if (token) {
-      setKakaoToken(token);
-      loadData(token);
-    } else {
-      // alert("인증 토큰이 없습니다. 다시 로그인해주세요.");
-      // navigate('/'); // 로그인 페이지로 리디렉션
-    return;
+    const token = localStorage.getItem('userToken'); // 로컬 스토리지에서 토큰 가져오기
+
+    if (!token) {
+      // 토큰이 없으면 경고 및 리디렉션
+      alert("인증 토큰이 없습니다. 다시 로그인 해주세요.");
+      navigate('/'); // 메인 페이지로 리디렉션
+      return; // 이후 로직을 실행하지 않음
     }
-  }, [navigate]);
 
-  // 서버에서 데이터 불러오기
-  const loadData = async (token) => {
-    try {
-      const response = await axios.get('https://namanba.shop/api/portfolio', {
-        headers: {
-          Authorization: `Bearer ${token}`
-        },
-      });
-      const data = response.data.data;
-      console.log("fetched data:", data);
+    // 토큰이 있으면 상태에 저장
+    setKakaoToken(token);
 
-      if (data) {
-        // 서버에서 받은 데이터를 상태에 저장
-        setResumeData({
-          position: data.position || '',
-          questions: data.resumes.length > 0 ? data.resumes : [{ resumeId: null, question: '', answer: '' }],
-          majors: data.majors.length > 0 ? data.majors : [{ majorId: null, majorName: '' }],
-          gpas: data.gpas.length > 0 ? data.gpas : [{ gpaId: null, score: '', total: '' }],
-          careers: data.careers.length > 0 ? data.careers : [{ careerId: null, careerType: '', content: '', startDate: null, endDate: null }],
-          stacks: data.stacks.length > 0 ? data.stacks : [{ stackId: null, stackLanguage: '', stackLevel: '' }],
-          awards: data.awards.length > 0 ? data.awards : [{ awardId: null, awardType: '', awardPrize: '' }],
-          certifications: data.certifications.length > 0 ? data.certifications : [{ certId: null, certType: '', certDate: null }],
-          languageCerts: data.languageCerts.length > 0 ? data.languageCerts : [{ languageCertId: null, languageCertType: '', languageCertLevel: '', languageCertDate: null }],
+    // 서버에서 데이터 불러오기 함수
+    const loadData = async () => {
+      try {
+        const response = await axios.get('https://namanba.shop/api/portfolio', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          },
         });
+
+        const data = response.data.data;
+        console.log("fetched data:", data);
+
+        if (data) {
+          // 서버에서 받은 데이터를 상태에 저장
+          setResumeData({
+            position: data.position || '',
+            questions: data.resumes.length > 0 ? data.resumes : [{ resumeId: null, question: '', answer: '' }],
+            majors: data.majors.length > 0 ? data.majors : [{ majorId: null, majorName: '' }],
+            gpas: data.gpas.length > 0 ? data.gpas : [{ gpaId: null, score: '', total: '' }],
+            careers: data.careers.length > 0 ? data.careers : [{ careerId: null, careerType: '', content: '', startDate: null, endDate: null }],
+            stacks: data.stacks.length > 0 ? data.stacks : [{ stackId: null, stackLanguage: '', stackLevel: '' }],
+            awards: data.awards.length > 0 ? data.awards : [{ awardId: null, awardType: '', awardPrize: '' }],
+            certifications: data.certifications.length > 0 ? data.certifications : [{ certId: null, certType: '', certDate: null }],
+            languageCerts: data.languageCerts.length > 0 ? data.languageCerts : [{ languageCertId: null, languageCertType: '', languageCertLevel: '', languageCertDate: null }],
+          });
+        } else {
+          // 데이터가 없으면 경고 및 리디렉션
+          alert("데이터를 불러올 수 없습니다. 다시 로그인 해주세요.");
+          navigate('/');
+        }
+      } catch (error) {
+        console.error("데이터를 불러오는 중 오류가 발생했습니다:", error);
+        alert("데이터를 불러올 수 없습니다. 다시 로그인 해주세요.");
+        navigate('/');
       }
-    } catch (error) {
-      console.error('데이터를 불러오는데 실패했습니다:', error);
-    }
-  };
+    };
+
+    // 데이터 로딩 실행
+    loadData();
+  }, [navigate]); // `navigate`를 종속성으로 추가하여 안전하게 리디렉션 처리
 
   useEffect(() => {
     console.log("Resume Data updated: ", resumeData);
