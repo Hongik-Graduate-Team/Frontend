@@ -15,7 +15,7 @@ function InputInfo() {
     position: '',
     questions: [{ resumeId: null, question: '', answer: '' }],
     majors: [{ majorId: null, majorName: '' }] ,
-    gpas: [{ score: '', total: '' }],
+    gpas: [{ gpaId: null, score: '', total: '' }],
     careers: [{ careerId: null, careerType: '', content: '', startDate: null, endDate: null }],
     stacks: [{ stackId: null, stackLanguage: '', stackLevel: '' }],
     awards: [{ awardId: null, awardType: '', awardPrize: '' }],
@@ -26,6 +26,7 @@ function InputInfo() {
   const [deletedItems, setDeletedItems] = useState({
     questions: [],
     majors: [],
+    gpas: [],
     careers: [],
     stacks: [],
     awards: [],
@@ -42,9 +43,11 @@ function InputInfo() {
       setKakaoToken(token);
       loadData(token);
     } else {
-      console.error("토큰을 찾을 수 없습니다.");
+      // alert("인증 토큰이 없습니다. 다시 로그인해주세요.");
+      // navigate('/'); // 로그인 페이지로 리디렉션
+    return;
     }
-  }, []);
+  }, [navigate]);
 
   // 서버에서 데이터 불러오기
   const loadData = async (token) => {
@@ -63,7 +66,7 @@ function InputInfo() {
           position: data.position || '',
           questions: data.resumes.length > 0 ? data.resumes : [{ resumeId: null, question: '', answer: '' }],
           majors: data.majors.length > 0 ? data.majors : [{ majorId: null, majorName: '' }],
-          gpas: data.gpas.length > 0 ? data.gpas : [{ score: '', total: '' }],
+          gpas: data.gpas.length > 0 ? data.gpas : [{ gpaId: null, score: '', total: '' }],
           careers: data.careers.length > 0 ? data.careers : [{ careerId: null, careerType: '', content: '', startDate: null, endDate: null }],
           stacks: data.stacks.length > 0 ? data.stacks : [{ stackId: null, stackLanguage: '', stackLevel: '' }],
           awards: data.awards.length > 0 ? data.awards : [{ awardId: null, awardType: '', awardPrize: '' }],
@@ -116,7 +119,7 @@ function InputInfo() {
    const handleChange = (e) => {
     const { name, value } = e.target;
   
-    if (name === "score" || name === "total") {  // 학점(gpa) 필드 업데이트
+    if (name === "score" || name === "total") {
       setResumeData((prevData) => ({
         ...prevData,
         gpas: prevData.gpas.map((gpa, index) =>
@@ -238,7 +241,7 @@ function InputInfo() {
   }
     // GPA 섹션 검사
     if (resumeData.gpas) {
-      const { score, total } = resumeData.gpas;
+      const { score, total } = resumeData.gpas[0];
       if ((score && !total) || (!score && total)) {
         alert('모든 항목을 입력해 주세요.');
         return false;
