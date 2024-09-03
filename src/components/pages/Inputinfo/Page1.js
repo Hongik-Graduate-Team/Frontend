@@ -83,31 +83,29 @@ function PageOne({ resumeData, handleChange, handleItemChange, addInputField, de
       
       <h3 className="mt-2 text-left text-lg font-semibold leading-9 tracking-tight text-gray-900">학점</h3>
           <div className="mb-10">
-            <div className="flex w-1/2 space-x-4">
-            {resumeData.gpas && resumeData.gpas.length > 0 && (
-              <>
+            {resumeData.gpas && resumeData.gpas.map((gpa, index) => (
+              <div key={index} className="flex w-1/2 space-x-4">
               <input
                 type="number"
-                id="score"
+                id={`score-${index}`}
                 name="score"
-                value={resumeData.gpas[0].score}
-                onChange={(e) => handleChange(e, 0)}
+                value={gpa.score}
+                onChange={(e) => handleItemChange('gpas', index, e)}
                 placeholder="취득 학점"
                 className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
               />
               <p className="p-3 mt-1">/</p>
               <input
                 type="number"
-                id="total"
+                id={`total-${index}`}
                 name="total"
-                value={resumeData.gpas[0].total}
-                onChange={(e) => handleChange(e, 0)}
+                value={gpa.total}
+                onChange={(e) => handleItemChange('gpas', index, e)}
                 placeholder="만점"
                 className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
               />
-              </>
-            )}
-            </div>
+              </div>
+            ))}
           </div>
 
       <div className="mb-10">
