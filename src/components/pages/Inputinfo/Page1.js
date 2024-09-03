@@ -86,7 +86,7 @@ function PageOne({ resumeData, handleChange, handleItemChange, addInputField, de
             {resumeData.gpas && resumeData.gpas.map((gpa, index) => (
               <div key={index} className="flex w-1/2 space-x-4">
               <input
-                type="number"
+                type="text"
                 id={`score-${index}`}
                 name="score"
                 value={gpa.score}
@@ -96,7 +96,7 @@ function PageOne({ resumeData, handleChange, handleItemChange, addInputField, de
               />
               <p className="p-3 mt-1">/</p>
               <input
-                type="number"
+                type="text"
                 id={`total-${index}`}
                 name="total"
                 value={gpa.total}
