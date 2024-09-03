@@ -113,19 +113,20 @@ function InputInfo() {
   }, [isFormChanged]);
 
    // 일반적인 입력값 변경 핸들러
-  const handleChange = (e) => {
+   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (name === "score" || name === "total") {   // 학점(gpa) 필드 업데이트
+  
+    if (name === "score" || name === "total") {  // 학점(gpa) 필드 업데이트
       setResumeData((prevData) => ({
-          ...prevData,
-          gpas: {
-              ...prevData.gpas[0],
-              [name]: value,
-          },
+        ...prevData,
+        gpas: prevData.gpas.map((gpa, index) =>
+          index === 0 ? { ...gpa, [name]: value } : gpa
+        ),
       }));
-  } else {    // 일반적인 필드 업데이트
+    } else {  // 일반적인 필드 업데이트
       setResumeData({ ...resumeData, [name]: value });
-  }
+    }
+  
     setIsFormChanged(true);
   };
 
