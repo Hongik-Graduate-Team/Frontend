@@ -15,7 +15,7 @@ function InputInfo() {
     position: '',
     questions: [{ resumeId: null, question: '', answer: '' }],
     majors: [{ majorId: null, majorName: '' }] ,
-    gpas: { score: '', total: '' },
+    gpas: [{ score: '', total: '' }],
     careers: [{ careerId: null, careerType: '', content: '', startDate: null, endDate: null }],
     stacks: [{ stackId: null, stackLanguage: '', stackLevel: '' }],
     awards: [{ awardId: null, awardType: '', awardPrize: '' }],
@@ -46,23 +46,24 @@ function InputInfo() {
     }
   }, []);
 
-  // 데이터 가져오기
+  // 서버에서 데이터 불러오기
   const loadData = async (token) => {
     try {
       const response = await axios.get('https://namanba.shop/api/portfolio', {
         headers: {
-          Authorization: `Bearer ${token}`  // 토큰을 헤더에 포함
+          Authorization: `Bearer ${token}`
         },
       });
       const data = response.data.data;
       console.log("fetched data:", data);
 
       if (data) {
+        // 서버에서 받은 데이터를 상태에 저장
         setResumeData({
           position: data.position || '',
           questions: data.resumes.length > 0 ? data.resumes : [{ resumeId: null, question: '', answer: '' }],
           majors: data.majors.length > 0 ? data.majors : [{ majorId: null, majorName: '' }],
-          gpas: data.gpas.length > 0 ? data.gpas[0] : { score: '', total: '' },
+          gpas: data.gpas.length > 0 ? data.gpas : [{ score: '', total: '' }],
           careers: data.careers.length > 0 ? data.careers : [{ careerId: null, careerType: '', content: '', startDate: null, endDate: null }],
           stacks: data.stacks.length > 0 ? data.stacks : [{ stackId: null, stackLanguage: '', stackLevel: '' }],
           awards: data.awards.length > 0 ? data.awards : [{ awardId: null, awardType: '', awardPrize: '' }],
@@ -76,8 +77,8 @@ function InputInfo() {
   };
 
   useEffect(() => {
-  console.log("Resume Data updated: ", resumeData);
-}, [resumeData]);
+    console.log("Resume Data updated: ", resumeData);
+  }, [resumeData]);
 
   // 페이지 이동 시 경고창 표시
   useEffect(() => {
@@ -94,7 +95,7 @@ function InputInfo() {
       if (isFormChanged) {
         const confirmLeave = window.confirm('저장되지 않은 변경 사항이 있습니다. 정말로 페이지를 떠나시겠습니까?');
         if (!confirmLeave) {
-          // 뒤로가기를 막기 위해 현재 URL을 다시 추가합니다.
+          // 뒤로가기를 막기 위해 현재 URL을 다시 추가
           window.history.pushState(null, '', window.location.href);
         }
       }
@@ -118,11 +119,11 @@ function InputInfo() {
       setResumeData((prevData) => ({
           ...prevData,
           gpas: {
-              ...prevData.gpas,
+              ...prevData.gpas[0],
               [name]: value,
           },
       }));
-  } else {    // 다른 일반적인 필드 업데이트
+  } else {    // 일반적인 필드 업데이트
       setResumeData({ ...resumeData, [name]: value });
   }
     setIsFormChanged(true);
@@ -184,6 +185,7 @@ function InputInfo() {
     setIsFormChanged(true);
   };
 
+  // 폼 유효성 검사
   const validateForm = () => {
     const requiredSections = ['position', 'questions'];
   
