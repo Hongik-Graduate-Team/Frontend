@@ -7,7 +7,9 @@ import HomePage from './components/pages/Homepage/HomePage';
 import InputInfo from './components/pages/Inputinfo/InputInfo';
 import MyPage from './components/pages/MyPage/MyPage';
 import InterviewPreparationPage from "./components/pages/Interview/InterviewPreparationPage";
+import InterviewStartPage from "./components/pages/Interview/InterviewStartPage";
 import './index.css';
+
 
 // Kakao SDK 초기화
 window.Kakao.init('YOUR_KAKAO_JAVASCRIPT_KEY');
@@ -23,6 +25,7 @@ function App() {
                     <Route path="/inputinfo" element={<InputInfo />} />
                     <Route path="/mypage" element={<MyPage />} />
                     <Route path="/interviewpreparation" element={<InterviewPreparationPage />} />
+                    <Route path="/interviewstart" element={<InterviewStartPage />} />
                 </Routes>
             </Router>
         </AuthProvider>
