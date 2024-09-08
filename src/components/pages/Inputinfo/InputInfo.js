@@ -41,9 +41,9 @@ function InputInfo() {
 
     if (!token) {
       // 토큰이 없으면 경고 및 리디렉션
-      alert("인증 토큰이 없습니다. 다시 로그인 해주세요.");
-      navigate('/'); // 메인 페이지로 리디렉션
-      return; // 이후 로직을 실행하지 않음
+      // alert("인증 토큰이 없습니다. 다시 로그인 해주세요.");
+      // navigate('/signin'); // 로그인 페이지로 리디렉션
+      // return; // 이후 로직을 실행하지 않음
     }
 
     // 토큰이 있으면 상태에 저장
@@ -80,9 +80,9 @@ function InputInfo() {
           navigate('/');
         }
       } catch (error) {
-        console.error("데이터를 불러오는 중 오류가 발생했습니다:", error);
-        alert("데이터를 불러올 수 없습니다. 다시 로그인 해주세요.");
-        navigate('/');
+        // console.error("데이터를 불러오는 중 오류가 발생했습니다:", error);
+        // alert("데이터를 불러올 수 없습니다. 다시 로그인 해주세요.");
+        // navigate('/signin');
       }
     };
 

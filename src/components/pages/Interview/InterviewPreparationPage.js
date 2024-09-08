@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as faceapi from 'face-api.js';
 import MainHeader from '../../molecules/Header/MainHeader';
-
+import InterviewInfoModal from '../../modal/InterviewInfoModal';
 // 이미지 임포트
 import voiceSuccessImage from '../../../assets/img/voice-success.png';
 import voiceFailImage from '../../../assets/img/voice-fail.png';
@@ -13,12 +13,29 @@ const InterviewPreparationPage = () => {
     const videoRef = useRef(null); // 비디오 요소를 참조하기 위한 useRef 훅
     const [voiceDetected, setVoiceDetected] = useState(false); // 음성 인식 여부 상태를 저장
     const [faceDetected, setFaceDetected] = useState(false); // 얼굴 인식 여부 상태를 저장
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const navigate = useNavigate(); // 페이지 이동을 위한 useNavigate 훅
 
     // 페이지 이동 함수
     const handleNavigation = (path) => {
         navigate(path);
+    };
+
+    // 모달 열기
+    const handleOpenModal = () => {
+        setIsModalOpen(true);
+    };
+
+    // 모달 닫기
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+    };
+
+    // 면접 응시 페이지로 이동
+    const handleProceedToInterview = () => {
+        setIsModalOpen(false);
+        navigate('/inputinfo'); // 면접 응시 페이지로 이동
     };
 
     useEffect(() => {
@@ -74,8 +91,6 @@ const InterviewPreparationPage = () => {
                 // 평균값에 따라 음성 인식 여부 결정
                 if (average > 30) {
                     setVoiceDetected(true);
-                } else {
-                    setVoiceDetected(false);
                 }
 
                 requestAnimationFrame(detectVoice); // 다음 프레임에서 다시 호출
@@ -99,8 +114,6 @@ const InterviewPreparationPage = () => {
                     // 얼굴 인식 여부 상태 업데이트
                     if (detections.length > 0) {
                         setFaceDetected(true);
-                    } else {
-                        setFaceDetected(false);
                     }
                 }
 
@@ -126,45 +139,62 @@ const InterviewPreparationPage = () => {
     return (
         <div className="flex flex-col h-screen">
             <MainHeader /> {/* 헤더 컴포넌트 */}
-            <div className="flex flex-1 flex-col items-center justify-center mx-4 my-8 p-4">
+            <div className="flex items-center justify-center min-h-[150px] text-lg text-center mb-4 mt-2"> {/* 안내문 */} 
+                <p>
+                    <button
+                        className="px-3 py-1 text-teal-400 text-xl font-semibold bg-teal-50 rounded-md mb-4"
+                    >
+                        응시 환경 체크
+                    </button><br />
+                    원활한 면접을 위해 웹캠과 마이크 체크를 시작합니다.<br />
+                    좌측 상단 브라우저의 카메라 및 마이크 접근 권한 요청이 뜨면 '허용'으로 설정해주세요.
+                </p>
+            </div>
+            <div className="flex-1 items-center justify-center">
                 {/* 비디오와 이미지 컨테이너 */}
-                <div className="flex items-center justify-center w-full max-w-6xl space-x-16">
+                <div className="flex items-center justify-center w-full space-x-10">
                     {/* 비디오 화면 */}
                     <div className="relative">
-                        <video ref={videoRef} className="w-[30rem] h-[30rem] rounded-lg shadow-lg" />
+                        <video ref={videoRef} className="w-full rounded-md shadow-md" />
                     </div>
                     {/* 상태 이미지 */}
-                    <div className="flex flex-col justify-between" style={{ height: '30rem', marginLeft: '1rem', marginRight: '1rem' }}>
+                    <div className="flex flex-col justify-between">
                         {/* 음성 인식 이미지 */}
                         <img
                             src={voiceDetected ? voiceSuccessImage : voiceFailImage}
                             alt={voiceDetected ? "Voice recognized" : "Voice not recognized"}
-                            className="w-[30rem] h-[50%] object-contain"
+                            className="w-4/5 object-contain"
                         />
                         {/* 얼굴 인식 이미지 */}
                         <img
                             src={faceDetected ? faceSuccessImage : faceFailImage}
                             alt={faceDetected ? "Face recognized" : "Face not recognized"}
-                            className="w-[30rem] h-[50%] object-contain"
+                            className="w-4/5 object-contain"
                         />
                     </div>
                 </div>
                 {/* 버튼 */}
-                <div className="mt-8 flex justify-center space-x-4">
+                <div className="mt-10 flex justify-center space-x-4">
                     <button
-                        className="px-6 py-3 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none"
-                        onClick={() => handleNavigation('/inputinfo')}
-                    >
-                        면접 시작
-                    </button>
-                    <button
-                        className="px-6 py-3 bg-gray-500 text-white rounded-md hover:bg-gray-600 focus:outline-none"
+                        className="px-4 py-2 text-white bg-gray-400 rounded-lg hover:bg-gray-500"
                         onClick={() => handleNavigation('/inputinfo')}
                     >
                         이전
                     </button>
+                    <button
+                        className={`px-4 py-2 text-white rounded-lg ${!voiceDetected || !faceDetected ? 'bg-gray-400 cursor-not-allowed' : 'bg-indigo-500 hover:bg-indigo-600'}`}
+                        onClick={handleOpenModal}
+                        disabled={!voiceDetected || !faceDetected}
+                    >
+                        면접 시작
+                    </button>
                 </div>
             </div>
+            <InterviewInfoModal 
+                isOpen={isModalOpen} 
+                onClose={handleCloseModal} 
+                onProceed={handleProceedToInterview} 
+            />
         </div>
     );
 };
