@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import logo from '../../../assets/img/Logo.png';
 import { AuthContext } from '../../../services/AuthContext';
 
-function MainHeader({ isFormChanged }) {
+function MainHeader({ isFormChanged, isInterviewStarted }) {
     const { setIsLoggedIn } = useContext(AuthContext);
     const navigate = useNavigate();
 
@@ -13,15 +13,29 @@ function MainHeader({ isFormChanged }) {
             if (confirmLeave) {
                 navigate(path);  // navigate 사용
             }
-        } else {
-            navigate(path);  // navigate 사용
+        }   
+        else if (isInterviewStarted) {
+            const confirmLeave = window.confirm('면접이 끝나지 않았습니다. 정말로 페이지를 떠나시겠습니까?');
+            if (confirmLeave) {
+                navigate(path);  // navigate 사용
+            }
+        }
+        else {
+            return;
         }
     };
 
 
     const handleLogout = () => {
         if (isFormChanged) {
-            const confirmLogout = window.confirm('저장되지 않은 변경 사항이 있습니다. 로그아웃하시겠습니까?');
+            const confirmLogout = window.confirm('저장되지 않은 변경 사항이 있습니다. 로그아웃 하시겠습니까?');
+            if (!confirmLogout) {
+                return;
+            }
+        }
+
+        else if (isInterviewStarted) {
+            const confirmLogout = window.confirm('면접이 끝나지 않았습니다. 로그아웃 하시겠습니까?');
             if (!confirmLogout) {
                 return;
             }
