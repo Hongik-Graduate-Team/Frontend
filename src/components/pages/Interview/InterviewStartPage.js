@@ -68,7 +68,7 @@ const InterviewStartPage = () => {
       };
          const handlePopState = (e) => {
         if (isInterviewStarted) {
-          const confirmLeave = window.confirm('저장되지 않은 변경 사항이 있습니다. 정말로 페이지를 떠나시겠습니까?');
+          const confirmLeave = window.confirm('면접이 끝나지 않았습니다. 정말로 페이지를 떠나시겠습니까?');
           if (!confirmLeave) {
             // 뒤로가기를 막기 위해 현재 URL을 다시 추가
             window.history.pushState(null, '', window.location.href);

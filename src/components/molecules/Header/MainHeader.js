@@ -21,7 +21,7 @@ function MainHeader({ isFormChanged, isInterviewStarted }) {
             }
         }
         else {
-            return;
+            navigate(path);  // navigate 사용
         }
     };
 
