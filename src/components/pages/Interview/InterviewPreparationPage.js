@@ -35,7 +35,7 @@ const InterviewPreparationPage = () => {
     // 면접 응시 페이지로 이동
     const handleProceedToInterview = () => {
         setIsModalOpen(false);
-        navigate('/inputinfo'); // 면접 응시 페이지로 이동
+        navigate('/interviewstart'); // 면접 응시 페이지로 이동
     };
 
     useEffect(() => {
