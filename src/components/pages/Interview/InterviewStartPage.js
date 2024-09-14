@@ -24,7 +24,7 @@ const InterviewStartPage = () => {
             setRemainingTime(30);  // 준비 시간 30초 재설정
         } else {
             alert("모든 질문이 완료되었습니다. 면접을 종료합니다.");
-            navigate('/interview-end');  // 면접 종료 페이지로 이동
+            navigate('/feedback');  // 면접 종료 페이지로 이동
         }
     }, [currentQuestionIndex, totalQuestions, navigate]);
 
@@ -40,21 +40,35 @@ const InterviewStartPage = () => {
 
     // 단계 전환 로직
     useEffect(() => {
-        if (remainingTime > 0) {
+        if (remainingTime > 0 && (currentStep === 'announcement' || currentStep === 'ready')) {
             const timer = setTimeout(() => setRemainingTime(remainingTime - 1), 1000);
             return () => clearTimeout(timer);
         } else if (remainingTime === 0) {
             if (currentStep === 'announcement') {
                 setCurrentStep('ready');  // 안내사항이 끝나면 준비 시간으로 이동
+                setRemainingTime(30);     // 준비 시간 30초 설정
             } else if (currentStep === 'ready') {
                 setCurrentStep('answering');  // 준비 시간이 끝나면 질문 답변 시간으로 이동
-                setAnswerTime(120);  // 답변 시간 재설정
-                startRecording();  // 답변 시간이 시작되면 녹화 시작
-            } else if (currentStep === 'answering') {
-                moveToNextStep();  // 답변 시간이 끝나면 다음 단계로 이동
+                setAnswerTime(120);  // 답변 시간 120초로 설정
+                startRecording();  // 녹화 시작
             }
         }
-    }, [remainingTime, currentStep, moveToNextStep]);  // moveToNextStep 추가
+    }, [remainingTime, currentStep]);
+
+    // 답변 시간 카운트다운
+    useEffect(() => {
+        if (currentStep === 'answering' && answerTime > 0) {
+            const timer = setTimeout(() => {
+                setAnswerTime((prevTime) => prevTime - 1);
+            }, 1000);
+    
+            // Cleanup 함수: 타이머를 정리합니다.
+            return () => clearTimeout(timer);
+        } else if (answerTime === 0) {
+            stopRecording();  // 녹화 중지
+            moveToNextStep();  // 다음 단계로 이동
+        }
+    }, [currentStep, answerTime, moveToNextStep]);
 
     // 페이지 이동 시 경고창 표시
     useEffect(() => {
@@ -84,20 +98,6 @@ const InterviewStartPage = () => {
       };
     }, [isInterviewStarted]);
 
-    // 답변 시간 카운트다운
-    useEffect(() => {
-        let timer;
-        if (currentStep === 'answering' && answerTime > 0) {
-            timer = setInterval(() => setAnswerTime(answerTime - 1), 1000);
-        }
-        if (answerTime === 0 && currentStep === 'answering') {
-            setCurrentStep('ready');  // 답변 시간이 끝나면 준비 시간으로 이동
-            setRemainingTime(30);  // 준비 시간 30초 재설정
-            stopRecording();  // 답변 시간이 끝나면 녹화 중지
-        }
-        return () => clearInterval(timer);
-    }, [answerTime, currentStep]);
-
     // Face-api를 이용해 얼굴을 인식하고 비디오 출력
     useEffect(() => {
         const videoElement = videoRef.current;
@@ -106,7 +106,7 @@ const InterviewStartPage = () => {
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({
                     video: true,
-                    audio: false,
+                    audio: true,
                 });
 
                 if (videoElement) {
@@ -177,18 +177,18 @@ const InterviewStartPage = () => {
         <svg style={{ height: 0 }}>
             <defs>
                 <linearGradient id="greenGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#EEFF35" /> {/* 시작 색상 */}
-                    <stop offset="100%" stopColor="#0AC848" /> {/* 끝 색상 */}
+                    <stop offset="0%" stopColor="#D9AFD9" /> {/* 시작 색상 */}
+                    <stop offset="100%" stopColor="#97D9E1" /> {/* 끝 색상 */}
                 </linearGradient>
 
                 <linearGradient id="blueGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#59f7da" /> {/* 시작 색상 */}
-                    <stop offset="100%" stopColor="#0068fa" /> {/* 끝 색상 */}
+                    <stop offset="0%" stopColor="#80D0C7" /> {/* 시작 색상 */}
+                    <stop offset="100%" stopColor="#0093E9" /> {/* 끝 색상 */}
                 </linearGradient>
 
-                <linearGradient id="redGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#fab62d" /> {/* 시작 색상 */}
-                    <stop offset="100%" stopColor="#fb1d0d" /> {/* 끝 색상 */}
+                <linearGradient id="redGradient" x1="0%" y1="100%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#5D67FF" /> {/* 시작 색상 */}
+                    <stop offset="100%" stopColor="#FF3C3C" /> {/* 끝 색상 */}
                 </linearGradient>
             </defs>
         </svg>
@@ -199,7 +199,7 @@ const InterviewStartPage = () => {
     <MainHeader isInterviewStarted={isInterviewStarted}/>
 
     {/* 상태에 따른 안내 및 질문 내용 - 헤더 바로 밑 */}
-    <div className="w-full mt-6 p-6 text-center">
+    <div className="w-full mt-2 text-center">
         {currentStep === 'announcement' && (
             <div>
                 <p className="text-3xl font-semibold mb-4">지금부터 면접을 시작하겠습니다.</p>
@@ -231,24 +231,28 @@ const InterviewStartPage = () => {
     </div>
 
     {/* 화면과 오른쪽 정보 및 버튼 */}
-    <div className="flex w-full max-w-7xl mt-4 gap-4">
+    <div className="flex w-full max-w-7xl mt-4">
         {/* 비디오 화면 - 왼쪽 */}
-        <div className="flex-1">
-            <video ref={videoRef} className="w-full rounded-lg shadow-xl" />
+        <div className="flex-grow-[1]">
+            <video ref={videoRef} className="rounded-lg shadow-xl w-full" />
         </div>
 
         {/* 시간 및 버튼 - 오른쪽 */}
-        <div className="flex-1 flex flex-col items-center justify-center p-3 rounded-lg">
+        <div className="flex-grow-[1] basis-1/4 flex flex-col items-center justify-center p-3 rounded-lg">
             <GradientSVG />
             {currentStep === 'announcement' && (
                 <div className='text-center'>
-                    <div className="text-xl text-green-600 mb-4">준비 시간:</div>
                     <CircularProgressbar
                         value={(remainingTime / 30) * 100}
-                        text={`0${Math.floor(remainingTime / 60)}:${("0" + (remainingTime % 60)).slice(-2)}`}
+                        text={
+                             <tspan>
+                                <tspan x="50%" dy="-3em" fontSize="0.45rem" fill="#97D9E1">준비 시간</tspan> 
+                                <tspan x="50%" dy="1em" fontSize="1.5rem" fontWeight="bold" textAnchor="middle">{`0${Math.floor(remainingTime / 60)}:${("0" + (remainingTime % 60)).slice(-2)}`}</tspan>
+                            </tspan>
+                        }
                         styles={buildStyles({
                             pathColor: 'url(#greenGradient)', // 프로그레스 바 색상
-                            textColor: '#0AC848', // 텍스트 색상
+                            textColor: '#97D9E1', // 텍스트 색상
                             trailColor: '#e8e8e8', // 배경 색상
                         })}
                     />
@@ -266,13 +270,17 @@ const InterviewStartPage = () => {
 
             {currentStep === 'ready' && (
                 <div className="text-center">
-                    <div className="text-xl text-blue-500 mb-4">준비 시간:</div>
                     <CircularProgressbar
                         value={(remainingTime / 30) * 100}
-                        text={`0${Math.floor(remainingTime / 60)}:${("0" + (remainingTime % 60)).slice(-2)}`}
+                        text={
+                             <tspan>
+                                <tspan x="50%" dy="-3em" fontSize="0.45rem" fill="#0093E9">준비 시간</tspan> 
+                                <tspan x="50%" dy="1em" fontSize="1.5rem" fontWeight="bold" textAnchor="middle">{`0${Math.floor(remainingTime / 60)}:${("0" + (remainingTime % 60)).slice(-2)}`}</tspan>
+                            </tspan>
+                        }
                         styles={buildStyles({
                             pathColor: 'url(#blueGradient)', // 프로그레스 바 색상
-                            textColor: '#3b82f6', // 텍스트 색상
+                            textColor: '#0093E9', // 텍스트 색상
                             trailColor: '#e8e8e8', // 배경 색상
                         })}
                     />
@@ -290,14 +298,18 @@ const InterviewStartPage = () => {
 
             {currentStep === 'answering' && (
                 <div className="text-center">
-                    <div className="text-xl text-red-500 mb-4">답변 시간:</div>
                     <CircularProgressbar
                         value={(answerTime / 120) * 100}
-                        text={`0${Math.floor(answerTime / 60)}:${("0" + (answerTime % 60)).slice(-2)}`}
+                        text={
+                             <tspan>
+                                <tspan x="50%" dy="-3em" fontSize="0.45rem" fill="#C850C0">답변 시간</tspan> 
+                                <tspan x="50%" dy="1em" fontSize="1.5rem" fontWeight="bold" textAnchor="middle">{`0${Math.floor(answerTime / 60)}:${("0" + (answerTime % 60)).slice(-2)}`}</tspan>
+                            </tspan>
+                        }
                         styles={buildStyles({
-                            pathColor: 'url(#redGradient)',
-                            textColor: '#fb1d0d',
-                            trailColor: '#e8e8e8',
+                            pathColor: 'url(#redGradient)', // 프로그레스 바 색상
+                            textColor: '#C850C0', // 텍스트 색상
+                            trailColor: '#e8e8e8', // 배경 색상
                         })}
                     />
                     <button

@@ -8,6 +8,7 @@ import InputInfo from './components/pages/Inputinfo/InputInfo';
 import MyPage from './components/pages/MyPage/MyPage';
 import InterviewPreparationPage from "./components/pages/Interview/InterviewPreparationPage";
 import InterviewStartPage from "./components/pages/Interview/InterviewStartPage";
+import Feedback from './components/pages/FeedbackPage';
 import './index.css';
 
 
@@ -26,6 +27,7 @@ function App() {
                     <Route path="/mypage" element={<MyPage />} />
                     <Route path="/interviewpreparation" element={<InterviewPreparationPage />} />
                     <Route path="/interviewstart" element={<InterviewStartPage />} />
+                    <Route path="/feedback" element={<Feedback />} />
                 </Routes>
             </Router>
         </AuthProvider>
