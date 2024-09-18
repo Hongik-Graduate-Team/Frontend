@@ -9,6 +9,7 @@ const InterviewStartPage = () => {
     const navigate = useNavigate();
     const videoRef = useRef(null);
     const mediaRecorderRef = useRef(null);
+    const recognitionRef = useRef(null); // 음성 인식 참조
     const [isInterviewStarted] = useState(true);
     const [remainingTime, setRemainingTime] = useState(30);  // 시간 설정
     const [currentStep, setCurrentStep] = useState('announcement');  // 현재 단계 (announcement, ready, answering)
@@ -17,9 +18,60 @@ const InterviewStartPage = () => {
     const totalQuestions = 5;  // 총 질문 개수
     const [faceDetected, setFaceDetected] = useState(true);  // 얼굴이 인식되고 있는지 상태 관리
     const [faceLostTime, setFaceLostTime] = useState(0);  // 얼굴이 인식되지 않는 시간 기록
+    const [noSpeechDetected, setNoSpeechDetected] = useState(false); // 음성 인식 실패 여부
+
+    // 음성 인식 기능 추가
+    useEffect(() => {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (SpeechRecognition) {
+            recognitionRef.current = new SpeechRecognition();
+            recognitionRef.current.continuous = true;  // 계속 인식
+            recognitionRef.current.interimResults = false;  // 중간 결과 비활성화
+            recognitionRef.current.lang = 'ko-KR'; // 한국어 설정
+
+            recognitionRef.current.onresult = (event) => {
+                setNoSpeechDetected(false);  // 음성이 인식되면 경고 해제
+                console.log('인식된 음성:', event.results[0][0].transcript);
+            };
+
+            recognitionRef.current.onspeechend = () => {
+                console.log('음성 입력 종료');
+            };
+
+            recognitionRef.current.onerror = (event) => {
+                if (event.error === 'no-speech') {
+                    console.log('음성이 인식되지 않음');
+                    setNoSpeechDetected(true);  // 음성 인식 실패
+                }
+            };
+        } else {
+            console.warn('이 브라우저는 음성 인식을 지원하지 않습니다.');
+        }
+
+        return () => {
+            if (recognitionRef.current) {
+                recognitionRef.current.stop();
+            }
+        };
+    }, []);
+
+    // 음성 인식 시작 및 중지 로직
+    const startSpeechRecognition = () => {
+        if (recognitionRef.current) {
+            recognitionRef.current.start();
+            setNoSpeechDetected(false);  // 시작 시 음성 감지 플래그 초기화
+        }
+    };
+
+    const stopSpeechRecognition = () => {
+        if (recognitionRef.current) {
+            recognitionRef.current.stop();
+        }
+    };
 
     // 다음 단계로 이동하는 함수 (다음 질문 또는 면접 종료)
     const moveToNextStep = useCallback(() => {
+        stopSpeechRecognition();  // 음성 인식 중지
         if (currentQuestionIndex < totalQuestions - 1) {
             setCurrentQuestionIndex(currentQuestionIndex + 1);
             setCurrentStep('ready');  // 다음 질문 전 준비 시간 시작
@@ -29,6 +81,27 @@ const InterviewStartPage = () => {
             navigate('/feedback');  // 면접 종료 페이지로 이동
         }
     }, [currentQuestionIndex, totalQuestions, navigate]);
+
+    // 단계 전환 로직에서 음성 인식 시작
+    useEffect(() => {
+        if (currentStep === 'answering') {
+            startSpeechRecognition();  // 질문 답변 단계에서 음성 인식 시작
+        }
+    }, [currentStep]);
+
+// 음성 인식 경고 메시지 관리
+    useEffect(() => {
+        let timer;
+
+        if (noSpeechDetected) {
+            timer = setTimeout(() => {
+                setNoSpeechDetected(false); // 경고 후 초기화
+            }, 3000);  // 3초 동안 음성이 감지되지 않으면 경고
+        }
+
+        return () => clearTimeout(timer);
+    }, [noSpeechDetected]);
+
 
     // 음성 재생 기능 추가 (안내 문구 재생)
     useEffect(() => {
@@ -173,10 +246,24 @@ const InterviewStartPage = () => {
 
     // 얼굴이 인식되지 않았을 때 상단에 메시지 표시
     useEffect(() => {
+        let timer;
+
         if (!faceDetected) {
-            setFaceLostTime(prev => prev + 1);  // 얼굴 인식 실패 시간 증가
+            timer = setTimeout(() => {
+                setFaceLostTime(prev => prev + 1);
+            }, 1000);
+
+            // 얼굴이 3초 이상 인식되지 않으면 경고 메시지 표시
+            if (faceLostTime > 3) {
+                setNoSpeechDetected(true);  // 얼굴이 인식되지 않으면 음성 인식도 비활성화
+            }
         }
-    }, [faceLostTime, faceDetected]);
+
+        return () => clearTimeout(timer);
+    }, [faceDetected, faceLostTime]);
+
+
+
 
     // 녹화 시작
     const startRecording = () => {
@@ -264,10 +351,16 @@ const InterviewStartPage = () => {
                 <div className="flex-grow-[1] relative">
                     <video ref={videoRef} className="rounded-lg shadow-xl w-full" />
 
-                    {/* 얼굴 인식 경고 메시지 */}
-                    {currentStep === 'answering' && !faceDetected && (
+                    {/* 얼굴 인식 및 음성 인식 경고 메시지 */}
+                    {currentStep === 'answering' && (
                         <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-lg">
-                            <p className="text-red-500 text-xl font-semibold">얼굴이 인식되지 않았습니다. 카메라를 다시 확인해 주세요.</p>
+                            <p className="text-red-500 text-xl font-semibold">
+                                {(!faceDetected && noSpeechDetected) ?
+                                    '얼굴과 음성이 인식되지 않습니다. 카메라와 마이크를 확인해 주세요.' :
+                                    !faceDetected ? '얼굴이 인식되지 않았습니다. 카메라를 다시 확인해 주세요.' :
+                                        '음성이 인식되지 않았습니다. 다시 말해주세요.'
+                                }
+                            </p>
                         </div>
                     )}
                 </div>
@@ -363,4 +456,5 @@ const InterviewStartPage = () => {
 };
 
 export default InterviewStartPage;
+
 
