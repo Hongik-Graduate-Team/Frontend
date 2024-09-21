@@ -377,8 +377,7 @@ const handleChange = (e, index) => {
   
       console.log('모든 요청이 성공적으로 완료되었습니다.');
       setIsFormChanged(false);
-      navigate('/interviewpreparation'); // 면접 준비 페이지로 이동
-  
+        
     } catch (error) {
       console.error('서버 요청 오류:', error);
       alert('저장 중 오류가 발생했습니다.');
