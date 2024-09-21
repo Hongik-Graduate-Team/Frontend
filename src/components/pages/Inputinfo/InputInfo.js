@@ -350,6 +350,7 @@ const handleChange = (e, index) => {
       };
   
       let allPromises = [];
+      let hasError = false; // 오류 발생 여부
   
       for (const section of sections) {
         const endpoint = apiEndpoints[section];
@@ -370,17 +371,29 @@ const handleChange = (e, index) => {
           params: { positionName: resumeData.position }
         }).catch(error => {
           console.error('PUT position 요청 오류:', error);
+          alert('저장 중 오류가 발생했습니다.');
+          hasError = true;
         })
       );
-  
-      await Promise.all(allPromises);
-  
-      console.log('모든 요청이 성공적으로 완료되었습니다.');
+
+      // 모든 요청을 병렬로 실행
+      await Promise.all(allPromises).catch(error => {
+        console.error('요청 중 오류:', error);
+        alert('저장 중 오류가 발생했습니다.');
+        hasError = true;
+      });
+
+      if (hasError) {
+        return false; // 오류가 발생한 경우 false 반환
+      }
+
       setIsFormChanged(false);
-        
+      return true; // 성공적으로 저장된 경우 true 반환
+
     } catch (error) {
       console.error('서버 요청 오류:', error);
       alert('저장 중 오류가 발생했습니다.');
+      return false; // 오류 발생 시 false 반환
     }
   };
 
