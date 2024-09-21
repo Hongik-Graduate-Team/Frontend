@@ -61,10 +61,19 @@ function InputInfo() {
         const data = response.data.data;
         console.log("fetched data:", data);
 
+        // 포지션 데이터 불러오기
+        const positionResponse = await axios.get('https://namanba.shop/api/portfolio/position', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          },
+        });
+
+        const positionData = positionResponse.data.data.position;
+
         if (data) {
           // 서버에서 받은 데이터를 상태에 저장
           setResumeData({
-            position: data.position || '',
+            position: positionData || '',
             questions: data.resumes.length > 0 ? data.resumes : [{ resumeId: null, question: '', answer: '' }],
             majors: data.majors.length > 0 ? data.majors : [{ majorId: null, majorName: '' }],
             gpas: data.gpas.length > 0 ? data.gpas : [{ gpaId: null, score: '', total: '' }],
