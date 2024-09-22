@@ -4,7 +4,7 @@ import addIcon from '../../../assets/img/add.png'
 
 function PageTwo({ resumeData, handleItemChange, addInputField, deleteInputField }) {
   const [totalCharacters, setTotalCharacters] = useState(0);
-  const maxCharacters = 6000;
+  const maxCharacters = 7000;
 
   // 전체 글자 수 계산
   const calculateTotalCharacters = (data) => {
