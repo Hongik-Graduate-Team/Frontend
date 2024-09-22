@@ -8,7 +8,13 @@ const InputTitleModal = ({ isOpen, onClose }) => {
 
     const handleSave = async () => {
         try {
-            await axios.post('/api/interviews', { interviewTitle });
+            const token = localStorage.getItem('userToken'); // 로컬 스토리지에서 토큰 가져오기
+            await axios.put('https://namanba.shop/api/interview', null, {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+                params: { interviewTitle: interviewTitle }
+              });
             setInterviewTitle(''); // 저장 후 input 초기화
             onClose(); // 모달 닫기
             navigate('/interviewpreparation');
