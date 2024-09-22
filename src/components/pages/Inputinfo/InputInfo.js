@@ -65,10 +65,10 @@ function InputInfo() {
         const positionResponse = await axios.get('https://namanba.shop/api/portfolio/position', {
           headers: {
             Authorization: `Bearer ${token}`
-          },
+          }
         });
 
-        const positionData = positionResponse.data.data.position;
+        const positionData = positionResponse.data.data.positionName;
 
         if (data) {
           // 서버에서 받은 데이터를 상태에 저장
