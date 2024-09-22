@@ -9,7 +9,7 @@ const InputTitleModal = ({ isOpen, onClose }) => {
     const handleSave = async () => {
         try {
             const token = localStorage.getItem('userToken'); // 로컬 스토리지에서 토큰 가져오기
-            await axios.put('https://namanba.shop/api/interview', null, {
+            await axios.post('https://namanba.shop/api/interview', null, {
                 headers: {
                   Authorization: `Bearer ${token}`,
                 },
