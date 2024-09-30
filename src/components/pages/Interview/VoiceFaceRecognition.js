@@ -93,6 +93,8 @@ const VoiceFaceRecognition = ({ videoRef, setFaceDetected, setNoAudioDetectedTim
                         setFaceLostTime(0);
                     } else {
                         setFaceDetected(false);
+                        // 얼굴이 인식되지 않으면 1초마다 faceLostTime을 증가시킴
+                        setFaceLostTime(prevTime => prevTime + 1);
                     }
                 }
                 requestAnimationFrame(detect);
@@ -108,8 +110,13 @@ const VoiceFaceRecognition = ({ videoRef, setFaceDetected, setNoAudioDetectedTim
                 videoElement.srcObject = null;
             }
         };
-    }, [setFaceDetected, setFaceLostTime, videoRef]);
-
+    }, [setFaceDetected, videoRef]);
+    // 얼굴이 인식되지 않았을 때 faceLostTime을 이용해 메시지 표시
+    useEffect(() => {
+        if (faceLostTime >= 3) {
+            console.warn('얼굴이 3초 이상 인식되지 않았습니다.');
+        }
+    }, [faceLostTime]);  // faceLostTime이 변경될 때마다 실행
     return null;
 };
 

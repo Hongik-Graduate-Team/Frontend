@@ -44,6 +44,26 @@ const InterviewStartPage = () => {
         }
     }, [currentQuestionIndex, totalQuestions, navigate, getRecordedVideoUrl, stopRecording]);
 
+    // 얼굴 인식 경고 표시
+    useEffect(() => {
+        if (currentStep === 'answering' && !faceDetected) {
+            const timer = setInterval(() => {
+                setFaceLostTime((prevTime) => prevTime + 1);
+            }, 1000); // 1초마다 faceLostTime 증가
+
+            return () => clearInterval(timer); // cleanup 함수로 타이머 정리
+        } else {
+            // 얼굴이 다시 인식되면 faceLostTime을 0으로 초기화
+            setFaceLostTime(0);
+        }
+    }, [faceDetected, currentStep]);
+
+    useEffect(() => {
+        if (currentStep === 'answering' && faceLostTime >= 3) {
+            console.warn("얼굴이 인식되지 않습니다!");
+        }
+    }, [faceLostTime, currentStep]);
+
     // 음성 재생 기능 추가 (안내 문구 재생)
     useEffect(() => {
         if (currentStep === 'announcement') {
@@ -60,6 +80,7 @@ const InterviewStartPage = () => {
     }, [currentStep]);
 
     // 단계 전환 로직
+    // 준비 시간 타이머 설정
     useEffect(() => {
         if (remainingTime > 0 && (currentStep === 'announcement' || currentStep === 'ready')) {
             const timer = setTimeout(() => setRemainingTime(remainingTime - 1), 1000);
@@ -74,22 +95,29 @@ const InterviewStartPage = () => {
                 startRecording();  // 녹화 시작
             }
         }
-    }, [remainingTime, currentStep, startRecording]);
+    }, [remainingTime, currentStep]);
+
 
     // 답변 시간 카운트다운
     useEffect(() => {
         if (currentStep === 'answering' && answerTime > 0) {
             const timer = setTimeout(() => {
-                setAnswerTime((prevTime) => prevTime - 1);
+                setAnswerTime(prevTime => prevTime - 1);
             }, 1000);
 
-            // Cleanup 함수: 타이머를 정리합니다.
+            // 타이머를 청소하는 클린업 함수
             return () => clearTimeout(timer);
-        } else if (answerTime === 0) {
-            pauseRecording();  // 녹화 일시 중지
-            moveToNextStep();  // 다음 단계로 이동
         }
-    }, [currentStep, answerTime, pauseRecording, moveToNextStep]);
+    }, [answerTime, currentStep]);
+
+    useEffect(() => {
+        if (answerTime === 0 && currentStep === 'answering') {
+            // 녹화를 일시 중지하고 다음 단계로 이동
+            pauseRecording();
+            moveToNextStep();
+        }
+    }, [answerTime, currentStep, pauseRecording, moveToNextStep]);
+
 
     // 페이지 이동 시 경고창 표시
     useEffect(() => {
@@ -231,6 +259,8 @@ const InterviewStartPage = () => {
                 {/* 시간 및 버튼 - 오른쪽 */}
                 <div className="flex-grow-[1] basis-1/4 flex flex-col items-center justify-center p-3 rounded-lg">
                     <GradientSVG/>
+
+                    {/* 준비 시간 단계 */}
                     {currentStep === 'announcement' && (
                         <div className="text-center">
                             <CircularProgressbar
@@ -316,6 +346,7 @@ const InterviewStartPage = () => {
                         </div>
                     )}
                 </div>
+
             </div>
         </div>
     );
