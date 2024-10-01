@@ -29,13 +29,19 @@ const FeedbackPage = () => {
   // 면접 영상 다운로드 함수
   const handleDownload = () => {
     const videoUrl = resultData?.video; // 전달된 video URL 사용
+    console.log("다운로드할 비디오 URL:", videoUrl);
     if (videoUrl) {
-      const link = document.createElement('a');
-      link.href = videoUrl;
-      link.setAttribute('download', 'interview_video.mp4'); // 다운로드할 파일명
-      document.body.appendChild(link);
-      link.click();
-      link.parentNode.removeChild(link);
+      try {
+        const link = document.createElement('a');
+        link.href = videoUrl;
+        link.setAttribute('download', 'interview_video.webm'); // 다운로드할 파일명
+        document.body.appendChild(link);
+        link.click();
+        link.parentNode.removeChild(link);
+      } catch (error) {
+        alert('비디오 다운로드 중 오류가 발생했습니다.');
+        console.error('Download error:', error);
+      }
     } else {
       alert('영상 URL을 찾을 수 없습니다.');
     }
