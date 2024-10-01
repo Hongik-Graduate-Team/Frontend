@@ -29,7 +29,7 @@ const VoiceFaceRecognition = ({ videoRef, setFaceDetected, setNoAudioDetectedTim
                     }
                     const volume = Math.sqrt(sum / dataArray.length);
 
-                    if (volume >= 5) {
+                    if (volume >= 3) {
                         silenceStart = null;
                     } else {
                         if (!silenceStart) {

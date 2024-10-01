@@ -4,12 +4,12 @@ import MainHeader from '../../molecules/Header/MainHeader';
 import {CircularProgressbar, buildStyles} from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import VoiceFaceRecognition from './VoiceFaceRecognition';
-import useInterviewRecorder from './InterviewRecorder';
-
 
 const InterviewStartPage = () => {
     const navigate = useNavigate();
     const videoRef = useRef(null);
+    const mediaRecorderRef = useRef(null);
+    const recordedChunksRef = useRef([]);
     const [recordedChunks, setRecordedChunks] = useState([]);
     const [isInterviewStarted] = useState(true);
     const [remainingTime, setRemainingTime] = useState(30);  // 시간 설정
@@ -20,15 +20,80 @@ const InterviewStartPage = () => {
     const [faceLostTime, setFaceLostTime] = useState(0);  // 얼굴이 인식되지 않는 시간
     const [faceDetected, setFaceDetected] = useState(true); // 얼굴이 인식되었는지 여부
     const [noAudioDetectedTime, setNoAudioDetectedTime] = useState(0);  // 음성이 인식되지 않는 시간 기록
-    const { startRecording, pauseRecording, stopRecording } = useInterviewRecorder({
-        videoRef,
-        setRecordedChunks,
-    });
 
-    const getRecordedVideoUrl = () => {
-        const blob = new Blob(recordedChunks, { type: 'video/webm' });
-        return URL.createObjectURL(blob);
-    };
+    // 녹화 시작 함수
+    const startRecording = useCallback(() => {
+        if (!videoRef.current) {
+            console.log("videoRef가 존재하지 않음");
+            return;
+        }    
+    
+        // 카메라와 마이크 스트림 가져오기
+        navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+            .then(stream => {
+                if (videoRef.current) {
+                    videoRef.current.srcObject = stream;
+                    videoRef.current.muted = true;
+                }
+
+                const options = { mimeType: 'video/webm; codecs=vp8' };  // 코덱 설정
+                mediaRecorderRef.current = new MediaRecorder(stream, options);    
+                // 녹화 데이터가 생성될 때마다 `recordedChunks`에 저장
+                mediaRecorderRef.current.ondataavailable = (event) => {
+                    if (event.data.size > 0) {
+                        recordedChunksRef.current = [...recordedChunksRef.current, event.data];
+                        setRecordedChunks(recordedChunksRef.current);  // 상태 업데이트
+                        console.log('데이터가 추가되었습니다:', event.data);
+                    }
+                };
+
+                // 녹화 중지 시 이벤트 처리
+                mediaRecorderRef.current.onstop = () => {
+                    console.log("녹화된 Blob 데이터:", recordedChunks.current);
+                    const blob = new Blob(recordedChunksRef.current, { type: 'video/webm; codecs=vp8' });
+                    const videoURL = URL.createObjectURL(blob);
+                    console.log("녹화본이 생성되었습니다:", videoURL);
+                    navigate('/feedback', { state: { video: videoURL } });
+                };
+    
+                // 녹화 시작
+                mediaRecorderRef.current.start();
+                console.log("녹화 시작");
+            })
+            .catch(error => {
+                console.error("녹화 시작에 실패했습니다:", error);
+            });
+    }, [navigate, recordedChunks]);
+
+    // 녹화 일시 중지 함수
+    const pauseRecording = useCallback(() => {
+        if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
+            mediaRecorderRef.current.pause(); // 녹화 일시 중지
+            console.log("녹화가 일시 중지되었습니다.");
+        }
+    }, []);
+
+    // 녹화 재개 함수
+    const resumeRecording = useCallback(() => {
+        if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'paused') {
+            mediaRecorderRef.current.resume(); // 녹화 재개
+            console.log("녹화가 재개되었습니다.");
+        }
+    }, []);
+
+    // 녹화 중지 함수
+    const stopRecording = useCallback(() => {
+        if (mediaRecorderRef.current) {
+            mediaRecorderRef.current.stop(); // 녹화 중지
+            console.log("녹화가 중지되었습니다.");
+
+            // 스트림 정리
+            const stream = videoRef.current.srcObject;
+            const tracks = stream.getTracks();
+            tracks.forEach(track => track.stop());
+            videoRef.current.srcObject = null;
+        }
+    }, []);
 
     // 다음 단계로 이동하는 함수 (다음 질문 또는 면접 종료)
     const moveToNextStep = useCallback(() => {
@@ -37,12 +102,10 @@ const InterviewStartPage = () => {
             setCurrentStep('ready');  // 다음 질문 전 준비 시간 시작
             setRemainingTime(30);  // 준비 시간 30초 재설정
         } else {
-            alert("모든 질문이 완료되었습니다. 면접을 종료합니다.");
             stopRecording(); // 마지막 질문 녹화 중지
-            const mergedVideoURL = getRecordedVideoUrl();  // 병합된 영상의 URL 생성
-            navigate('/feedback', { state: { video: mergedVideoURL } });  // 영상을 전달
+            alert("모든 질문이 완료되었습니다. 면접을 종료합니다.");
         }
-    }, [currentQuestionIndex, totalQuestions, navigate, getRecordedVideoUrl, stopRecording]);
+    }, [currentQuestionIndex, totalQuestions, stopRecording]);
 
     // 얼굴 인식 경고 표시
     useEffect(() => {
@@ -79,7 +142,6 @@ const InterviewStartPage = () => {
         };
     }, [currentStep]);
 
-    // 단계 전환 로직
     // 준비 시간 타이머 설정
     useEffect(() => {
         if (remainingTime > 0 && (currentStep === 'announcement' || currentStep === 'ready')) {
@@ -92,7 +154,6 @@ const InterviewStartPage = () => {
             } else if (currentStep === 'ready') {
                 setCurrentStep('answering');  // 준비 시간이 끝나면 질문 답변 시간으로 이동
                 setAnswerTime(120);  // 답변 시간 120초로 설정
-                startRecording();  // 녹화 시작
             }
         }
     }, [remainingTime, currentStep]);
@@ -110,13 +171,24 @@ const InterviewStartPage = () => {
         }
     }, [answerTime, currentStep]);
 
+    // 준비시간에는 녹화 X, 답변 시간이 시작되면 녹화 시작
     useEffect(() => {
-        if (answerTime === 0 && currentStep === 'answering') {
+        if (currentStep === 'answering') {
+            console.log(currentQuestionIndex);
+            if (currentQuestionIndex === 0) {
+                startRecording(); // 첫 번째 질문일 때 녹화 처음 시작
+            } else {
+                resumeRecording(); // 그 외의 경우에는 녹화 재개
+            }
+        }
+    }, [currentStep, startRecording, resumeRecording, currentQuestionIndex]);
+
+    useEffect(() => {
+        if (answerTime === 0 && currentQuestionIndex < totalQuestions) {
             // 녹화를 일시 중지하고 다음 단계로 이동
             pauseRecording();
-            moveToNextStep();
         }
-    }, [answerTime, currentStep, pauseRecording, moveToNextStep]);
+    }, [answerTime, currentStep, pauseRecording, currentQuestionIndex, totalQuestions]);
 
 
     // 페이지 이동 시 경고창 표시
@@ -339,7 +411,10 @@ const InterviewStartPage = () => {
                             />
                             <button
                                 className="mt-10 px-8 py-2 bg-blue-500 text-white rounded-lg"
-                                onClick={() => moveToNextStep()}
+                                onClick={() => {
+                                    setAnswerTime(0);  // 답변 시간 0으로
+                                    moveToNextStep();  // 다음 단계로
+                                }}
                             >
                                 {currentQuestionIndex < totalQuestions - 1 ? '다음 질문' : '면접 종료'}
                             </button>
