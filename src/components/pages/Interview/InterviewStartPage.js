@@ -59,8 +59,8 @@ const InterviewStartPage = () => {
         if (!videoRef.current) {
             console.log("videoRef가 존재하지 않음");
             return;
-        }    
-    
+        }
+
         // 카메라와 마이크 스트림 가져오기
         navigator.mediaDevices.getUserMedia({ video: true, audio: true })
             .then(stream => {
@@ -70,7 +70,7 @@ const InterviewStartPage = () => {
                 }
 
                 const options = { mimeType: 'video/webm; codecs=vp8' };  // 코덱 설정
-                mediaRecorderRef.current = new MediaRecorder(stream, options);    
+                mediaRecorderRef.current = new MediaRecorder(stream, options);
                 // 녹화 데이터가 생성될 때마다 `recordedChunks`에 저장
                 mediaRecorderRef.current.ondataavailable = (event) => {
                     if (event.data.size > 0) {
@@ -88,7 +88,7 @@ const InterviewStartPage = () => {
                     console.log("녹화본이 생성되었습니다:", videoURL);
                     navigate('/feedback', { state: { video: videoURL } });
                 };
-    
+
                 // 녹화 시작
                 mediaRecorderRef.current.start();
                 console.log("녹화 시작");
@@ -344,7 +344,7 @@ const InterviewStartPage = () => {
                             <p className="text-red-500 text-xl font-semibold">
                                 얼굴과 음성이 인식되지 않습니다. 카메라와 마이크를 확인해 주세요.
                             </p>
-                    </div>
+                        </div>
                     )}
 
                     {/* 얼굴 인식 경고 */}

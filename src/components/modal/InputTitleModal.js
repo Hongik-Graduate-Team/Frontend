@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, {useContext, useState} from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { InterviewContext } from '../../context/InterviewContext'; // Context 가져오기
 
 const InputTitleModal = ({ isOpen, onClose }) => {
-    const [interviewTitle, setInterviewTitle] = useState('');
+    const [localInterviewTitle, setLocalInterviewTitle] = useState(''); // 로컬 상태
+    const { setInterviewTitle } = useContext(InterviewContext); // Context에서 setInterviewTitle 가져오기
     const navigate = useNavigate();
 
     const handleSave = async () => {
@@ -13,11 +15,12 @@ const InputTitleModal = ({ isOpen, onClose }) => {
                 headers: {
                   Authorization: `Bearer ${token}`,
                 },
-                params: { interviewTitle: interviewTitle }
+                params: { interviewTitle: localInterviewTitle  }
               });
-            setInterviewTitle(''); // 저장 후 input 초기화
+            setInterviewTitle(localInterviewTitle); // 전역 상태에 저장
+            setLocalInterviewTitle(''); // 로컬 상태 초기화
             onClose(); // 모달 닫기
-            navigate('/interviewpreparation');
+            navigate('/interviewpreparation', { state: { localInterviewTitle } }); // interviewTitle을 페이지로 전달
         } catch (error) {
             console.error('Error saving interview title:', error);
         }
@@ -31,9 +34,9 @@ const InputTitleModal = ({ isOpen, onClose }) => {
                 <h2 className="text-xl font-bold mb-4">면접 제목 입력</h2>
                 <input
                     type="text"
-                    value={interviewTitle}
+                    value={localInterviewTitle}
                     placeholder="사용할 면접 제목을 입력하세요."
-                    onChange={(e) => setInterviewTitle(e.target.value)}
+                    onChange={(e) => setLocalInterviewTitle(e.target.value)}
                     className="w-full p-3 border border-gray-300 rounded-lg mb-4"
                     required
                 />

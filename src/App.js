@@ -10,6 +10,7 @@ import InterviewPreparationPage from "./components/pages/Interview/InterviewPrep
 import InterviewStartPage from "./components/pages/Interview/InterviewStartPage";
 import Feedback from './components/pages/FeedbackPage';
 import './index.css';
+import {InterviewProvider} from "./context/InterviewContext";
 
 
 // Kakao SDK 초기화
@@ -17,20 +18,22 @@ window.Kakao.init('YOUR_KAKAO_JAVASCRIPT_KEY');
 
 function App() {
     return (
-        <AuthProvider>
-            <Router>
-                <Routes>
-                    <Route path="/" element={<HomePage />} />
-                    <Route path="/signin" element={<SignInPage />} />
-                    <Route path="/signup" element={<SignUpPage />} />
-                    <Route path="/inputinfo" element={<InputInfo />} />
-                    <Route path="/mypage" element={<MyPage />} />
-                    <Route path="/interviewpreparation" element={<InterviewPreparationPage />} />
-                    <Route path="/interviewstart" element={<InterviewStartPage />} />
-                    <Route path="/feedback" element={<Feedback />} />
-                </Routes>
-            </Router>
-        </AuthProvider>
+        <InterviewProvider>
+            <AuthProvider>
+                <Router>
+                    <Routes>
+                        <Route path="/" element={<HomePage />} />
+                        <Route path="/signin" element={<SignInPage />} />
+                        <Route path="/signup" element={<SignUpPage />} />
+                        <Route path="/inputinfo" element={<InputInfo />} />
+                        <Route path="/mypage" element={<MyPage />} />
+                        <Route path="/interviewpreparation" element={<InterviewPreparationPage />} />
+                        <Route path="/interviewstart" element={<InterviewStartPage />} />
+                        <Route path="/feedback" element={<Feedback />} />
+                    </Routes>
+                </Router>
+            </AuthProvider>
+        </InterviewProvider>
     );
 }
 
