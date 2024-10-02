@@ -28,6 +28,7 @@ const InterviewStartPage = () => {
     // API로부터 질문을 불러오는 함수
     const loadQuestions = useCallback(async () => {
         const token = localStorage.getItem('kakaoToken');  // 토큰을 로컬스토리지에서 가져옴
+        console.log(token);
         try {
             const response = await axios.get('https://namanba.shop/api/interview', {
                 headers: {
@@ -38,6 +39,7 @@ const InterviewStartPage = () => {
                 }
             });
             const questionData = response.data.data;  // 질문 데이터를 받아옴
+            console.log(questionData);
             setQuestions([
                 questionData.basicInterview1,
                 questionData.basicInterview2,

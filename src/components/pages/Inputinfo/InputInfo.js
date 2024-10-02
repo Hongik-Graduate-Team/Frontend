@@ -41,9 +41,9 @@ function InputInfo() {
 
     if (!token) {
       // 토큰이 없으면 경고 및 리디렉션
-      // alert("인증 토큰이 없습니다. 다시 로그인 해주세요.");
-      // navigate('/signin'); // 로그인 페이지로 리디렉션
-      // return; // 이후 로직을 실행하지 않음
+      alert("인증 토큰이 없습니다. 다시 로그인 해주세요.");
+      navigate('/signin'); // 로그인 페이지로 리디렉션
+      return; // 이후 로직을 실행하지 않음
     }
 
     // 토큰이 있으면 상태에 저장
@@ -61,28 +61,22 @@ function InputInfo() {
         const data = response.data.data;
         console.log("fetched data:", data);
 
-        if (data) {
-          // 서버에서 받은 데이터를 상태에 저장
-          setResumeData({
-            position: data.positionName || '',
-            questions: data.resumes.length > 0 ? data.resumes : [{ resumeId: null, question: '', answer: '' }],
-            majors: data.majors.length > 0 ? data.majors : [{ majorId: null, majorName: '' }],
-            gpas: data.gpas.length > 0 ? data.gpas : [{ gpaId: null, score: '', total: '' }],
-            careers: data.careers.length > 0 ? data.careers : [{ careerId: null, careerType: '', content: '', startDate: null, endDate: null }],
-            stacks: data.stacks.length > 0 ? data.stacks : [{ stackId: null, stackLanguage: '', stackLevel: '' }],
-            awards: data.awards.length > 0 ? data.awards : [{ awardId: null, awardType: '', awardPrize: '' }],
-            certifications: data.certifications.length > 0 ? data.certifications : [{ certId: null, certType: '', certDate: null }],
-            languageCerts: data.languageCerts.length > 0 ? data.languageCerts : [{ languageCertId: null, languageCertType: '', languageCertLevel: '', languageCertDate: null }],
-          });
-        } else {
-          // 데이터가 없으면 경고 및 리디렉션
-          alert("데이터를 불러올 수 없습니다. 다시 로그인 해주세요.");
-          navigate('/');
-        }
+        // 서버에서 받은 데이터를 상태에 저장
+        setResumeData({
+          position: data.positionName || '',
+          questions: data.resumes.length > 0 ? data.resumes : [{ resumeId: null, question: '', answer: '' }],
+          majors: data.majors.length > 0 ? data.majors : [{ majorId: null, majorName: '' }],
+          gpas: data.gpas.length > 0 ? data.gpas : [{ gpaId: null, score: '', total: '' }],
+          careers: data.careers.length > 0 ? data.careers : [{ careerId: null, careerType: '', content: '', startDate: null, endDate: null }],
+          stacks: data.stacks.length > 0 ? data.stacks : [{ stackId: null, stackLanguage: '', stackLevel: '' }],
+          awards: data.awards.length > 0 ? data.awards : [{ awardId: null, awardType: '', awardPrize: '' }],
+          certifications: data.certifications.length > 0 ? data.certifications : [{ certId: null, certType: '', certDate: null }],
+          languageCerts: data.languageCerts.length > 0 ? data.languageCerts : [{ languageCertId: null, languageCertType: '', languageCertLevel: '', languageCertDate: null }],
+        });
       } catch (error) {
-        // console.error("데이터를 불러오는 중 오류가 발생했습니다:", error);
-        // alert("데이터를 불러올 수 없습니다. 다시 로그인 해주세요.");
-        // navigate('/signin');
+        console.error("데이터를 불러오는 중 오류가 발생했습니다:", error);
+        alert("데이터를 불러올 수 없습니다. 다시 로그인 해주세요.");
+        navigate('/signin');
       }
     };
 
