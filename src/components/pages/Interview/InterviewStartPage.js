@@ -1,9 +1,11 @@
-import React, {useRef, useEffect, useState, useCallback} from 'react';
+import React, {useRef, useEffect, useState, useCallback, useContext} from 'react';
 import {useNavigate} from 'react-router-dom';
 import MainHeader from '../../molecules/Header/MainHeader';
 import {CircularProgressbar, buildStyles} from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import VoiceFaceRecognition from './VoiceFaceRecognition';
+import { InterviewContext } from '../../../context/InterviewContext';
+import axios from "axios"; // Context 가져오기
 
 const InterviewStartPage = () => {
     const navigate = useNavigate();
@@ -20,6 +22,37 @@ const InterviewStartPage = () => {
     const [faceLostTime, setFaceLostTime] = useState(0);  // 얼굴이 인식되지 않는 시간
     const [faceDetected, setFaceDetected] = useState(true); // 얼굴이 인식되었는지 여부
     const [noAudioDetectedTime, setNoAudioDetectedTime] = useState(0);  // 음성이 인식되지 않는 시간 기록
+    const [questions, setQuestions] = useState([]);  // 질문 목록을 상태로 관리
+    const { interviewTitle } = useContext(InterviewContext); // interviewTitle 가져오기
+
+    // API로부터 질문을 불러오는 함수
+    const loadQuestions = useCallback(async () => {
+        const token = localStorage.getItem('kakaoToken');  // 토큰을 로컬스토리지에서 가져옴
+        try {
+            const response = await axios.get('https://namanba.shop/api/interview', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                },
+                params: {
+                    interviewTitle: interviewTitle   // 인터뷰 제목을 여기에 입력
+                }
+            });
+            const questionData = response.data.data;  // 질문 데이터를 받아옴
+            setQuestions([
+                questionData.basicInterview1,
+                questionData.basicInterview2,
+                questionData.basicInterview3,
+                ...questionData.customQuestions  // 기본 질문과 커스텀 질문을 합침
+            ]);
+        } catch (error) {
+            console.error("질문을 불러오는 중 오류 발생:", error);
+        }
+    }, [interviewTitle]);
+    // 컴포넌트가 처음 렌더링될 때 질문을 불러옴
+    useEffect(() => {
+        loadQuestions();
+    }, [loadQuestions]);
+
 
     // 녹화 시작 함수
     const startRecording = useCallback(() => {
@@ -142,6 +175,7 @@ const InterviewStartPage = () => {
         };
     }, [currentStep]);
 
+    // 단계 전환 로직
     // 준비 시간 타이머 설정
     useEffect(() => {
         if (remainingTime > 0 && (currentStep === 'announcement' || currentStep === 'ready')) {
@@ -275,8 +309,10 @@ const InterviewStartPage = () => {
                         >
                             질문 {currentQuestionIndex + 1} / {totalQuestions}
                         </button>
-                        <br/>
-                        <p className="text-3xl font-semibold mb-4">여기 질문 내용이 들어갑니다.</p>
+                        <br />
+                        <p className="text-3xl font-semibold mb-4">
+                            {questions[currentQuestionIndex] || "질문을 불러오는 중..."}
+                        </p>
                     </div>
                 )}
 
@@ -287,8 +323,10 @@ const InterviewStartPage = () => {
                         >
                             질문 {currentQuestionIndex + 1} / {totalQuestions}
                         </button>
-                        <br/>
-                        <p className="text-3xl font-semibold mb-4">질문 내용내용</p>
+                        <br />
+                        <p className="text-3xl font-semibold mb-4">
+                            {questions[currentQuestionIndex] || "질문을 불러오는 중..."}
+                        </p>
                     </div>
                 )}
             </div>
