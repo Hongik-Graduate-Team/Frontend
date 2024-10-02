@@ -18,7 +18,7 @@ const InterviewStartPage = () => {
     const [currentStep, setCurrentStep] = useState('announcement');  // 현재 단계 (announcement, ready, answering)
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);  // 현재 질문 번호
     const [answerTime, setAnswerTime] = useState(120);  // 답변 시간 (2분)
-    const totalQuestions = 5;  // 총 질문 개수
+    const totalQuestions = 8;  // 총 질문 개수
     const [faceLostTime, setFaceLostTime] = useState(0);  // 얼굴이 인식되지 않는 시간
     const [faceDetected, setFaceDetected] = useState(true); // 얼굴이 인식되었는지 여부
     const [noAudioDetectedTime, setNoAudioDetectedTime] = useState(0);  // 음성이 인식되지 않는 시간 기록
@@ -312,7 +312,7 @@ const InterviewStartPage = () => {
                             질문 {currentQuestionIndex + 1} / {totalQuestions}
                         </button>
                         <br />
-                        <p className="text-3xl font-semibold mb-4">
+                        <p className="w-3/4 text-3xl mx-auto font-semibold mb-4">
                             {questions[currentQuestionIndex] || "질문을 불러오는 중..."}
                         </p>
                     </div>
@@ -326,7 +326,7 @@ const InterviewStartPage = () => {
                             질문 {currentQuestionIndex + 1} / {totalQuestions}
                         </button>
                         <br />
-                        <p className="text-3xl font-semibold mb-4">
+                        <p className="w-3/4 text-3xl mx-auto font-semibold mb-4">
                             {questions[currentQuestionIndex] || "질문을 불러오는 중..."}
                         </p>
                     </div>
