@@ -38,6 +38,7 @@ function NavigationButtons({ page, setPage, handleSubmit, validateForm }) {
     try {
       // 제목을 백엔드로 전송
       await axios.post('/api/interviews', { title });
+      navigate('/interview-start', { state: { interviewTitle: title } });
       navigate('/signin'); // 면접 시작 페이지로 라우팅 (경로 수정 가능)
     } catch (error) {
       console.error('제목 저장 오류:', error);
