@@ -27,7 +27,7 @@ const InterviewStartPage = () => {
 
     // API로부터 질문을 불러오는 함수
     const loadQuestions = useCallback(async () => {
-        const token = localStorage.getItem('kakaoToken');  // 토큰을 로컬스토리지에서 가져옴
+        const token = localStorage.getItem('userToken');  // 토큰을 로컬스토리지에서 가져옴
         console.log(token);
         try {
             const response = await axios.get('https://namanba.shop/api/interview', {
