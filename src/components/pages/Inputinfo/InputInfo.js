@@ -74,9 +74,24 @@ function InputInfo() {
           languageCerts: data.languageCerts.length > 0 ? data.languageCerts : [{ languageCertId: null, languageCertType: '', languageCertLevel: '', languageCertDate: null }],
         });
       } catch (error) {
-        console.error("데이터를 불러오는 중 오류가 발생했습니다:", error);
-        alert("데이터를 불러올 수 없습니다. 다시 로그인 해주세요.");
-        navigate('/signin');
+        if (error.response && error.response.status === 403) {
+          // 403 오류를 데이터 부재로 간주하여 기본값 처리
+          setResumeData({
+            position: '',
+            questions: [{ resumeId: null, question: '', answer: '' }],
+            majors: [{ majorId: null, majorName: '' }],
+            gpas: [{ gpaId: null, score: '', total: '' }],
+            careers: [{ careerId: null, careerType: '', content: '', startDate: null, endDate: null }],
+            stacks: [{ stackId: null, stackLanguage: '', stackLevel: '' }],
+            awards: [{ awardId: null, awardType: '', awardPrize: '' }],
+            certifications: [{ certId: null, certType: '', certDate: null }],
+            languageCerts: [{ languageCertId: null, languageCertType: '', languageCertLevel: '', languageCertDate: null }],
+          });
+        } else {
+          // 다른 오류 처리
+          console.error("데이터를 불러오는 중 오류 발생:", error);
+          alert('데이터를 불러오는 중 오류가 발생했습니다.');
+        }
       }
     };
 
