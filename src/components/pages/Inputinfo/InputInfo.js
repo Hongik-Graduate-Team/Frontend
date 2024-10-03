@@ -76,17 +76,7 @@ function InputInfo() {
       } catch (error) {
         if (error.response && error.response.status === 403) {
           // 403 오류를 데이터 부재로 간주하여 기본값 처리
-          setResumeData({
-            position: '',
-            questions: [{ resumeId: null, question: '', answer: '' }],
-            majors: [{ majorId: null, majorName: '' }],
-            gpas: [{ gpaId: null, score: '', total: '' }],
-            careers: [{ careerId: null, careerType: '', content: '', startDate: null, endDate: null }],
-            stacks: [{ stackId: null, stackLanguage: '', stackLevel: '' }],
-            awards: [{ awardId: null, awardType: '', awardPrize: '' }],
-            certifications: [{ certId: null, certType: '', certDate: null }],
-            languageCerts: [{ languageCertId: null, languageCertType: '', languageCertLevel: '', languageCertDate: null }],
-          });
+          return {};
         } else {
           // 다른 오류 처리
           console.error("데이터를 불러오는 중 오류 발생:", error);
