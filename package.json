@@ -9,6 +9,7 @@
     "@testing-library/user-event": "^13.5.0",
     "autoprefixer": "^10.4.19",
     "axios": "^1.7.2",
+    "crypto-js": "^4.2.0",
     "date-fns": "^3.6.0",
     "face-api.js": "^0.22.2",
     "framer-motion": "^11.2.14",

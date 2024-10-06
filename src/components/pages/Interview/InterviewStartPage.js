@@ -6,6 +6,7 @@ import 'react-circular-progressbar/dist/styles.css';
 import VoiceFaceRecognition from './VoiceFaceRecognition';
 import { InterviewContext } from '../../../context/InterviewContext';
 import axios from "axios"; // Context 가져오기
+// import CryptoJS from 'crypto-js';  // 암호화 라이브러리 추가
 
 const InterviewStartPage = () => {
     const navigate = useNavigate();
@@ -24,6 +25,8 @@ const InterviewStartPage = () => {
     const [noAudioDetectedTime, setNoAudioDetectedTime] = useState(0);  // 음성이 인식되지 않는 시간 기록
     const [questions, setQuestions] = useState([]);  // 질문 목록을 상태로 관리
     const { interviewTitle } = useContext(InterviewContext); // interviewTitle 가져오기
+
+    // const SECRET_KEY = 'your-secret-key'; // 암호화에 사용할 비밀 키
 
     // API로부터 질문을 불러오는 함수
     const loadQuestions = useCallback(async () => {
@@ -88,7 +91,31 @@ const InterviewStartPage = () => {
                     const blob = new Blob(recordedChunksRef.current, { type: 'video/webm; codecs=vp8' });
                     const videoURL = URL.createObjectURL(blob);
                     console.log("녹화본이 생성되었습니다:", videoURL);
+
+                    // // 추가 기능: 녹화된 비디오 암호화 후 서버로 전송
+                    // const reader = new FileReader();
+                    //
+                    // reader.onloadend = async () => {
+                    //     const videoData = reader.result;
+                    //     const encryptedData = CryptoJS.AES.encrypt(videoData, SECRET_KEY).toString();  // 비디오 데이터 암호화
+                    //
+                    //     try {
+                    //         await axios.post('https://namanba.shop/api/upload', { video: encryptedData }, {
+                    //             headers: {
+                    //                 Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+                    //                 'Content-Type': 'application/json',
+                    //             },
+                    //         });
+                    //         console.log("비디오 파일이 성공적으로 전송되었습니다.");
+                    //     } catch (error) {
+                    //         console.error("비디오 전송 중 오류 발생:", error);
+                    //     }
+                    // };
+                    // reader.readAsDataURL(blob);  // 비디오 데이터를 읽고 암호화 준비
+
+                    // 기존 기능: 녹화된 비디오 URL 생성 및 페이지 이동
                     navigate('/feedback', { state: { video: videoURL } });
+
                 };
 
                 // 녹화 시작
@@ -467,3 +494,5 @@ const InterviewStartPage = () => {
     );
 }
 export default InterviewStartPage;
+
+
