@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-// import { AuthContext } from '../../services/AuthContext';
 import SignInHeader from '../molecules/Header/SignInHeader';
 import kakaoLogo from '../../assets/img/kakaoLogo.png';
 
 function SignInPage() {
-    // const { setIsLoggedIn } = useContext(AuthContext); // 로그인 상태 업데이트 함수 가져오기
     const [loginData, setLoginData] = useState({ email: "", password: "" });
     const navigate = useNavigate();
 
@@ -24,14 +22,9 @@ function SignInPage() {
             console.log('서버 응답:', response.data);
 
             // 로그인 성공시 토큰 저장 및 로그인 상태 갱신
-            // 응답 헤더에서 Authorization 헤더로부터 토큰 추출
-            const token = response.headers['authorization'].split(' ')[1]; // 'Bearer' 제거 후 토큰 추출
-            console.log('토큰:', token);
-
-            // 토큰을 로컬 스토리지에 저장
-            localStorage.setItem('userToken', token);
-            // setIsLoggedIn(true); // 로그인 상태 업데이트
-
+            // const token = response.data.token; // 응답에서 토큰을 받아온다고 가정
+            // localStorage.setItem('userToken', token);
+            // // setIsLoggedIn(true);
 
             navigate('/자소서 페이지'); // 로그인 후 이동할 페이지로 리디렉트
         } catch (error) {
