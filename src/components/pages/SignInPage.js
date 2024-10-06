@@ -21,11 +21,7 @@ function SignInPage() {
             const response = await axios.post('/signin', loginData, { withCredentials: true });
             console.log('서버 응답:', response.data);
 
-            // 로그인 성공시 토큰 저장 및 로그인 상태 갱신
-            // const token = response.data.token; // 응답에서 토큰을 받아온다고 가정
-            // localStorage.setItem('userToken', token);
-            // // setIsLoggedIn(true);
-
+            // 로그인 성공시 페이지 이동
             navigate('/자소서 페이지'); // 로그인 후 이동할 페이지로 리디렉트
         } catch (error) {
             console.error('서버 요청 오류:', error);
@@ -35,7 +31,24 @@ function SignInPage() {
 
     // 카카오 로그인 핸들러
     const handleKakaoLogin = () => {
-        window.location.href = 'https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=c04b061bca7c5b2db4d80b65c8f684fe&redirect_uri=https://namanba.shop/login/oauth2/code/kakao';
+        // 카카오 로그인 요청
+        axios.get('https://namanba.shop/api/auth/kakao-login', {
+            withCredentials: true // 쿠키를 포함하도록 설정
+        })
+            .then(response => {
+                // 응답 헤더에서 Authorization 토큰 추출
+                const token = response.headers['authorization'];
+
+                // 토큰을 localStorage에 저장
+                localStorage.setItem('Authorization', token);
+
+                // 메인 페이지로 리다이렉트
+                navigate('/');
+            })
+            .catch(error => {
+                console.error('카카오 로그인 실패:', error);
+                alert('카카오 로그인에 실패했습니다. 다시 시도해주세요.');
+            });
     };
 
     return (
@@ -96,6 +109,7 @@ function SignInPage() {
 }
 
 export default SignInPage;
+
 
 
 
