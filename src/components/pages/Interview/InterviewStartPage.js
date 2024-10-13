@@ -6,13 +6,14 @@ import 'react-circular-progressbar/dist/styles.css';
 import VoiceFaceRecognition from './VoiceFaceRecognition';
 import { InterviewContext } from '../../../context/InterviewContext';
 import axios from "axios"; // Context 가져오기
-// import CryptoJS from 'crypto-js';  // 암호화 라이브러리 추가
+import CryptoJS from 'crypto-js';  // 암호화 라이브러리 추가
 
 const InterviewStartPage = () => {
     const navigate = useNavigate();
     const videoRef = useRef(null);
     const mediaRecorderRef = useRef(null);
     const recordedChunksRef = useRef([]);
+    const audioRecorderRef = useRef(null); // audioRecorderRef 선언
     const [recordedChunks, setRecordedChunks] = useState([]);
     const [isInterviewStarted] = useState(true);
     const [remainingTime, setRemainingTime] = useState(30);  // 시간 설정
@@ -26,7 +27,7 @@ const InterviewStartPage = () => {
     const [questions, setQuestions] = useState([]);  // 질문 목록을 상태로 관리
     const { interviewTitle } = useContext(InterviewContext); // interviewTitle 가져오기
 
-    // const SECRET_KEY = 'your-secret-key'; // 암호화에 사용할 비밀 키
+    const SECRET_KEY = 'your-secret-key'; // 암호화에 사용할 비밀 키
 
     // API로부터 질문을 불러오는 함수
     const loadQuestions = useCallback(async () => {
@@ -58,8 +59,6 @@ const InterviewStartPage = () => {
         loadQuestions();
     }, [loadQuestions]);
 
-
-    // 녹화 시작 함수
     const startRecording = useCallback(() => {
         if (!videoRef.current) {
             console.log("videoRef가 존재하지 않음");
@@ -74,9 +73,17 @@ const InterviewStartPage = () => {
                     videoRef.current.muted = true;
                 }
 
+                // 추가 : 오디오 스트림만 따로 추출
+                const audioStream = new MediaStream(stream.getAudioTracks());
+                console.log("오디오 녹화 시작");
+
                 const options = { mimeType: 'video/webm; codecs=vp8' };  // 코덱 설정
                 mediaRecorderRef.current = new MediaRecorder(stream, options);
-                // 녹화 데이터가 생성될 때마다 `recordedChunks`에 저장
+
+                // 추가 : 오디오만 녹음
+                audioRecorderRef.current = new MediaRecorder(audioStream, { mimeType: 'audio/webm' });
+
+                // 녹화 데이터가 생성될 때마다 recordedChunks에 저장
                 mediaRecorderRef.current.ondataavailable = (event) => {
                     if (event.data.size > 0) {
                         recordedChunksRef.current = [...recordedChunksRef.current, event.data];
@@ -85,6 +92,14 @@ const InterviewStartPage = () => {
                     }
                 };
 
+                // 추가 : 오디오 데이터가 생성될 때마다 audioChunks에 저장
+                const audioChunks = [];
+                audioRecorderRef.current.ondataavailable = (event) => {
+                    if (event.data.size > 0) {
+                        audioChunks.push(event.data);
+                        console.log("오디오 데이터가 추가되었습니다:", event.data);
+                    }
+                };
                 // 녹화 중지 시 이벤트 처리
                 mediaRecorderRef.current.onstop = () => {
                     console.log("녹화된 Blob 데이터:", recordedChunks.current);
@@ -92,62 +107,70 @@ const InterviewStartPage = () => {
                     const videoURL = URL.createObjectURL(blob);
                     console.log("녹화본이 생성되었습니다:", videoURL);
 
-                    // // 추가 기능: 녹화된 비디오 암호화 후 서버로 전송
-                    // const reader = new FileReader();
-                    //
-                    // reader.onloadend = async () => {
-                    //     const videoData = reader.result;
-                    //     const encryptedData = CryptoJS.AES.encrypt(videoData, SECRET_KEY).toString();  // 비디오 데이터 암호화
-                    //
-                    //     try {
-                    //         await axios.post('https://namanba.shop/api/upload', { video: encryptedData }, {
-                    //             headers: {
-                    //                 Authorization: `Bearer ${localStorage.getItem('userToken')}`,
-                    //                 'Content-Type': 'application/json',
-                    //             },
-                    //         });
-                    //         console.log("비디오 파일이 성공적으로 전송되었습니다.");
-                    //     } catch (error) {
-                    //         console.error("비디오 전송 중 오류 발생:", error);
-                    //     }
-                    // };
-                    // reader.readAsDataURL(blob);  // 비디오 데이터를 읽고 암호화 준비
-
                     // 기존 기능: 녹화된 비디오 URL 생성 및 페이지 이동
                     navigate('/feedback', { state: { video: videoURL } });
 
                 };
 
+                // 추가 : 오디오만 따로 전송
+                audioRecorderRef.current.onstop = () => {
+                    console.log("오디오 녹화 중지");
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                    const reader = new FileReader();
+
+                    reader.onloadend = async () => {
+                        const audioData = reader.result;
+                        const encryptedData = CryptoJS.AES.encrypt(audioData, SECRET_KEY).toString();  // 오디오 데이터 암호화
+
+                        try {
+                            await axios.post('https://namanba.shop/api/upload', { audio: encryptedData }, {
+                                headers: {
+                                    Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+                                    'Content-Type': 'application/json',
+                                },
+                            });
+                            console.log("오디오 파일이 성공적으로 전송되었습니다.");
+                        } catch (error) {
+                            console.error("오디오 전송 중 오류 발생:", error);
+                        }
+                    };
+                    reader.readAsDataURL(audioBlob);  // 오디오 데이터를 읽고 암호화 준비
+                };
+
                 // 녹화 시작
                 mediaRecorderRef.current.start();
+                audioRecorderRef.current.start();  // 오디오 녹음도 시작
                 console.log("녹화 시작");
             })
             .catch(error => {
                 console.error("녹화 시작에 실패했습니다:", error);
             });
-    }, [navigate, recordedChunks]);
+    }, [navigate, recordedChunks]);  // recordedChunks 추가
 
-    // 녹화 일시 중지 함수
+// 녹화 및 오디오 일시 중지
     const pauseRecording = useCallback(() => {
         if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
-            mediaRecorderRef.current.pause(); // 녹화 일시 중지
-            console.log("녹화가 일시 중지되었습니다.");
+            mediaRecorderRef.current.pause();  // 영상 녹화 일시 중지
+            audioRecorderRef.current.pause();  // 오디오 녹음 일시 중지
+            console.log("녹화와 오디오 녹음이 일시 중지되었습니다.");
         }
     }, []);
 
-    // 녹화 재개 함수
+// 녹화 및 오디오 재개
     const resumeRecording = useCallback(() => {
         if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'paused') {
-            mediaRecorderRef.current.resume(); // 녹화 재개
-            console.log("녹화가 재개되었습니다.");
+            mediaRecorderRef.current.resume();  // 영상 녹화 재개
+            audioRecorderRef.current.resume();  // 오디오 녹음 재개
+            console.log("녹화와 오디오 녹음이 재개되었습니다.");
         }
     }, []);
 
-    // 녹화 중지 함수
+// 녹화 및 오디오 중지
     const stopRecording = useCallback(() => {
         if (mediaRecorderRef.current) {
-            mediaRecorderRef.current.stop(); // 녹화 중지
-            console.log("녹화가 중지되었습니다.");
+            mediaRecorderRef.current.stop();  // 영상 녹화 중지
+            audioRecorderRef.current.stop();  // 오디오 녹음 중지
+            console.log("녹화와 오디오 녹음이 중지되었습니다.");
 
             // 스트림 정리
             const stream = videoRef.current.srcObject;
@@ -494,5 +517,3 @@ const InterviewStartPage = () => {
     );
 }
 export default InterviewStartPage;
-
-
