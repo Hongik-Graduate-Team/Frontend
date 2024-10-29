@@ -7,7 +7,7 @@ import VoiceFaceRecognition from './VoiceFaceRecognition';
 import { InterviewContext } from '../../../context/InterviewContext';
 import axios from "axios"; // Context 가져오기
 import GazeAnalysis from './GazeAnalysis';  // 시선 분석 컴포넌트
-import PoseAnalysis from './PoseAnalysis';  // 자세 분석 컴포넌트
+// import PoseAnalysis from './PoseAnalysis';  // 자세 분석 컴포넌트
 
 const InterviewStartPage = () => {
     const navigate = useNavigate();
