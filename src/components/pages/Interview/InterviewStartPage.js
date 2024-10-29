@@ -6,7 +6,6 @@ import 'react-circular-progressbar/dist/styles.css';
 import VoiceFaceRecognition from './VoiceFaceRecognition';
 import { InterviewContext } from '../../../context/InterviewContext';
 import axios from "axios"; // Context 가져오기
-import CryptoJS from 'crypto-js';  // 암호화 라이브러리 추가
 
 const InterviewStartPage = () => {
     const navigate = useNavigate();
@@ -26,8 +25,6 @@ const InterviewStartPage = () => {
     const [noAudioDetectedTime, setNoAudioDetectedTime] = useState(0);  // 음성이 인식되지 않는 시간 기록
     const [questions, setQuestions] = useState([]);  // 질문 목록을 상태로 관리
     const { interviewTitle } = useContext(InterviewContext); // interviewTitle 가져오기
-
-    const SECRET_KEY = 'your-secret-key'; // 암호화에 사용할 비밀 키
 
     // API로부터 질문을 불러오는 함수
     const loadQuestions = useCallback(async () => {
@@ -120,10 +117,9 @@ const InterviewStartPage = () => {
 
                     reader.onloadend = async () => {
                         const audioData = reader.result;
-                        const encryptedData = CryptoJS.AES.encrypt(audioData, SECRET_KEY).toString();  // 오디오 데이터 암호화
 
                         try {
-                            await axios.post('https://namanba.shop/api/upload', { audio: encryptedData }, {
+                            await axios.post('https://namanba.shop/api/upload', { audio: audioData }, {
                                 headers: {
                                     Authorization: `Bearer ${localStorage.getItem('userToken')}`,
                                     'Content-Type': 'application/json',
@@ -134,7 +130,7 @@ const InterviewStartPage = () => {
                             console.error("오디오 전송 중 오류 발생:", error);
                         }
                     };
-                    reader.readAsDataURL(audioBlob);  // 오디오 데이터를 읽고 암호화 준비
+                    reader.readAsDataURL(audioBlob);  // 오디오 데이터를 읽음
                 };
 
                 // 녹화 시작
