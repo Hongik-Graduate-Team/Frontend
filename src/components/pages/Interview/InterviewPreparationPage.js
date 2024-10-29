@@ -8,6 +8,7 @@ import voiceSuccessImage from '../../../assets/img/voice-success.png';
 import voiceFailImage from '../../../assets/img/voice-fail.png';
 import faceSuccessImage from '../../../assets/img/face-success.png';
 import faceFailImage from '../../../assets/img/face-fail.png';
+import guideLine from '../../../assets/img/guideLine.png';
 
 const InterviewPreparationPage = () => {
     const videoRef = useRef(null); // 비디오 요소를 참조하기 위한 useRef 훅
@@ -155,7 +156,8 @@ const InterviewPreparationPage = () => {
                 <div className="flex items-center justify-center w-full space-x-10">
                     {/* 비디오 화면 */}
                     <div className="relative">
-                        <video ref={videoRef} className="w-full rounded-md shadow-md" />
+                        <video ref={videoRef} className="w-full rounded-md shadow-md transform scale-x-[-1]" />
+                        <img src={guideLine} alt="guideLine" className="absolute mt-10 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-3/4 opacity-50 pointer-events-none" />
                     </div>
                     {/* 상태 이미지 */}
                     <div className="flex flex-col justify-between">
