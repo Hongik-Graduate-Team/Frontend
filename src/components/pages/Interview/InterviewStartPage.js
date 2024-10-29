@@ -6,6 +6,8 @@ import 'react-circular-progressbar/dist/styles.css';
 import VoiceFaceRecognition from './VoiceFaceRecognition';
 import { InterviewContext } from '../../../context/InterviewContext';
 import axios from "axios"; // Context 가져오기
+import GazeAnalysis from './GazeAnalysis';  // 시선 분석 컴포넌트
+// import PoseAnalysis from './PoseAnalysis';  // 자세 분석 컴포넌트
 
 const InterviewStartPage = () => {
     const navigate = useNavigate();
@@ -25,6 +27,7 @@ const InterviewStartPage = () => {
     const [noAudioDetectedTime, setNoAudioDetectedTime] = useState(0);  // 음성이 인식되지 않는 시간 기록
     const [questions, setQuestions] = useState([]);  // 질문 목록을 상태로 관리
     const { interviewTitle } = useContext(InterviewContext); // interviewTitle 가져오기
+    const [interviewEnded, setInterviewEnded] = useState(false);
 
     // API로부터 질문을 불러오는 함수
     const loadQuestions = useCallback(async () => {
@@ -167,6 +170,7 @@ const InterviewStartPage = () => {
             mediaRecorderRef.current.stop();  // 영상 녹화 중지
             audioRecorderRef.current.stop();  // 오디오 녹음 중지
             console.log("녹화와 오디오 녹음이 중지되었습니다.");
+            setInterviewEnded(true);
 
             // 스트림 정리
             const stream = videoRef.current.srcObject;
@@ -340,6 +344,16 @@ const InterviewStartPage = () => {
                 setNoAudioDetectedTime={setNoAudioDetectedTime}
                 setFaceLostTime={setFaceLostTime}
             />
+            <GazeAnalysis
+                videoRef={videoRef}
+                isAnswering={currentStep === 'answering'}
+                interviewEnded={interviewEnded}
+            />
+            {/* <PoseAnalysis
+                videoRef={videoRef}
+                isAnswering={currentStep === 'answering'}
+                interviewEnded={interviewEnded}
+            /> */}
 
             {/* 상태에 따른 안내 및 질문 내용 - 헤더 바로 밑 */}
             <div className="w-full mt-2 text-center">
