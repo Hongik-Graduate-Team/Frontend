@@ -10,7 +10,7 @@ function InputInfo() {
   const [page, setPage] = useState(1);
   const [isFormChanged, setIsFormChanged] = useState(false);
   const [kakaoToken, setKakaoToken] = useState(null);
-  
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [resumeData, setResumeData] = useState({
     position: '',
     questions: [{ resumeId: null, question: '', answer: '' }],
@@ -325,6 +325,8 @@ const handleChange = (e, index) => {
   
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isSubmitting) return; // 중복 호출 방지
+    setIsSubmitting(true);
     try {
       const sections = [
         'questions',
@@ -387,6 +389,7 @@ const handleChange = (e, index) => {
       }
 
       setIsFormChanged(false);
+      setIsSubmitting(false);
       return true; // 성공적으로 저장된 경우 true 반환
 
     } catch (error) {

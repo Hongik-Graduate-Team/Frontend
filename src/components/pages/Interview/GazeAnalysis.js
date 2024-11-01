@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { FaceMesh } from '@mediapipe/face_mesh';
 import axios from 'axios';
 
-const GazeAnalysis = ({ videoRef, isAnswering, interviewEnded }) => {
+const GazeAnalysis = ({ videoRef, isAnswering, interviewEnded, interviewId }) => {
   const [gazeData, setGazeData] = useState([]);  // 시선 데이터를 저장하는 상태
   const [directionCounts, setDirectionCounts] = useState({Up: 0, Down: 0, Left: 0, Right: 0, CenterX: 0, CenterY: 0 }); // 시선 방향별 카운트
   const latestGazePoint = useRef(null);  // 최신 시선 좌표를 참조하는 ref
@@ -39,7 +39,7 @@ const GazeAnalysis = ({ videoRef, isAnswering, interviewEnded }) => {
   };
 
   // 백엔드에 분석 결과 전송 함수
-  const sendGazeAnalysisToBackend = (avgPosition, stability, directionCounts) => {
+  const sendGazeAnalysisToBackend = (stability, directionCounts, interviewId) => {
     const stabilityScore = Math.sqrt(stability.varianceX + stability.varianceY);  // 안정성 점수 계산
     const token = localStorage.getItem('userToken');  // 사용자 토큰 가져오기
   
@@ -50,7 +50,7 @@ const GazeAnalysis = ({ videoRef, isAnswering, interviewEnded }) => {
 
     console.log('Analysis sent:', dataToPost);
   
-    axios.post('/api/sendGazeAnalysisResults', dataToPost, {
+    axios.post(`https://namanba.shop/api/${interviewId}/evaluate-gaze`, dataToPost, {
       headers: {
         Authorization: `Bearer ${token}`,  // 인증 헤더 설정
       },
@@ -129,7 +129,7 @@ const GazeAnalysis = ({ videoRef, isAnswering, interviewEnded }) => {
           }
 
           latestGazePoint.current = gazePoint;
-          console.log(latestGazePoint.current, direction.y, direction.x);
+          // console.log(latestGazePoint.current, direction.y, direction.x);
 
           // 답변 시간에만 gazeData에 추가
           if (isAnsweringRef.current) {

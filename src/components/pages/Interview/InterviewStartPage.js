@@ -26,6 +26,7 @@ const InterviewStartPage = () => {
     const [faceDetected, setFaceDetected] = useState(true); // 얼굴이 인식되었는지 여부
     const [noAudioDetectedTime, setNoAudioDetectedTime] = useState(0);  // 음성이 인식되지 않는 시간 기록
     const [questions, setQuestions] = useState([]);  // 질문 목록을 상태로 관리
+    const [interviewId, setInterviewId] = useState(null); // 인터뷰 ID 상태
     const { interviewTitle } = useContext(InterviewContext); // interviewTitle 가져오기
     const [interviewEnded, setInterviewEnded] = useState(false);
 
@@ -44,6 +45,7 @@ const InterviewStartPage = () => {
             });
             const questionData = response.data.data;  // 질문 데이터를 받아옴
             console.log(questionData);
+            setInterviewId(response.data.interviewId);
             setQuestions([
                 questionData.basicInterview1,
                 questionData.basicInterview2,
@@ -54,6 +56,7 @@ const InterviewStartPage = () => {
             console.error("질문을 불러오는 중 오류 발생:", error);
         }
     }, [interviewTitle]);
+    
     // 컴포넌트가 처음 렌더링될 때 질문을 불러옴
     useEffect(() => {
         loadQuestions();
@@ -348,6 +351,7 @@ const InterviewStartPage = () => {
                 videoRef={videoRef}
                 isAnswering={currentStep === 'answering'}
                 interviewEnded={interviewEnded}
+                interviewId={interviewId}
             />
             {/* <PoseAnalysis
                 videoRef={videoRef}
@@ -398,7 +402,7 @@ const InterviewStartPage = () => {
                 {/* 비디오 화면 - 왼쪽 */}
                 <div className="flex-grow-[1] relative">
                     {/* 비디오 화면 */}
-                    <video ref={videoRef} className="rounded-lg shadow-xl w-full"/>
+                    <video ref={videoRef} className="rounded-lg shadow-xl w-full transform scale-x-[-1]"/>
 
                     {/* 두 가지 경고가 모두 해당되는 경우 */}
                     {currentStep === 'answering' && faceLostTime >= 3 && noAudioDetectedTime >= 5 && (
