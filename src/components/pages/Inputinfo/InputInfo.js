@@ -389,13 +389,14 @@ const handleChange = (e, index) => {
       }
 
       setIsFormChanged(false);
-      setIsSubmitting(false);
-      return true; // 성공적으로 저장된 경우 true 반환
 
     } catch (error) {
       console.error('서버 요청 오류:', error);
       alert('저장 중 오류가 발생했습니다.');
       return false; // 오류 발생 시 false 반환
+    }
+    finally {
+      setIsSubmitting(false); // 실행 후 상태 리셋
     }
   };
 
