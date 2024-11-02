@@ -11,7 +11,6 @@ function InputInfo() {
   const [isFormChanged, setIsFormChanged] = useState(false);
   const [kakaoToken, setKakaoToken] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
   const [resumeData, setResumeData] = useState({
     position: '',
     questions: [{ resumeId: null, question: '', answer: '' }],
@@ -389,8 +388,6 @@ const handleChange = (e, index) => {
         return false; // 오류가 발생한 경우 false 반환
       }
 
-      setIsSubmitted(true);
-
     } catch (error) {
       console.error('서버 요청 오류:', error);
       alert('저장 중 오류가 발생했습니다.');
@@ -406,7 +403,7 @@ const handleChange = (e, index) => {
   return (
     <div>
       <MainHeader isFormChanged={isFormChanged} />
-      <form className="max-w-4xl mx-auto mb-10 mt-5 p-3">
+      <form onSubmit={handleSubmit} className="max-w-4xl mx-auto mb-10 mt-5 p-3">
         {page === 1 && (
           <PageOne
             resumeData={resumeData}
@@ -431,7 +428,6 @@ const handleChange = (e, index) => {
           validateForm={validateForm}
           handleSubmit={handleSubmit}
           isSubmitting={isSubmitting}
-          isSubmitted={isSubmitted}
         />
       </form>
     </div>
