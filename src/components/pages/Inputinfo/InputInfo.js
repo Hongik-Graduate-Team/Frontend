@@ -427,6 +427,7 @@ const handleChange = (e, index) => {
           setPage={setPage}
           validateForm={validateForm}
           handleSubmit={handleSubmit}
+          isSubmitting={isSubmitting}
         />
       </form>
     </div>

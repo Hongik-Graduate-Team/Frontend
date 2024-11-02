@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 import InputTitleModal from "../../modal/InputTitleModal";
 
-function NavigationButtons({ page, setPage, handleSubmit, validateForm }) {
+function NavigationButtons({ page, setPage, handleSubmit, validateForm, isSubmitting }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -38,8 +38,7 @@ function NavigationButtons({ page, setPage, handleSubmit, validateForm }) {
     try {
       // 제목을 백엔드로 전송
       await axios.post('/api/interviews', { title });
-      navigate('/interview-start', { state: { interviewTitle: title } });
-      navigate('/signin'); // 면접 시작 페이지로 라우팅 (경로 수정 가능)
+      navigate('/interviewpreparation', { state: { interviewTitle: title } });
     } catch (error) {
       console.error('제목 저장 오류:', error);
     }
@@ -59,16 +58,18 @@ function NavigationButtons({ page, setPage, handleSubmit, validateForm }) {
       {page === 2 && (
         <div className="flex justify-center space-x-4">
           <button
-            type="button"
+            type="submit"
             className="px-4 py-2 text-white bg-gray-400 rounded-lg hover:bg-gray-500"
             onClick={handleTempSave}
+            disabled={isSubmitting}
           >
             임시 저장
           </button>
           <button
-            type="button"
+            type="submit"
             className="px-4 py-2 text-white bg-indigo-500 rounded-lg hover:bg-indigo-600"
             onClick={handleSaveAndOpenModal}
+            disabled={isSubmitting}
           >
             저장 및 면접 시작
           </button>
