@@ -4,10 +4,13 @@ import axios from 'axios';
 
 const GazeAnalysis = ({ videoRef, isAnswering, interviewEnded, interviewId }) => {
   const [gazeData, setGazeData] = useState([]);  // 시선 데이터를 저장하는 상태
-  const [directionCounts, setDirectionCounts] = useState({Up: 0, Down: 0, Left: 0, Right: 0, CenterX: 0, CenterY: 0 }); // 시선 방향별 카운트
+  const [directionCounts, setDirectionCounts] = useState({up: 0, down: 0, left: 0, right: 0, centerX: 0, centerY: 0 }); // 시선 방향별 카운트
   const latestGazePoint = useRef(null);  // 최신 시선 좌표를 참조하는 ref
   const animationId = useRef(null);  // 애니메이션 프레임 ID를 참조하는 ref
   const isAnsweringRef = useRef(isAnswering); // isAnswering의 현재 상태를 참조하는 ref (useEffect로 업데이트)
+  // gazeData와 directionCounts의 최신 상태를 참조하기 위한 ref
+  const gazeDataRef = useRef(gazeData);
+  const directionCountsRef = useRef(directionCounts);
 
   // 평균 위치 계산 함수
   const calculateAveragePosition = (gazeData) => {
@@ -39,7 +42,7 @@ const GazeAnalysis = ({ videoRef, isAnswering, interviewEnded, interviewId }) =>
   };
 
   // 백엔드에 분석 결과 전송 함수
-  const sendGazeAnalysisToBackend = (stability, directionCounts, interviewId) => {
+  const sendGazeAnalysisToBackend = (avgPosition, stability, directionCounts, interviewId) => {
     const stabilityScore = Math.sqrt(stability.varianceX + stability.varianceY);  // 안정성 점수 계산
     const token = localStorage.getItem('userToken');  // 사용자 토큰 가져오기
   
@@ -108,31 +111,31 @@ const GazeAnalysis = ({ videoRef, isAnswering, interviewEnded, interviewId }) =>
           const leftIris = { x: landmarks[468].x, y: landmarks[468].y };
           const rightIris = { x: landmarks[473].x, y: landmarks[473].y };
 
-          const direction = { x: 'CenterX', y: 'CenterY' };
+          const direction = { x: 'centerX', y: 'centerY' };
           const irisThresholdX = 0.01;
           const irisThresholdY = 0.005;
 
           if (leftIris.x > leftEyeCenter.x + irisThresholdX || rightIris.x > rightEyeCenter.x + irisThresholdX) {
-            direction.x = 'Left';
+            direction.x = 'left';
           } else if (leftIris.x < leftEyeCenter.x - irisThresholdX || rightIris.x < rightEyeCenter.x - irisThresholdX) {
-            direction.x = 'Right';
+            direction.x = 'right';
           } else {
-            direction.x = 'CenterX';
+            direction.x = 'centerX';
           }
 
           if (leftIris.y > leftEyeCenter.y + 0.0005 || rightIris.y > rightEyeCenter.y + 0.0005) {
-            direction.y = 'Down';
+            direction.y = 'down';
           } else if (leftIris.y < leftEyeCenter.y - irisThresholdY || rightIris.y < rightEyeCenter.y - irisThresholdY) {
-              direction.y = 'Up';
+              direction.y = 'up';
           } else {
-              direction.y = 'CenterY';
+              direction.y = 'centerY';
           }
 
           latestGazePoint.current = gazePoint;
-          // console.log(latestGazePoint.current, direction.y, direction.x);
 
           // 답변 시간에만 gazeData에 추가
           if (isAnsweringRef.current) {
+            // console.log(latestGazePoint.current, direction.y, direction.x);
             setGazeData((prevData) => [...prevData, latestGazePoint.current]);
             setDirectionCounts((prevCounts) => ({
               ...prevCounts,
@@ -171,14 +174,24 @@ const GazeAnalysis = ({ videoRef, isAnswering, interviewEnded, interviewId }) =>
     isAnsweringRef.current = isAnswering;
   }, [isAnswering]);
 
+  // gazeData와 directionCounts가 변경될 때 ref 업데이트
+  useEffect(() => {
+    gazeDataRef.current = gazeData;
+  }, [gazeData]);
+
+  useEffect(() => {
+    directionCountsRef.current = directionCounts;
+  }, [directionCounts]);
+
   // 인터뷰 종료 후 시선 데이터가 있을 경우 분석 및 전송
   useEffect(() => {
-    if (interviewEnded && gazeData.length > 0) {
-      const avgPosition = calculateAveragePosition(gazeData);
-      const stability = calculateStability(gazeData, avgPosition);
+    if (interviewEnded && gazeDataRef.current.length > 0) {
+      const avgPosition = calculateAveragePosition(gazeDataRef.current);
+      const stability = calculateStability(gazeDataRef.current, avgPosition);
+      const directionCounts = directionCountsRef.current;
       sendGazeAnalysisToBackend(avgPosition, stability, directionCounts);
     }
-  }, [interviewEnded, gazeData, directionCounts]);
+  }, [interviewEnded, interviewId]);
 
   return null;
 };
