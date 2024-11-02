@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 import InputTitleModal from "../../modal/InputTitleModal";
 
-function NavigationButtons({ page, setPage, handleSubmit, validateForm, isSubmitting }) {
+function NavigationButtons({ page, setPage, handleSubmit, validateForm, isSubmitting, isSubmitted }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -13,10 +13,8 @@ function NavigationButtons({ page, setPage, handleSubmit, validateForm, isSubmit
       return;
     }
     try {
-      // 입력된 정보 저장
-      const isSaveSuccessful = await handleSubmit(e);
       // 저장 후 모달창 열기
-      if (isSaveSuccessful) {
+      if (isSubmitted) {
         setIsModalOpen(true);
       }
     } catch (error) {
