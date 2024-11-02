@@ -45,7 +45,7 @@ const InterviewStartPage = () => {
             });
             const questionData = response.data.data;  // 질문 데이터를 받아옴
             console.log(questionData);
-            setInterviewId(response.data.interviewId);
+            setInterviewId(questionData.interviewId);
             setQuestions([
                 questionData.basicInterview1,
                 questionData.basicInterview2,
