@@ -111,7 +111,7 @@ const InterviewStartPage = () => {
                     console.log("녹화본이 생성되었습니다:", videoURL);
 
                     // 기존 기능: 녹화된 비디오 URL 생성 및 페이지 이동
-                    navigate('/feedback', { state: { video: videoURL } });
+                    navigate('/feedback', { state: { video: videoURL, interviewId: interviewId } });
 
                 };
 
@@ -147,7 +147,7 @@ const InterviewStartPage = () => {
             .catch(error => {
                 console.error("녹화 시작에 실패했습니다:", error);
             });
-    }, [navigate, recordedChunks]);  // recordedChunks 추가
+    }, [navigate, recordedChunks, interviewId]);  // recordedChunks 추가
 
 // 녹화 및 오디오 일시 중지
     const pauseRecording = useCallback(() => {
