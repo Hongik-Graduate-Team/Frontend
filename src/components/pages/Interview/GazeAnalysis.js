@@ -189,7 +189,7 @@ const GazeAnalysis = ({ videoRef, isAnswering, interviewEnded, interviewId }) =>
       const avgPosition = calculateAveragePosition(gazeDataRef.current);
       const stability = calculateStability(gazeDataRef.current, avgPosition);
       const directionCounts = directionCountsRef.current;
-      sendGazeAnalysisToBackend(avgPosition, stability, directionCounts);
+      sendGazeAnalysisToBackend(avgPosition, stability, directionCounts, interviewId);
     }
   }, [interviewEnded, interviewId]);
 
