@@ -58,7 +58,7 @@ function NavigationButtons({ page, setPage, handleSubmit, validateForm, isSubmit
       {page === 2 && (
         <div className="flex justify-center space-x-4">
           <button
-            type="button"
+            type="submit"
             className="px-4 py-2 text-white bg-gray-400 rounded-lg hover:bg-gray-500"
             onClick={handleTempSave}
             disabled={isSubmitting}
@@ -66,9 +66,9 @@ function NavigationButtons({ page, setPage, handleSubmit, validateForm, isSubmit
             임시 저장
           </button>
           <button
-            type="button"
+            type="submit"
             className="px-4 py-2 text-white bg-indigo-500 rounded-lg hover:bg-indigo-600"
-            onClick={async (e) => handleSaveAndOpenModal(e)}
+            onClick={handleSaveAndOpenModal}
             disabled={isSubmitting}
           >
             저장 및 면접 시작

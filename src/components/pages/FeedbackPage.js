@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import {
   Chart as ChartJS,
@@ -11,6 +11,7 @@ import {
 } from 'chart.js';
 import { Radar } from 'react-chartjs-2';
 import MainHeader from '../molecules/Header/MainHeader';
+import axios from 'axios';
 
 // Radar 차트를 그리기 위해 필요한 구성 요소들을 Chart.js에 등록합니다.
 ChartJS.register(
@@ -25,6 +26,28 @@ ChartJS.register(
 const FeedbackPage = () => {
   const location = useLocation();
   const resultData = location.state; // 이전 페이지에서 넘겨받은 데이터
+  const [gazeData, setGazeData] = useState({ gaze: 0, gazeMessage: '' }); // 시선 분석 데이터를 저장할 상태
+
+  useEffect(() => {
+    const token = localStorage.getItem('userToken');  // 사용자 토큰 가져오기
+    const interviewId = resultData?.interviewId;
+    const fetchGazeData = async () => {
+      try {
+        const response = await axios.get(`https://namanba.shop/api/${interviewId}/evaluate-gaze`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          },
+        });
+        setGazeData(response.data.data); // 받아온 시선 분석 데이터를 상태에 저장
+      } catch (error) {
+        console.error('시선 분석 데이터를 가져오는 중 오류가 발생했습니다:', error);
+      }
+    };
+
+    if (resultData?.interviewId) {
+      fetchGazeData();
+    }
+  }, [resultData]);
 
   // 면접 영상 다운로드 함수
   const handleDownload = () => {
@@ -52,7 +75,7 @@ const FeedbackPage = () => {
     datasets: [
       {
         label: '', // 제목 라벨을 빈 문자열로 설정하여 안 보이게 만듭니다.
-        data: [4, 1, 2, 3, 3, 3], // 여기에 실제 데이터를 넣을 수 있습니다.
+        data: [gazeData.gaze, 1, 2, 3, 3, 3], // 여기에 실제 데이터를 넣을 수 있습니다.
         backgroundColor: 'rgba(0, 0, 139, 0.2)', // 남색으로 변경 (rgba로 투명도 설정)
         borderColor: 'rgba(0, 0, 139, 1)', // 남색으로 변경
         borderWidth: 1,
@@ -96,7 +119,7 @@ const FeedbackPage = () => {
             <div>
               <h2 className="text-xl font-semibold mb-1">시선 처리</h2>
               <p className="mb-4">
-                사용자는 면접관과 눈을 자주 마주치지만, 가끔 시선을 아래로 돌리는 경향이 있습니다. 이는 때때로 자신감 부족으로 보일 수 있습니다.
+                {gazeData.gazeMessage}
               </p>
 
               <h2 className="text-xl font-semibold mb-1">제스처</h2>

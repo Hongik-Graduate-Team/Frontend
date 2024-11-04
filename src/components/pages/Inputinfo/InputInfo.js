@@ -403,7 +403,7 @@ const handleChange = (e, index) => {
   return (
     <div>
       <MainHeader isFormChanged={isFormChanged} />
-      <form className="max-w-4xl mx-auto mb-10 mt-5 p-3">
+      <form onSubmit={handleSubmit} className="max-w-4xl mx-auto mb-10 mt-5 p-3">
         {page === 1 && (
           <PageOne
             resumeData={resumeData}
