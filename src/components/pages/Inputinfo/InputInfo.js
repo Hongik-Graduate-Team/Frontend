@@ -395,8 +395,8 @@ const handleChange = (e, index) => {
     }
     finally {
       setIsFormChanged(false);
-    setIsSubmitting(false); // 실행 후 상태 리셋
-    return true; // 성공적으로 저장된 경우 true 반환
+      setIsSubmitting(false); // 실행 후 상태 리셋
+      return true; // 성공적으로 저장된 경우 true 반환
   }
   };
 
