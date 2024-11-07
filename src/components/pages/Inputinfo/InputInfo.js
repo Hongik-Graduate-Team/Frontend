@@ -327,6 +327,7 @@ const handleChange = (e, index) => {
     e.preventDefault();
     if (isSubmitting) return; // 중복 호출 방지
     setIsSubmitting(true);
+    console.log(isSubmitting);
     try {
       const sections = [
         'questions',
@@ -393,10 +394,10 @@ const handleChange = (e, index) => {
       alert('저장 중 오류가 발생했습니다.');
       return false; // 오류 발생 시 false 반환
     } finally {
-      console.log(isFormChanged, isSubmitting);
+      console.log(isSubmitting);
       setIsFormChanged(false);
       setIsSubmitting(false); // 실행 후 상태 리셋
-      console.log(isFormChanged, isSubmitting);
+      console.log(isSubmitting);
       return true; // 성공적으로 저장된 경우 true 반환
   }
   };
