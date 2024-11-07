@@ -392,10 +392,11 @@ const handleChange = (e, index) => {
       console.error('서버 요청 오류:', error);
       alert('저장 중 오류가 발생했습니다.');
       return false; // 오류 발생 시 false 반환
-    }
-    finally {
+    } finally {
+      console.log(isFormChanged, isSubmitting);
       setIsFormChanged(false);
       setIsSubmitting(false); // 실행 후 상태 리셋
+      console.log(isFormChanged, isSubmitting);
       return true; // 성공적으로 저장된 경우 true 반환
   }
   };
@@ -403,7 +404,7 @@ const handleChange = (e, index) => {
   return (
     <div>
       <MainHeader isFormChanged={isFormChanged} />
-      <form onSubmit={handleSubmit} className="max-w-4xl mx-auto mb-10 mt-5 p-3">
+      <form className="max-w-4xl mx-auto mb-10 mt-5 p-3">
         {page === 1 && (
           <PageOne
             resumeData={resumeData}
