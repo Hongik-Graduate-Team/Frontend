@@ -276,8 +276,9 @@ const InterviewStartPage = () => {
         if (answerTime === 0 && currentQuestionIndex < totalQuestions) {
             // 녹화를 일시 중지하고 다음 단계로 이동
             pauseRecording();
+            moveToNextStep();
         }
-    }, [answerTime, currentStep, pauseRecording, currentQuestionIndex, totalQuestions]);
+    }, [answerTime, currentStep, pauseRecording, currentQuestionIndex, totalQuestions, moveToNextStep]);
 
 
     // 페이지 이동 시 경고창 표시
