@@ -88,7 +88,7 @@ function SignInPage() {
                             onClick={handleKakaoLogin}
                             className="flex items-center justify-center w-full p-3 mt-4 border border-gray-300 text-gray-500 font-semibold rounded-lg shadow-lg hover:bg-yellow-300 hover:text-black">
                             <img src={kakaoLogo} alt="Kakao Logo" className="w-6 h-6 mr-2" />
-                            <span>카카오로 로그인</span>
+                            <span>카카오 로그인</span>
                         </button>
                     </div>
                 </div>

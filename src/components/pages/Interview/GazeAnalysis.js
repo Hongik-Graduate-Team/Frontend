@@ -15,12 +15,12 @@ const GazeAnalysis = ({ videoRef, isAnswering, interviewEnded, interviewId }) =>
   // 평균 위치 계산 함수
   const calculateAveragePosition = (gazeData) => {
     const sum = gazeData.reduce(
-      (acc, point) => {
-        acc.x += point.x;
-        acc.y += point.y;
-        return acc;
-      },
-      { x: 0, y: 0 }
+        (acc, point) => {
+          acc.x += point.x;
+          acc.y += point.y;
+          return acc;
+        },
+        { x: 0, y: 0 }
     );
     return { x: sum.x / gazeData.length, y: sum.y / gazeData.length };
   };
@@ -28,12 +28,12 @@ const GazeAnalysis = ({ videoRef, isAnswering, interviewEnded, interviewId }) =>
   // 안정성(분산) 계산 함수
   const calculateStability = (gazeData, avgPosition) => {
     const variance = gazeData.reduce(
-      (acc, point) => {
-        acc.x += Math.pow(point.x - avgPosition.x, 2);
-        acc.y += Math.pow(point.y - avgPosition.y, 2);
-        return acc;
-      },
-      { x: 0, y: 0 }
+        (acc, point) => {
+          acc.x += Math.pow(point.x - avgPosition.x, 2);
+          acc.y += Math.pow(point.y - avgPosition.y, 2);
+          return acc;
+        },
+        { x: 0, y: 0 }
     );
     return {
       varianceX: variance.x / gazeData.length,
@@ -45,25 +45,25 @@ const GazeAnalysis = ({ videoRef, isAnswering, interviewEnded, interviewId }) =>
   const sendGazeAnalysisToBackend = (avgPosition, stability, directionCounts, interviewId) => {
     const stabilityScore = Math.sqrt(stability.varianceX + stability.varianceY);  // 안정성 점수 계산
     const token = localStorage.getItem('userToken');  // 사용자 토큰 가져오기
-  
+
     const dataToPost = {
       stabilityScore,
       directionCounts,
     };
 
     console.log('Analysis sent:', dataToPost);
-  
+
     axios.post(`https://namanba.shop/api/${interviewId}/evaluate-gaze`, dataToPost, {
       headers: {
         Authorization: `Bearer ${token}`,  // 인증 헤더 설정
       },
     })
-      .then((response) => {
-        console.log('Gaze analysis results sent successfully:', response.data);
-      })
-      .catch((error) => {
-        console.error('Error sending gaze analysis results:', error);
-      });
+        .then((response) => {
+          console.log('Gaze analysis results sent successfully:', response.data);
+        })
+        .catch((error) => {
+          console.error('Error sending gaze analysis results:', error);
+        });
   };
 
   useEffect(() => {
@@ -126,9 +126,11 @@ const GazeAnalysis = ({ videoRef, isAnswering, interviewEnded, interviewId }) =>
           if (leftIris.y > leftEyeCenter.y + 0.0005 || rightIris.y > rightEyeCenter.y + 0.0005) {
             direction.y = 'down';
           } else if (leftIris.y < leftEyeCenter.y - irisThresholdY || rightIris.y < rightEyeCenter.y - irisThresholdY) {
+
               direction.y = 'up';
           } else {
               direction.y = 'centerY';
+
           }
 
           latestGazePoint.current = gazePoint;
