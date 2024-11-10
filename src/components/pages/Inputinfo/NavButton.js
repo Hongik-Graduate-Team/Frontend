@@ -15,7 +15,6 @@ function NavigationButtons({ page, setPage, handleSubmit, validateForm, isSubmit
     try {
       // 입력된 정보 저장
       const isSaveSuccessful = await handleSubmit(e);
-      console.log(isSaveSuccessful);
       // 저장 후 모달창 열기
       if (isSaveSuccessful) {
         setIsModalOpen(true);
