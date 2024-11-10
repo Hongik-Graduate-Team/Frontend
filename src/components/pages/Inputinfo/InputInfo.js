@@ -10,7 +10,7 @@ function InputInfo() {
   const [page, setPage] = useState(1);
   const [isFormChanged, setIsFormChanged] = useState(false);
   const [kakaoToken, setKakaoToken] = useState(null);
-  
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [resumeData, setResumeData] = useState({
     position: '',
     questions: [{ resumeId: null, question: '', answer: '' }],
@@ -325,6 +325,9 @@ const handleChange = (e, index) => {
   
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isSubmitting) return; // 중복 호출 방지
+    setIsSubmitting(true);
+    console.log(isSubmitting);
     try {
       const sections = [
         'questions',
@@ -386,20 +389,23 @@ const handleChange = (e, index) => {
         return false; // 오류가 발생한 경우 false 반환
       }
 
-      setIsFormChanged(false);
-      return true; // 성공적으로 저장된 경우 true 반환
-
     } catch (error) {
       console.error('서버 요청 오류:', error);
       alert('저장 중 오류가 발생했습니다.');
       return false; // 오류 발생 시 false 반환
-    }
+    } finally {
+      console.log(isSubmitting);
+      setIsFormChanged(false);
+      setIsSubmitting(false); // 실행 후 상태 리셋
+      console.log(isSubmitting);
+      return true; // 성공적으로 저장된 경우 true 반환
+  }
   };
 
   return (
     <div>
       <MainHeader isFormChanged={isFormChanged} />
-      <form onSubmit={handleSubmit} className="max-w-4xl mx-auto mb-10 mt-5 p-3">
+      <form className="max-w-4xl mx-auto mb-10 mt-5 p-3">
         {page === 1 && (
           <PageOne
             resumeData={resumeData}
@@ -423,6 +429,7 @@ const handleChange = (e, index) => {
           setPage={setPage}
           validateForm={validateForm}
           handleSubmit={handleSubmit}
+          isSubmitting={isSubmitting}
         />
       </form>
     </div>

@@ -126,9 +126,11 @@ const GazeAnalysis = ({ videoRef, isAnswering, interviewEnded, interviewId }) =>
           if (leftIris.y > leftEyeCenter.y + 0.0005 || rightIris.y > rightEyeCenter.y + 0.0005) {
             direction.y = 'down';
           } else if (leftIris.y < leftEyeCenter.y - irisThresholdY || rightIris.y < rightEyeCenter.y - irisThresholdY) {
-            direction.y = 'up';
+
+              direction.y = 'up';
           } else {
-            direction.y = 'centerY';
+              direction.y = 'centerY';
+
           }
 
           latestGazePoint.current = gazePoint;

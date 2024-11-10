@@ -6,9 +6,12 @@ import { InterviewContext } from '../../context/InterviewContext'; // Context �
 const InputTitleModal = ({ isOpen, onClose }) => {
     const [localInterviewTitle, setLocalInterviewTitle] = useState(''); // 로컬 상태
     const { setInterviewTitle } = useContext(InterviewContext); // Context에서 setInterviewTitle 가져오기
+    const [isSaving, setIsSaving] = useState(false); //
     const navigate = useNavigate();
 
-    const handleSave = async () => {
+    const handleSave = async (e) => {
+        e.preventDefault(); // 폼 제출 기본 동작 방지
+        setIsSaving(true);
         try {
             const token = localStorage.getItem('userToken'); // 로컬 스토리지에서 토큰 가져오기
             await axios.get('https://namanba.shop/api/interview', {
@@ -23,6 +26,8 @@ const InputTitleModal = ({ isOpen, onClose }) => {
             navigate('/interviewpreparation', { state: { localInterviewTitle } }); // interviewTitle을 페이지로 전달
         } catch (error) {
             console.error('Error saving interview title:', error);
+        } finally {
+            setIsSaving(false); // 요청 완료 후 버튼 다시 활성화
         }
     };
 
@@ -42,7 +47,7 @@ const InputTitleModal = ({ isOpen, onClose }) => {
                 />
                 <div className="flex justify-end space-x-2">
                     <button onClick={onClose} className="px-4 py-2 bg-gray-300 rounded-lg">취소</button>
-                    <button onClick={handleSave} className="px-4 py-2 bg-indigo-500 text-white rounded-lg">저장</button>
+                    <button onClick={handleSave} className="px-4 py-2 bg-indigo-500 text-white rounded-lg" disabled={isSaving}>저장</button>
                 </div>
             </div>
         </div>
