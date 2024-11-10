@@ -174,14 +174,14 @@ const InterviewStartPage = () => {
             audioRecorderRef.current.stop();  // 오디오 녹음 중지
             console.log("녹화와 오디오 녹음이 중지되었습니다.");
             setInterviewEnded(true);
-        
+
             // 스트림 정리
-            const stream = videoRef.current.srcObject;
-            if (stream) {  // srcObject가 null이 아닐 경우에만 getTracks를 호출
+            const stream = videoRef.current?.srcObject;
+            if (stream) {
                 const tracks = stream.getTracks();
                 tracks.forEach(track => track.stop());
+                videoRef.current.srcObject = null;
             }
-            videoRef.current.srcObject = null;
         }
     }, []);
 
@@ -191,11 +191,12 @@ const InterviewStartPage = () => {
             setCurrentQuestionIndex(currentQuestionIndex + 1);
             setCurrentStep('ready');  // 다음 질문 전 준비 시간 시작
             setRemainingTime(30);  // 준비 시간 30초 재설정
-        } else {
+        } else if (!interviewEnded) {
             stopRecording(); // 마지막 질문 녹화 중지
             alert("모든 질문이 완료되었습니다. 면접을 종료합니다.");
+            setInterviewEnded(true);  // 알림이 한 번만 뜨도록 상태 설정
         }
-    }, [currentQuestionIndex, totalQuestions, stopRecording]);
+    }, [currentQuestionIndex, totalQuestions, stopRecording, interviewEnded]);
 
     // 얼굴 인식 경고 표시
     useEffect(() => {
