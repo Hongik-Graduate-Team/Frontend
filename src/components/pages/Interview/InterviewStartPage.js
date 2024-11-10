@@ -56,7 +56,7 @@ const InterviewStartPage = () => {
             console.error("질문을 불러오는 중 오류 발생:", error);
         }
     }, [interviewTitle]);
-    
+
     // 컴포넌트가 처음 렌더링될 때 질문을 불러옴
     useEffect(() => {
         loadQuestions();
@@ -255,10 +255,11 @@ const InterviewStartPage = () => {
                 setAnswerTime(prevTime => prevTime - 1);
             }, 1000);
 
-            // 타이머를 청소하는 클린업 함수
             return () => clearTimeout(timer);
+        } else if (currentStep === 'answering' && answerTime === 0) {
+            moveToNextStep();  // 답변 시간이 0이 되면 다음 단계로 이동
         }
-    }, [answerTime, currentStep]);
+    }, [answerTime, currentStep, moveToNextStep]);
 
     // 준비시간에는 녹화 X, 답변 시간이 시작되면 녹화 시작
     useEffect(() => {
@@ -276,9 +277,8 @@ const InterviewStartPage = () => {
         if (answerTime === 0 && currentQuestionIndex < totalQuestions) {
             // 녹화를 일시 중지하고 다음 단계로 이동
             pauseRecording();
-            moveToNextStep();
         }
-    }, [answerTime, currentStep, pauseRecording, currentQuestionIndex, totalQuestions, moveToNextStep]);
+    }, [answerTime, currentStep, pauseRecording, currentQuestionIndex, totalQuestions]);
 
 
     // 페이지 이동 시 경고창 표시
@@ -347,6 +347,9 @@ const InterviewStartPage = () => {
                 setFaceDetected={setFaceDetected}
                 setNoAudioDetectedTime={setNoAudioDetectedTime}
                 setFaceLostTime={setFaceLostTime}
+                interviewId={interviewId}
+                isAnswering={currentStep === 'answering'} // 추가된 부분
+                interviewEnded={interviewEnded}
             />
             <GazeAnalysis
                 videoRef={videoRef}
