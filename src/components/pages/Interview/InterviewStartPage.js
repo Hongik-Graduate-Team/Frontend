@@ -26,6 +26,7 @@ const InterviewStartPage = () => {
     const [faceDetected, setFaceDetected] = useState(true); // 얼굴이 인식되었는지 여부
     const [noAudioDetectedTime, setNoAudioDetectedTime] = useState(0);  // 음성이 인식되지 않는 시간 기록
     const [questions, setQuestions] = useState([]);  // 질문 목록을 상태로 관리
+    const [interviewId, setInterviewId] = useState(null); // 인터뷰 ID 상태
     const { interviewTitle } = useContext(InterviewContext); // interviewTitle 가져오기
     const [interviewEnded, setInterviewEnded] = useState(false);
 
@@ -44,6 +45,7 @@ const InterviewStartPage = () => {
             });
             const questionData = response.data.data;  // 질문 데이터를 받아옴
             console.log(questionData);
+            setInterviewId(questionData.interviewId);
             setQuestions([
                 questionData.basicInterview1,
                 questionData.basicInterview2,
@@ -54,6 +56,7 @@ const InterviewStartPage = () => {
             console.error("질문을 불러오는 중 오류 발생:", error);
         }
     }, [interviewTitle]);
+
     // 컴포넌트가 처음 렌더링될 때 질문을 불러옴
     useEffect(() => {
         loadQuestions();
@@ -108,7 +111,7 @@ const InterviewStartPage = () => {
                     console.log("녹화본이 생성되었습니다:", videoURL);
 
                     // 기존 기능: 녹화된 비디오 URL 생성 및 페이지 이동
-                    navigate('/feedback', { state: { video: videoURL } });
+                    navigate('/feedback', { state: { video: videoURL, interviewId: interviewId } });
 
                 };
 
@@ -144,7 +147,7 @@ const InterviewStartPage = () => {
             .catch(error => {
                 console.error("녹화 시작에 실패했습니다:", error);
             });
-    }, [navigate, recordedChunks]);  // recordedChunks 추가
+    }, [navigate, recordedChunks, interviewId]);  // recordedChunks 추가
 
 // 녹화 및 오디오 일시 중지
     const pauseRecording = useCallback(() => {
@@ -252,10 +255,11 @@ const InterviewStartPage = () => {
                 setAnswerTime(prevTime => prevTime - 1);
             }, 1000);
 
-            // 타이머를 청소하는 클린업 함수
             return () => clearTimeout(timer);
+        } else if (currentStep === 'answering' && answerTime === 0) {
+            moveToNextStep();  // 답변 시간이 0이 되면 다음 단계로 이동
         }
-    }, [answerTime, currentStep]);
+    }, [answerTime, currentStep, moveToNextStep]);
 
     // 준비시간에는 녹화 X, 답변 시간이 시작되면 녹화 시작
     useEffect(() => {
@@ -343,11 +347,15 @@ const InterviewStartPage = () => {
                 setFaceDetected={setFaceDetected}
                 setNoAudioDetectedTime={setNoAudioDetectedTime}
                 setFaceLostTime={setFaceLostTime}
+                interviewId={interviewId}
+                isAnswering={currentStep === 'answering'} // 추가된 부분
+                interviewEnded={interviewEnded}
             />
             <GazeAnalysis
                 videoRef={videoRef}
                 isAnswering={currentStep === 'answering'}
                 interviewEnded={interviewEnded}
+                interviewId={interviewId}
             />
             {/* <PoseAnalysis
                 videoRef={videoRef}
@@ -398,7 +406,7 @@ const InterviewStartPage = () => {
                 {/* 비디오 화면 - 왼쪽 */}
                 <div className="flex-grow-[1] relative">
                     {/* 비디오 화면 */}
-                    <video ref={videoRef} className="rounded-lg shadow-xl w-full"/>
+                    <video ref={videoRef} className="rounded-lg shadow-xl w-full transform scale-x-[-1]"/>
 
                     {/* 두 가지 경고가 모두 해당되는 경우 */}
                     {currentStep === 'answering' && faceLostTime >= 3 && noAudioDetectedTime >= 5 && (
