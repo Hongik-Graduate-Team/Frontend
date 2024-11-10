@@ -167,18 +167,20 @@ const InterviewStartPage = () => {
         }
     }, []);
 
-// 녹화 및 오디오 중지
+    // 녹화 및 오디오 중지
     const stopRecording = useCallback(() => {
         if (mediaRecorderRef.current) {
             mediaRecorderRef.current.stop();  // 영상 녹화 중지
             audioRecorderRef.current.stop();  // 오디오 녹음 중지
             console.log("녹화와 오디오 녹음이 중지되었습니다.");
             setInterviewEnded(true);
-
+        
             // 스트림 정리
             const stream = videoRef.current.srcObject;
-            const tracks = stream.getTracks();
-            tracks.forEach(track => track.stop());
+            if (stream) {  // srcObject가 null이 아닐 경우에만 getTracks를 호출
+                const tracks = stream.getTracks();
+                tracks.forEach(track => track.stop());
+            }
             videoRef.current.srcObject = null;
         }
     }, []);
