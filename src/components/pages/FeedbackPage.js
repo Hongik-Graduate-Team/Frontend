@@ -112,7 +112,7 @@ const FeedbackPage = () => {
       <MainHeader /> {/* 헤더를 페이지 맨 위에 배치합니다 */}
       <div className="flex flex-col items-center justify-center">
         <div className="bg-gray-50 shadow-md p-8 mt-4 w-full max-w-7xl">
-          <h1 className="text-3xl font-semibold text-blue-700 mb-8">000님의 면접 분석 결과입니다.</h1>
+          <h1 className="text-3xl font-semibold text-indigo-600 mb-8">회원님의 면접 분석 결과입니다.</h1>
 
           <div className="flex flex-cols-1 md:grid-cols-2 gap-8 w-full">
             {/* 분석 결과 텍스트 */}
