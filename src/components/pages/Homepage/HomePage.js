@@ -13,8 +13,7 @@ const HomePage = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const params = new URLSearchParams(window.location.search);
-        const token = params.get('token');
+        const token = localStorage.getItem('userToken');
 
         if (token) {
             console.log('카카오 로그인 성공. 토큰:', token);

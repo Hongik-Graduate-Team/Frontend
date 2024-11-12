@@ -47,7 +47,7 @@ function SignInPage() {
                 .then((response) => {
                     // 백엔드 응답에서 카카오 액세스 토큰을 추출
                     const kakaoAccessToken = response.data.token; // 응답 바디에서 토큰을 추출
-                    localStorage.setItem('Authorization', kakaoAccessToken);
+                    localStorage.setItem('userToken', kakaoAccessToken);
 
                     // 카카오 액세스 토큰 확인용 콘솔 출력
                     console.log('받은 카카오 액세스 토큰:', kakaoAccessToken);
