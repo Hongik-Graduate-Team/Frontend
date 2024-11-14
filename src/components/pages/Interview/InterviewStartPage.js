@@ -117,15 +117,14 @@ const InterviewStartPage = () => {
 
                 // 오디오만 따로 전송
                 audioRecorderRef.current.onstop = () => {
-                    console.log("오디오 녹화 중지");
                     const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
                     const formData = new FormData();
-                    formData.append("audio", audioBlob, "audio.webm"); // FormData로 오디오 추가
+                    formData.append("audio", audioBlob, "audio.webm");
 
                     axios.post(`https://namanba.shop/api/${interviewId}/audio`, formData, {
                         headers: {
                             Authorization: `Bearer ${localStorage.getItem('userToken')}`,
-                            'Content-Type': 'multipart/form-data', // FormData의 경우 'multipart/form-data' 사용
+                            'Content-Type': 'multipart/form-data',
                         },
                     })
                         .then(() => {
@@ -138,13 +137,12 @@ const InterviewStartPage = () => {
 
                 // 녹화 시작
                 mediaRecorderRef.current.start();
-                audioRecorderRef.current.start();  // 오디오 녹음도 시작
-                console.log("녹화 시작");
+                audioRecorderRef.current.start();
             })
             .catch(error => {
                 console.error("녹화 시작에 실패했습니다:", error);
             });
-    }, [navigate, recordedChunks, interviewId]);  // recordedChunks 추가
+    }, [navigate, recordedChunks, interviewId]);
 
 // 녹화 및 오디오 일시 중지
     const pauseRecording = useCallback(() => {
