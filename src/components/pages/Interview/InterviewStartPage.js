@@ -115,28 +115,25 @@ const InterviewStartPage = () => {
 
                 };
 
-                // 추가 : 오디오만 따로 전송
+                // 오디오만 따로 전송
                 audioRecorderRef.current.onstop = () => {
                     console.log("오디오 녹화 중지");
                     const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-                    const reader = new FileReader();
+                    const formData = new FormData();
+                    formData.append("audio", audioBlob, "audio.webm"); // FormData로 오디오 추가
 
-                    reader.onloadend = async () => {
-                        const audioData = reader.result;
-
-                        try {
-                            await axios.post('https://namanba.shop/api/upload', { audio: audioData }, {
-                                headers: {
-                                    Authorization: `Bearer ${localStorage.getItem('userToken')}`,
-                                    'Content-Type': 'application/json',
-                                },
-                            });
+                    axios.post(`https://namanba.shop/api/${interviewId}/audio`, formData, {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+                            'Content-Type': 'multipart/form-data', // FormData의 경우 'multipart/form-data' 사용
+                        },
+                    })
+                        .then(() => {
                             console.log("오디오 파일이 성공적으로 전송되었습니다.");
-                        } catch (error) {
+                        })
+                        .catch((error) => {
                             console.error("오디오 전송 중 오류 발생:", error);
-                        }
-                    };
-                    reader.readAsDataURL(audioBlob);  // 오디오 데이터를 읽음
+                        });
                 };
 
                 // 녹화 시작
