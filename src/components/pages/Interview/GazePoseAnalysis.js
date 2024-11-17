@@ -1,16 +1,25 @@
 import { useEffect, useState, useRef } from 'react';
 import { FaceMesh } from '@mediapipe/face_mesh';
+import { Pose } from '@mediapipe/pose';
 import axios from 'axios';
 
-const GazeAnalysis = ({ videoRef, isAnswering, interviewEnded, interviewId }) => {
+const GazePoseAnalysis = ({ videoRef, isAnswering, interviewEnded, interviewId }) => {
   const [gazeData, setGazeData] = useState([]);  // 시선 데이터를 저장하는 상태
-  const [directionCounts, setDirectionCounts] = useState({up: 0, down: 0, left: 0, right: 0, centerX: 0, centerY: 0 }); // 시선 방향별 카운트
+  const [directionCounts, setDirectionCounts] = useState({
+    up: 0, down: 0, left: 0, right: 0, centerX: 0, centerY: 0
+  }); // 시선 방향별 카운트
+  const [postureData, setPostureData] = useState({
+    headTouchCount: 0, excessiveArmMovement: 0,
+    headMovement: 0, excessiveBodyMovement: 0
+  }); // 제스처 카운트
   const latestGazePoint = useRef(null);  // 최신 시선 좌표를 참조하는 ref
   const animationId = useRef(null);  // 애니메이션 프레임 ID를 참조하는 ref
   const isAnsweringRef = useRef(isAnswering); // isAnswering의 현재 상태를 참조하는 ref (useEffect로 업데이트)
   // gazeData와 directionCounts의 최신 상태를 참조하기 위한 ref
   const gazeDataRef = useRef(gazeData);
   const directionCountsRef = useRef(directionCounts);
+  const postureDataRef = useRef(postureData);
+  const previousPosition = useRef(null);
 
   // 평균 위치 계산 함수
   const calculateAveragePosition = (gazeData) => {
@@ -66,14 +75,31 @@ const GazeAnalysis = ({ videoRef, isAnswering, interviewEnded, interviewId }) =>
       });
   };
 
+  // 포즈 분석 결과 전송 함수
+  const sendPostureAnalysisToBackend = (postureData, interviewId) => {
+    const token = localStorage.getItem('userToken');
+    console.log('Analysis sent:', postureData);
+
+    axios.post(`https://namanba.shop/api/${interviewId}/evaluate-posture`, postureData, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((response) => {
+        console.log('Posture analysis results sent successfully:', response.data);
+      })
+      .catch((error) => {
+        console.error('Error sending posture analysis results:', error);
+      });
+  };
+
   useEffect(() => {
     const videoElement = videoRef.current;
-    let faceMesh;
+    let faceMesh, pose;
 
     // 얼굴 분석 루프 함수
     const analyzeFrame = async () => {
-      if (faceMesh && videoElement.videoWidth > 0 && videoElement.videoHeight > 0) {
+      if (faceMesh && pose && videoElement.videoWidth > 0 && videoElement.videoHeight > 0) {
         await faceMesh.send({ image: videoElement });
+        await pose.send({ image: videoElement });
       }
       animationId.current = requestAnimationFrame(analyzeFrame);
     };
@@ -135,7 +161,6 @@ const GazeAnalysis = ({ videoRef, isAnswering, interviewEnded, interviewId }) =>
 
           // 답변 시간에만 gazeData에 추가
           if (isAnsweringRef.current) {
-            // console.log(latestGazePoint.current, direction.y, direction.x);
             setGazeData((prevData) => [...prevData, latestGazePoint.current]);
             setDirectionCounts((prevCounts) => ({
               ...prevCounts,
@@ -146,6 +171,97 @@ const GazeAnalysis = ({ videoRef, isAnswering, interviewEnded, interviewId }) =>
         } else {
           console.warn('No face landmarks detected.');
           latestGazePoint.current = null;
+        }
+      });
+
+      pose = new Pose({
+        locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`,
+      });
+
+      // pose 옵션 설정
+      pose.setOptions({
+        modelComplexity: 1,
+        smoothLandmarks: true,
+        enableSegmentation: false,
+        minDetectionConfidence: 0.5,
+        minTrackingConfidence: 0.5,
+      });
+
+      // Pose 분석 결과 처리
+      pose.onResults((results) => {
+        if (results.poseLandmarks && results.poseLandmarks.length > 0) {
+          const landmarks = results.poseLandmarks;
+          
+          const leftIndex = { x: landmarks[19].x, y: landmarks[19].y };
+          const rightIndex = { x: landmarks[20].x, y: landmarks[20].y };
+          const leftWrist = { x: landmarks[15].x, y: landmarks[15].y, v: landmarks[15].visibility};
+          const rightWrist = { x: landmarks[16].x, y: landmarks[16].y, v: landmarks[16].visibility };
+          const isLeftWristVisible = leftWrist.v > 0.5;
+          const isRightWristVisible = rightWrist.v > 0.5;
+          const nose = { x: landmarks[0].x, y: landmarks[0].y };
+          const leftShoulder = { x: landmarks[11].x, y: landmarks[11].y, v: landmarks[11].visibility };
+          const rightShoulder = { x: landmarks[12].x, y: landmarks[12].y, v: landmarks[12].visibility };
+          const averageShoulder = { x: (leftShoulder.x + rightShoulder.x) / 2, y: (leftShoulder.y + rightShoulder.y) / 2 };
+          const isLeftShoulderVisible = leftShoulder.v > 0.5;
+          const isRightShoulderVisible = rightShoulder.v > 0.5;
+      
+          const distance = (pointA, pointB) => {
+            if (!pointA || !pointB) return Infinity;
+            return Math.sqrt(Math.pow(pointA.x - pointB.x, 2) + Math.pow(pointA.y - pointB.y, 2));
+          };
+      
+          if (isAnsweringRef.current) {
+            setPostureData((prevData) => {
+              const newPostureData = { ...prevData };
+      
+              // 머리 만지는 행동 감지
+              if  (distance(leftIndex, nose) < 0.25 || distance(rightIndex, nose) < 0.25) {
+                newPostureData.headTouchCount++;
+              }
+      
+              // 과도한 팔 움직임 감지
+              if (isLeftWristVisible || isRightWristVisible) {
+                if (isLeftWristVisible) {
+                  const leftMovement = distance(leftWrist, previousPosition.leftWrist);
+                  if (leftMovement > 0.1) {
+                    newPostureData.excessiveArmMovement++;
+                  }
+                  previousPosition.leftWrist = { x: leftWrist.x, y: leftWrist.y };
+                }
+                if (isRightWristVisible) {
+                  const rightMovement = distance(rightWrist, previousPosition.rightWrist);
+                  if (rightMovement > 0.1) {
+                    newPostureData.excessiveArmMovement++;
+                  }
+                  previousPosition.rightWrist = { x: rightWrist.x, y: rightWrist.y };
+                }
+              }
+      
+              // 과도한 고개 움직임 감지
+              if (nose) {
+                const headMovement = distance(nose, previousPosition.nose);
+                if (headMovement > 0.03) {
+                  newPostureData.headMovement++;
+                }
+                previousPosition.nose = { x: nose.x, y: nose.y };
+              }
+                    
+              // 과도한 몸 움직임 감지
+              if (isLeftShoulderVisible || isRightShoulderVisible) {
+                const bodyMovement = distance(averageShoulder, previousPosition.shoulder);
+                if (bodyMovement > 0.03) {
+                  newPostureData.excessiveBodyMovement++;
+                }
+                previousPosition.shoulder = { x:averageShoulder.x, y: averageShoulder.y };
+              }
+            
+              // postureDataRef와 동기화
+              postureDataRef.current = newPostureData;   
+              return newPostureData;
+            });
+          }
+        } else {
+          console.warn('No landmarks detected.');
         }
       });
 
@@ -189,11 +305,13 @@ const GazeAnalysis = ({ videoRef, isAnswering, interviewEnded, interviewId }) =>
       const avgPosition = calculateAveragePosition(gazeDataRef.current);
       const stability = calculateStability(gazeDataRef.current, avgPosition);
       const directionCounts = directionCountsRef.current;
+      const postureData = postureDataRef.current;
       sendGazeAnalysisToBackend(avgPosition, stability, directionCounts, interviewId);
+      sendPostureAnalysisToBackend(postureData, interviewId);
     }
   }, [interviewEnded, interviewId]);
 
   return null;
 };
 
-export default GazeAnalysis;
+export default GazePoseAnalysis;
