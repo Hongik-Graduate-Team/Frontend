@@ -6,8 +6,7 @@ import 'react-circular-progressbar/dist/styles.css';
 import VoiceFaceRecognition from './VoiceFaceRecognition';
 import { InterviewContext } from '../../../context/InterviewContext';
 import axios from "axios"; // Context 가져오기
-import GazeAnalysis from './GazeAnalysis';  // 시선 분석 컴포넌트
-// import PoseAnalysis from './PoseAnalysis';  // 자세 분석 컴포넌트
+import GazePoseAnalysis from './GazePoseAnalysis';  // 시선 분석 컴포넌트
 
 const InterviewStartPage = () => {
     const navigate = useNavigate();
@@ -349,17 +348,12 @@ const InterviewStartPage = () => {
                 isAnswering={currentStep === 'answering'} // 추가된 부분
                 interviewEnded={interviewEnded}
             />
-            <GazeAnalysis
+            <GazePoseAnalysis
                 videoRef={videoRef}
                 isAnswering={currentStep === 'answering'}
                 interviewEnded={interviewEnded}
                 interviewId={interviewId}
             />
-            {/* <PoseAnalysis
-                videoRef={videoRef}
-                isAnswering={currentStep === 'answering'}
-                interviewEnded={interviewEnded}
-            /> */}
 
             {/* 상태에 따른 안내 및 질문 내용 - 헤더 바로 밑 */}
             <div className="w-full mt-2 text-center">
