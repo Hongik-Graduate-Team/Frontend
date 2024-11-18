@@ -6,6 +6,16 @@ function PreviousInterviews({ onSelectInterview }) {
     const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
     const [totalPages, setTotalPages] = useState(1); // 전체 페이지 수
 
+    // 날짜를 AM/PM 형식으로 변환하는 함수
+    const formatDateTime = (dateString) => {
+        const date = new Date(dateString);
+        const hours = date.getHours();
+        const minutes = date.getMinutes().toString().padStart(2, "0");
+        const ampm = hours >= 12 ? "PM" : "AM";
+        const formattedHours = hours % 12 || 12;
+        return `${date.toLocaleDateString()} ${formattedHours}:${minutes} ${ampm}`;
+    };
+
     useEffect(() => {
         const fetchInterviews = async () => {
             const token = localStorage.getItem("userToken");
@@ -65,7 +75,7 @@ function PreviousInterviews({ onSelectInterview }) {
                                     <span className="w-1/4 text-gray-800 font-medium">{interview.interviewTitle}</span>
                                     <span className="w-1/4 text-gray-600">{interview.positionName}</span>
                                     <span className="w-1/4 text-gray-500">
-                                        {new Date(interview.createdDate).toLocaleDateString()}
+                                        {formatDateTime(interview.createdDate)}
                                     </span>
                                 </li>
                             ))}
