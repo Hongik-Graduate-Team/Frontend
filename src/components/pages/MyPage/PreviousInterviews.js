@@ -10,12 +10,12 @@ function PreviousInterviews({ onSelectInterview }) {
         const fetchInterviews = async () => {
             const token = localStorage.getItem("userToken");
             try {
-                const response = await axios.get('https://namanba.shop/api/interviews/lists', {
+                const response = await axios.get('https://namanba.shop/interviews/lists', {
                     headers: { Authorization: `Bearer ${token}` },
                     params: {
                         page: currentPage - 1, // 백엔드는 0부터 시작하는 페이지 인덱스를 사용
-                        direction: "DESC"
-                    }
+                        direction: "DESC",
+                    },
                 });
 
                 const data = response.data.data;
@@ -25,6 +25,7 @@ function PreviousInterviews({ onSelectInterview }) {
                 console.error("면접 목록 로드 오류:", error);
             }
         };
+
         fetchInterviews();
     }, [currentPage]);
 
@@ -34,18 +35,8 @@ function PreviousInterviews({ onSelectInterview }) {
         }
     };
 
-    const handleInterviewClick = async (interviewId) => {
-        try {
-            const token = localStorage.getItem("userToken");
-            await axios.post(
-                'https://namanba.shop/api/interview/select', // 선택 API 호출
-                { interviewId },
-                { headers: { Authorization: `Bearer ${token}` } }
-            );
-            onSelectInterview(interviewId); // 부모 컴포넌트로 ID 전달
-        } catch (error) {
-            console.error("면접 선택 전송 오류:", error);
-        }
+    const handleInterviewClick = (interviewId) => {
+        onSelectInterview(interviewId); // 부모 컴포넌트로 ID 전달
     };
 
     return (
