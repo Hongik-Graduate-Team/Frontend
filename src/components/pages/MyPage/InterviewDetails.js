@@ -1,45 +1,41 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-function InterviewDetails() {
-    const [interviewDetails, setInterviewDetails] = useState(null); // 면접 상세 정보 상태
-    const [isLoading, setIsLoading] = useState(true); // 로딩 상태
+function InterviewDetails({ interviewId }) { // props로 interviewId 전달받음
+    const [interviewDetails, setInterviewDetails] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
     const navigate = useNavigate();
-    const { interviewId } = useParams(); // URL의 인터뷰 ID 파라미터 가져오기
 
     useEffect(() => {
         const token = localStorage.getItem("userToken");
 
-        // 인터뷰 상세 정보 가져오기
         const fetchInterviewDetails = async () => {
             setIsLoading(true);
             try {
                 const response = await axios.get(
-                    `https://namanba.shop/interviews/${interviewId}`,
+                    `https://namanba.shop/interviews/${interviewId}`, // 전달받은 ID 사용
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
                         },
                     }
                 );
-                setInterviewDetails(response.data.data); // 상세 정보 상태에 저장
+                setInterviewDetails(response.data.data);
             } catch (error) {
                 console.error("면접 상세 정보 로드 오류:", error);
             } finally {
-                setIsLoading(false); // 로딩 완료
+                setIsLoading(false);
             }
         };
 
         fetchInterviewDetails();
     }, [interviewId]);
 
-    // 로딩 중 화면
     if (isLoading) {
         return <div className="min-h-screen flex justify-center items-center text-gray-500">로딩 중...</div>;
     }
 
-    // 데이터가 없는 경우
     if (!interviewDetails) {
         return <div className="min-h-screen flex justify-center items-center text-gray-500">면접 정보를 찾을 수 없습니다.</div>;
     }

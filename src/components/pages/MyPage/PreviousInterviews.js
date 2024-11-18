@@ -14,8 +14,8 @@ function PreviousInterviews({ onSelectInterview }) {
                     headers: { Authorization: `Bearer ${token}` },
                     params: {
                         page: currentPage - 1, // 백엔드는 0부터 시작하는 페이지 인덱스를 사용
-                        direction: "DESC",
-                    },
+                        direction: "DESC"
+                    }
                 });
 
                 const data = response.data.data;
@@ -25,7 +25,6 @@ function PreviousInterviews({ onSelectInterview }) {
                 console.error("면접 목록 로드 오류:", error);
             }
         };
-
         fetchInterviews();
     }, [currentPage]);
 
