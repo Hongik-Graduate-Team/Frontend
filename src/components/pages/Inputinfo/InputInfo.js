@@ -89,10 +89,6 @@ function InputInfo() {
     loadData();
   }, [navigate]); // `navigate`를 종속성으로 추가하여 안전하게 리디렉션 처리
 
-  useEffect(() => {
-    console.log("Resume Data updated: ", resumeData);
-  }, [resumeData]);
-
   // 페이지 이동 시 경고창 표시
   useEffect(() => {
     const handleBeforeUnload = (e) => {
