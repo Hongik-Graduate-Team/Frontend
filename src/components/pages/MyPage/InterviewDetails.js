@@ -50,9 +50,11 @@ function InterviewDetails({ interviewId }) {
         return <div className="min-h-screen flex justify-center items-center text-gray-500">면접 정보를 찾을 수 없습니다.</div>;
     }
 
-    // 커스텀 질문 분리
+    // 커스텀 질문 분리 및 숫자 제거
     const customQuestions = interviewDetails.customQuestions
-        ? interviewDetails.customQuestions.split("\n")
+        ? interviewDetails.customQuestions
+            .split("\n")
+            .map((question) => question.replace(/^\d+\.\s*/, "").trim())
         : [];
 
     return (
@@ -97,7 +99,7 @@ function InterviewDetails({ interviewId }) {
                     <h2 className="text-2xl font-semibold text-gray-900 mb-4">면접 평가</h2>
                     {interviewDetails.evaluationStatus === "IN_PROGRESS" ? (
                         <div className="text-center text-red-500 text-xl font-bold">
-                            면접이 완료되지 않았습니다.
+                            평가가 완료되지 않았습니다.
                         </div>
                     ) : (
                         <ul className="list-inside space-y-4">
@@ -127,7 +129,7 @@ function InterviewDetails({ interviewId }) {
                 {/* 이전 버튼 */}
                 <div className="flex justify-center">
                     <button
-                        onClick={() => navigate("/previousinterviews")}
+                        onClick={() => navigate("/mypage")} // 마이페이지로 이동
                         className="px-5 py-2 bg-indigo-500 text-white text-lg rounded-lg shadow hover:bg-indigo-600 transition"
                     >
                         이전
@@ -139,3 +141,4 @@ function InterviewDetails({ interviewId }) {
 }
 
 export default InterviewDetails;
+
