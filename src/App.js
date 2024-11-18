@@ -11,6 +11,8 @@ import InterviewStartPage from "./components/pages/Interview/InterviewStartPage"
 import Feedback from './components/pages/FeedbackPage';
 import './index.css';
 import {InterviewProvider} from "./context/InterviewContext";
+import InterviewDetails from "./components/pages/MyPage/InterviewDetails";
+import PreviousInterviews from "./components/pages/MyPage/PreviousInterviews";
 
 
 // Kakao SDK 초기화
@@ -27,6 +29,8 @@ function App() {
                         <Route path="/signup" element={<SignUpPage />} />
                         <Route path="/inputinfo" element={<InputInfo />} />
                         <Route path="/mypage" element={<MyPage />} />
+                        <Route path="/previousinterviews" element={<PreviousInterviews />} />
+                        <Route path="/interviewdetails" element={<InterviewDetails />} />
                         <Route path="/interviewpreparation" element={<InterviewPreparationPage />} />
                         <Route path="/interviewstart" element={<InterviewStartPage />} />
                         <Route path="/feedback" element={<Feedback />} />
