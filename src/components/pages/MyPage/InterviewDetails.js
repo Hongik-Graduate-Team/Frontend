@@ -16,7 +16,7 @@ function InterviewDetails() {
             setIsLoading(true);
             try {
                 const response = await axios.get(
-                    `https://namanba.shop/api/interviews/${interviewId}`,
+                    `https://namanba.shop/interviews/${interviewId}`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
