@@ -1,5 +1,4 @@
 import React, {useContext, useState} from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { InterviewContext } from '../../context/InterviewContext'; // Context 가져오기
 
@@ -13,13 +12,6 @@ const InputTitleModal = ({ isOpen, onClose }) => {
         e.preventDefault(); // 폼 제출 기본 동작 방지
         setIsSaving(true);
         try {
-            const token = localStorage.getItem('userToken'); // 로컬 스토리지에서 토큰 가져오기
-            await axios.get('https://namanba.shop/api/interview', {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
-                params: { interviewTitle: localInterviewTitle  }
-              });
             setInterviewTitle(localInterviewTitle); // 전역 상태에 저장
             setLocalInterviewTitle(''); // 로컬 상태 초기화
             onClose(); // 모달 닫기
