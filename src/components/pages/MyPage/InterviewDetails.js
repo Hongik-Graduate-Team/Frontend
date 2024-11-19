@@ -8,6 +8,7 @@ function InterviewDetails({ interviewId }) {
     const navigate = useNavigate();
 
     const handleNavigation = (path) => {
+        console.log(`Navigating to: ${path}`); // 디버깅을 위한 로그 추가
         navigate(path);
     };
 
