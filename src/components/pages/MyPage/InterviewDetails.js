@@ -9,8 +9,7 @@ function InterviewDetails({ interviewId }) {
 
     const handleNavigation = (path) => {
         console.log(`Navigating to: ${path}`); // 디버깅을 위한 로그 추가
-        // navigate(path);
-        window.location.href = path; // 강제 이동
+        navigate(path);
     };
 
     useEffect(() => {
