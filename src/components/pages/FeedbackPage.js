@@ -26,6 +26,7 @@ ChartJS.register(
 const FeedbackPage = () => {
   const location = useLocation();
   const resultData = location.state; // 이전 페이지에서 넘겨받은 데이터
+  const [loading, setLoading] = useState(true);
   const [gazeData, setGazeData] = useState({ gaze: 0, gazeMessage: '' }); // 시선 분석 데이터
   const [gestureData, setGestureData] = useState({ gesture: 0, gestureMessage: '' }) // 자세 분석 데이터
   const [expressionData, setExpressionData] = useState({ expression: 0, expressionMessage: '' }); // 표정 분석 데이터
@@ -71,6 +72,10 @@ const FeedbackPage = () => {
         )
       } catch (error) {
         console.error('데이터를 가져오는 중 오류가 발생했습니다:', error);
+      }  finally {
+        setTimeout(() => {
+          setLoading(false); // 데이터 로딩 완료 후 로딩 상태 해제
+        }, 500);
       }
     };
 
@@ -78,6 +83,16 @@ const FeedbackPage = () => {
       fetchFeedbackData();
     }
   }, [resultData]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-2xl font-semibold">데이터를 로딩 중입니다.<p></p>잠시만 기다려주세요.</p>
+        </div>
+      </div>
+    );
+  }
 
   // 면접 영상 다운로드 함수
   const handleDownload = () => {

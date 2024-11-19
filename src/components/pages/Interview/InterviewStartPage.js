@@ -166,8 +166,8 @@ const InterviewStartPage = () => {
         if (mediaRecorderRef.current) {
             mediaRecorderRef.current.stop();  // 영상 녹화 중지
             audioRecorderRef.current.stop();  // 오디오 녹음 중지
-            console.log("녹화와 오디오 녹음이 중지되었습니다.");
             setInterviewEnded(true);
+            console.log("녹화와 오디오 녹음이 중지되었습니다.");
 
             // 스트림 정리
             const stream = videoRef.current?.srcObject;
@@ -187,8 +187,8 @@ const InterviewStartPage = () => {
             setRemainingTime(30);  // 준비 시간 30초 재설정
         } else if (!interviewEnded) {
             stopRecording(); // 마지막 질문 녹화 중지
-            alert("모든 질문이 완료되었습니다. 면접을 종료합니다.");
             setInterviewEnded(true);  // 알림이 한 번만 뜨도록 상태 설정
+            alert("모든 질문이 완료되었습니다. 면접을 종료합니다.");
         }
     }, [currentQuestionIndex, totalQuestions, stopRecording, interviewEnded]);
 

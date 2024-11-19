@@ -63,7 +63,7 @@ const GazePoseAnalysis = ({ videoRef, isAnswering, interviewEnded, interviewId }
     axios.all([
       axios.post(`https://namanba.shop/api/${interviewId}/evaluate-gaze`, gazeDataToPost, {
         headers: {
-          Authorization: `Bearer ${token}`,  // 인증 헤더 설정
+          Authorization: `Bearer ${token}`,
         },
       }),
       axios.post(`https://namanba.shop/api/${interviewId}/evaluate-gesture`, postureData, {
