@@ -80,7 +80,7 @@ const GazePoseAnalysis = ({ videoRef, isAnswering, interviewEnded, interviewId }
     const token = localStorage.getItem('userToken');
     console.log('Analysis sent:', postureData);
 
-    axios.post(`https://namanba.shop/api/${interviewId}/evaluate-posture`, postureData, {
+    axios.post(`https://namanba.shop/api/${interviewId}/evaluate-gesture`, postureData, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((response) => {

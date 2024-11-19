@@ -62,10 +62,10 @@ const FeedbackPage = () => {
         ])
         .then(
           axios.spread((res1, res2, res3, res4) => {
-            setGazeData(res1.data);
-            setGestureData(res2.data);
-            setExpressionData(res3.data);
-            setAudioData(res4.data);
+            setGazeData(res1.data.data);
+            setGestureData(res2.data.data);
+            setExpressionData(res3.data.data);
+            setAudioData(res4.data.data);
           }
         )
         )
