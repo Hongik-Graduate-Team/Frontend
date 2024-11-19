@@ -81,7 +81,9 @@ const GazePoseAnalysis = ({ videoRef, isAnswering, interviewEnded, interviewId }
     console.log('Analysis sent:', postureData);
 
     axios.post(`https://namanba.shop/api/${interviewId}/evaluate-gesture`, postureData, {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { 
+        Authorization: `Bearer ${token}`, 
+      },
     })
       .then((response) => {
         console.log('Posture analysis results sent successfully:', response.data);
