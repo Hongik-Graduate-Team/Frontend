@@ -112,10 +112,10 @@ function InterviewDetails({ interviewId }) {
                                 <strong>제스처:</strong> {interviewDetails.gesture} ({interviewDetails.gestureMessage})
                             </li>
                             <li className="text-lg text-gray-800">
-                                <strong>음성 크기:</strong> {interviewDetails.voiceVolume} ({interviewDetails.voiceVolumeMessage})
+                                <strong>목소리 크기:</strong> {interviewDetails.voiceVolume} ({interviewDetails.voiceVolumeMessage})
                             </li>
                             <li className="text-lg text-gray-800">
-                                <strong>말 속도:</strong> {interviewDetails.speechRate} ({interviewDetails.speechRateMessage})
+                                <strong>발화 속도:</strong> {interviewDetails.speechRate} ({interviewDetails.speechRateMessage})
                             </li>
                             <li className="text-lg text-gray-800">
                                 <strong>침묵 시간:</strong> {interviewDetails.silenceDuration} (
