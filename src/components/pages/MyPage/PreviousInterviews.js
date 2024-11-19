@@ -25,7 +25,7 @@ function PreviousInterviews({ onSelectInterview }) {
             const response = await axios.get('https://namanba.shop/interviews/lists', {
                 headers: { Authorization: `Bearer ${token}` }, // 토큰을 Authorization 헤더에 추가
                 params: {
-                    page: page - 1, // 백엔드에서는 0부터 시작하는 페이지 번호 사용
+                    page: page, // 백엔드에서는 0부터 시작하는 페이지 번호 사용
                     // direction: "DESC" // 내림차순 정렬
                 }
             });
