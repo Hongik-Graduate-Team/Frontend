@@ -146,8 +146,8 @@ function InterviewDetails({ interviewId }) {
                                 {evaluationItems.map((item, index) => (
                                     <li key={index} className="text-lg text-gray-800">
                                         <div className="flex items-center space-x-2">
-                                            <span className="font-bold">{item.title}:</span>
-                                            <span className="text-indigo-600 font-bold">{item.value}점</span>
+                                            <span className="text-xl font-bold">{item.title}:</span>
+                                            <span className="text-xl text-indigo-600 font-bold">{item.value}점</span>
                                         </div>
                                         <div className="mt-2">{processMessage(item.message)}</div>
                                     </li>
