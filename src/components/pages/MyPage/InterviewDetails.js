@@ -127,7 +127,7 @@ function InterviewDetails({ interviewId }) {
 
                 <div className="flex justify-center">
                     <button
-                        onClick={() => handleNavigation("/mypage")}
+                        onClick={() => handleNavigation('/mypage')}
                         className="px-5 py-2 bg-indigo-500 text-white text-lg rounded-lg shadow hover:bg-indigo-600 transition"
                     >
                         이전
