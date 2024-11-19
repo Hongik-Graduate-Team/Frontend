@@ -80,7 +80,7 @@ const FeedbackPage = () => {
       if (resultData?.interviewId) {
         fetchFeedbackData();
       }
-    }, 5000);
+    }, 10000);
     return () => clearTimeout(timer);
     
   }, [resultData]);
