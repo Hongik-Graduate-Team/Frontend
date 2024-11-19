@@ -9,7 +9,7 @@ const GazePoseAnalysis = ({ videoRef, isAnswering, interviewEnded, interviewId }
     up: 0, down: 0, left: 0, right: 0, centerX: 0, centerY: 0
   }); // 시선 방향별 카운트
   const [postureData, setPostureData] = useState({
-    headTouchCount: 0, excessiveArmMovement: 0,
+    headTouch: 0, excessiveArmMovement: 0,
     headMovement: 0, excessiveBodyMovement: 0
   }); // 제스처 카운트
   const latestGazePoint = useRef(null);  // 최신 시선 좌표를 참조하는 ref
@@ -216,7 +216,7 @@ const GazePoseAnalysis = ({ videoRef, isAnswering, interviewEnded, interviewId }
       
               // 머리 만지는 행동 감지
               if  (distance(leftIndex, nose) < 0.25 || distance(rightIndex, nose) < 0.25) {
-                newPostureData.headTouchCount++;
+                newPostureData.headTouch++;
               }
       
               // 과도한 팔 움직임 감지
