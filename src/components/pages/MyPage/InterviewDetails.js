@@ -9,7 +9,9 @@ function InterviewDetails({ interviewId }) {
 
     const handleNavigation = (path) => {
         console.log(`Navigating to: ${path}`); // 디버깅을 위한 로그 추가
-        navigate(path);
+        navigate("/mypage", { replace: true }); // `replace` 옵션으로 히스토리를 덮어씌움
+        // navigate(path);
+        // window.location.href = path; // 강제 이동
     };
 
     useEffect(() => {
