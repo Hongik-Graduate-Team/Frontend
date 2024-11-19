@@ -51,46 +51,33 @@ const GazePoseAnalysis = ({ videoRef, isAnswering, interviewEnded, interviewId }
   };
 
   // 백엔드에 분석 결과 전송 함수
-  const sendGazeAnalysisToBackend = (avgPosition, stability, directionCounts, interviewId) => {
+  const sendAnalysisToBackend = (avgPosition, stability, directionCounts, postureData, interviewId) => {
     const stabilityScore = Math.sqrt(stability.varianceX + stability.varianceY);  // 안정성 점수 계산
     const token = localStorage.getItem('userToken');  // 사용자 토큰 가져오기
   
-    const dataToPost = {
+    const gazeDataToPost = {
       stabilityScore,
       directionCounts,
     };
-
-    console.log('Analysis sent:', dataToPost);
   
-    axios.post(`https://namanba.shop/api/${interviewId}/evaluate-gaze`, dataToPost, {
-      headers: {
-        Authorization: `Bearer ${token}`,  // 인증 헤더 설정
-      },
-    })
-      .then((response) => {
-        console.log('Gaze analysis results sent successfully:', response.data);
+    axios.all([
+      axios.post(`https://namanba.shop/api/${interviewId}/evaluate-gaze`, gazeDataToPost, {
+        headers: {
+          Authorization: `Bearer ${token}`,  // 인증 헤더 설정
+        },
+      }),
+      axios.post(`https://namanba.shop/api/${interviewId}/evaluate-gesture`, postureData, {
+        headers: { 
+          Authorization: `Bearer ${token}`, 
+        },
       })
-      .catch((error) => {
-        console.error('Error sending gaze analysis results:', error);
-      });
-  };
-
-  // 포즈 분석 결과 전송 함수
-  const sendPostureAnalysisToBackend = (postureData, interviewId) => {
-    const token = localStorage.getItem('userToken');
-    console.log('Analysis sent:', postureData);
-
-    axios.post(`https://namanba.shop/api/${interviewId}/evaluate-gesture`, postureData, {
-      headers: { 
-        Authorization: `Bearer ${token}`, 
-      },
+    ])
+    .then((response) => {
+      console.log('analysis results sent successfully:', response.data);
     })
-      .then((response) => {
-        console.log('Posture analysis results sent successfully:', response.data);
-      })
-      .catch((error) => {
-        console.error('Error sending posture analysis results:', error);
-      });
+    .catch((error) => {
+      console.error('Error sending analysis results:', error);
+    });
   };
 
   useEffect(() => {
@@ -308,8 +295,7 @@ const GazePoseAnalysis = ({ videoRef, isAnswering, interviewEnded, interviewId }
       const stability = calculateStability(gazeDataRef.current, avgPosition);
       const directionCounts = directionCountsRef.current;
       const postureData = postureDataRef.current;
-      sendGazeAnalysisToBackend(avgPosition, stability, directionCounts, interviewId);
-      sendPostureAnalysisToBackend(postureData, interviewId);
+      sendAnalysisToBackend(avgPosition, stability, directionCounts, postureData, interviewId);
     }
   }, [interviewEnded, interviewId]);
 
