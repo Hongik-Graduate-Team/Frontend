@@ -53,7 +53,6 @@ function InterviewDetails({ interviewId }) {
         return <div className="min-h-screen flex justify-center items-center text-gray-500">면접 정보를 찾을 수 없습니다.</div>;
     }
 
-    // 개인 맞춤형 질문 처리
     const customQuestions = interviewDetails.customQuestions
         ? interviewDetails.customQuestions
             .split("\n")
@@ -61,7 +60,6 @@ function InterviewDetails({ interviewId }) {
             .filter((question) => question !== "")
         : [];
 
-    // 면접 평가 항목
     const evaluationItems = [
         { title: "시선", value: interviewDetails.gaze, message: interviewDetails.gazeMessage },
         { title: "표정", value: interviewDetails.expression, message: interviewDetails.expressionMessage },
@@ -78,7 +76,7 @@ function InterviewDetails({ interviewId }) {
                     {interviewDetails.interviewTitle}
                 </h1>
 
-                {/* 직군 및 생성 날짜 섹션 */}
+                {/* 직군 및 생성 날짜 */}
                 <div className="mb-8">
                     <h2 className="text-2xl font-semibold text-gray-900 mb-2">직군</h2>
                     <p className="text-lg text-gray-700 rounded-lg p-4">{interviewDetails.positionName}</p>
@@ -90,13 +88,13 @@ function InterviewDetails({ interviewId }) {
                     </p>
                 </div>
 
-                {/* 면접 질문 섹션 */}
+                {/* 면접 질문 */}
                 <div className="mb-8">
                     <h2 className="text-2xl font-semibold text-gray-900 mb-4">질문</h2>
                     <div className="space-y-6">
                         {/* 기본 질문 */}
                         <div className="bg-gray-100 rounded-lg p-6">
-                            <h3 className="text-xl font-bold text-gray-900 mb-4">기본 질문</h3>
+                            <h3 className="text-xl font-bold text-indigo-600 mb-4">기본 질문</h3>
                             <ul className="list-disc list-inside space-y-2">
                                 <li className="text-lg text-gray-800">{interviewDetails.basicInterview1}</li>
                                 <li className="text-lg text-gray-800">{interviewDetails.basicInterview2}</li>
@@ -106,7 +104,7 @@ function InterviewDetails({ interviewId }) {
 
                         {/* 개인 맞춤형 질문 */}
                         <div className="bg-gray-100 rounded-lg p-6">
-                            <h3 className="text-xl font-bold text-gray-900 mb-4">개인 맞춤형 질문</h3>
+                            <h3 className="text-xl font-bold text-indigo-600 mb-4">개인 맞춤형 질문</h3>
                             <ul className="list-disc list-inside space-y-2">
                                 {customQuestions.map((question, index) => (
                                     <li key={index} className="text-lg text-gray-800">
@@ -118,7 +116,7 @@ function InterviewDetails({ interviewId }) {
                     </div>
                 </div>
 
-                {/* 면접 평가 섹션 */}
+                {/* 면접 평가 */}
                 <div className="mb-8">
                     <h2 className="text-2xl font-semibold text-gray-900 mb-4">면접 평가</h2>
                     {interviewDetails.evaluationStatus === "IN_PROGRESS" ? (
@@ -126,14 +124,19 @@ function InterviewDetails({ interviewId }) {
                             평가가 완료되지 않았습니다.
                         </div>
                     ) : (
-                        <ul className="space-y-6">
-                            {evaluationItems.map((item, index) => (
-                                <li key={index} className="text-lg text-gray-800">
-                                    <div className="font-bold text-indigo-600">{item.title}: {item.value}점</div>
-                                    <p className="text-gray-700 mt-1">{item.message}</p>
-                                </li>
-                            ))}
-                        </ul>
+                        <div className="bg-gray-100 rounded-lg p-6">
+                            <ul className="space-y-6">
+                                {evaluationItems.map((item, index) => (
+                                    <li key={index} className="text-lg text-gray-800">
+                                        <div className="flex items-center space-x-2">
+                                            <span className="font-bold">{item.title}:</span>
+                                            <span className="text-indigo-600 font-bold">{item.value}점</span>
+                                        </div>
+                                        <p className="text-gray-700 mt-1">{item.message}</p>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
                     )}
                 </div>
 
@@ -152,4 +155,3 @@ function InterviewDetails({ interviewId }) {
 }
 
 export default InterviewDetails;
-
