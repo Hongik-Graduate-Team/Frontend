@@ -166,7 +166,6 @@ const VoiceFaceRecognition = ({ videoRef, setFaceDetected, setNoAudioDetectedTim
                                     disgusted: prevCounts.disgusted + (expressions.disgusted > 0.5 ? 1 : 0),
                                     surprised: prevCounts.surprised + (expressions.surprised > 0.5 ? 1 : 0),
                                 };
-                                console.log("업데이트된 표정 카운트:", updatedCounts);
                                 return updatedCounts;
                             });
                             setTotalFrames(prevFrames => prevFrames + 1);
