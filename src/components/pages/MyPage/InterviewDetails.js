@@ -8,7 +8,6 @@ function InterviewDetails({ interviewId }) {
     const navigate = useNavigate();
 
     const handleNavigation = (path) => {
-        console.log(`Navigating to: ${path}`); // 디버깅을 위한 로그 추가
         navigate(path);
     };
 
@@ -54,12 +53,14 @@ function InterviewDetails({ interviewId }) {
         return <div className="min-h-screen flex justify-center items-center text-gray-500">면접 정보를 찾을 수 없습니다.</div>;
     }
 
-    const customQuestions = interviewDetails.customQuestions
-        ? interviewDetails.customQuestions
-            .split("\n")
-            .map((question) => question.replace(/^\d+\.\s*/, "").trim())
-            .filter((question) => question !== "")
-        : [];
+    const evaluationItems = [
+        { title: "시선", value: interviewDetails.gaze, message: interviewDetails.gazeMessage },
+        { title: "표정", value: interviewDetails.expression, message: interviewDetails.expressionMessage },
+        { title: "제스처", value: interviewDetails.gesture, message: interviewDetails.gestureMessage },
+        { title: "목소리 크기", value: interviewDetails.voiceVolume, message: interviewDetails.voiceVolumeMessage },
+        { title: "발화 속도", value: interviewDetails.speechRate, message: interviewDetails.speechRateMessage },
+        { title: "침묵 시간", value: interviewDetails.silenceDuration, message: interviewDetails.silenceDurationMessage },
+    ];
 
     return (
         <div className="min-h-screen p-6">
@@ -81,53 +82,26 @@ function InterviewDetails({ interviewId }) {
                 </div>
 
                 <div className="mb-8">
-                    <h2 className="text-2xl font-semibold text-gray-900 mb-4">질문</h2>
-                    <ul className="list-disc list-inside space-y-4">
-                        <li className="text-lg text-gray-800">{interviewDetails.basicInterview1}</li>
-                        <li className="text-lg text-gray-800">{interviewDetails.basicInterview2}</li>
-                        <li className="text-lg text-gray-800">{interviewDetails.basicInterview3}</li>
-                        {customQuestions.map((question, index) => (
-                            <li key={index} className="text-lg text-gray-800">
-                                {question}
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-
-                <div className="mb-8">
                     <h2 className="text-2xl font-semibold text-gray-900 mb-4">면접 평가</h2>
                     {interviewDetails.evaluationStatus === "IN_PROGRESS" ? (
                         <div className="text-center text-red-500 text-xl font-bold">
                             평가가 완료되지 않았습니다.
                         </div>
                     ) : (
-                        <ul className="list-inside space-y-4">
-                            <li className="text-lg text-gray-800">
-                                <strong>시선:</strong> {interviewDetails.gaze} ({interviewDetails.gazeMessage})
-                            </li>
-                            <li className="text-lg text-gray-800">
-                                <strong>표정:</strong> {interviewDetails.expression} ({interviewDetails.expressionMessage})
-                            </li>
-                            <li className="text-lg text-gray-800">
-                                <strong>제스처:</strong> {interviewDetails.gesture} ({interviewDetails.gestureMessage})
-                            </li>
-                            <li className="text-lg text-gray-800">
-                                <strong>목소리 크기:</strong> {interviewDetails.voiceVolume} ({interviewDetails.voiceVolumeMessage})
-                            </li>
-                            <li className="text-lg text-gray-800">
-                                <strong>발화 속도:</strong> {interviewDetails.speechRate} ({interviewDetails.speechRateMessage})
-                            </li>
-                            <li className="text-lg text-gray-800">
-                                <strong>침묵 시간:</strong> {interviewDetails.silenceDuration} (
-                                {interviewDetails.silenceDurationMessage})
-                            </li>
+                        <ul className="space-y-6">
+                            {evaluationItems.map((item, index) => (
+                                <li key={index} className="text-lg text-gray-800">
+                                    <div className="font-bold text-indigo-600">{item.title}: {item.value}점</div>
+                                    <p className="text-gray-700 mt-1">{item.message}</p>
+                                </li>
+                            ))}
                         </ul>
                     )}
                 </div>
 
                 <div className="flex justify-center">
                     <button
-                        onClick={() => handleNavigation('/mypage')}
+                        onClick={() => handleNavigation("/mypage")}
                         className="px-5 py-2 bg-indigo-500 text-white text-lg rounded-lg shadow hover:bg-indigo-600 transition"
                     >
                         이전
