@@ -57,7 +57,7 @@ function MyPage() {
                     )}
                     {selectedMenu === "previousInterviews" && selectedInterviewId && (
                         <InterviewDetails interviewId={selectedInterviewId} /> /* ID 전달 */
-                        )}
+                    )}
                     {selectedMenu === "editProfile" && <EditProfile />}
                 </main>
             </div>
