@@ -45,6 +45,23 @@ function InterviewDetails({ interviewId }) {
         return `${date.toLocaleDateString()} ${formattedHours}:${minutes} ${ampm}`;
     };
 
+    const processMessage = (message) => {
+        // "-" 기준으로 메시지를 나누고, 첫 번째 "-"는 제거, 이후는 개행
+        if (!message.includes("-")) return message;
+
+        const parts = message.split("-").map((part) => part.trim());
+        return (
+            <div>
+                <p>{parts[0]}</p>
+                {parts.slice(1).map((part, index) => (
+                    <p key={index} className="mt-2">
+                        {part}
+                    </p>
+                ))}
+            </div>
+        );
+    };
+
     if (isLoading) {
         return <div className="min-h-screen flex justify-center items-center text-gray-500">로딩 중...</div>;
     }
@@ -94,7 +111,7 @@ function InterviewDetails({ interviewId }) {
                     <div className="space-y-6">
                         {/* 기본 질문 */}
                         <div className="bg-gray-100 rounded-lg p-6">
-                            <h3 className="text-xl font-bold text-indigo-600 mb-4">기본 질문</h3>
+                            <h3 className="text-xl font-bold text-gray-800 mb-4">기본 질문</h3>
                             <ul className="list-disc list-inside space-y-2">
                                 <li className="text-lg text-gray-800">{interviewDetails.basicInterview1}</li>
                                 <li className="text-lg text-gray-800">{interviewDetails.basicInterview2}</li>
@@ -104,7 +121,7 @@ function InterviewDetails({ interviewId }) {
 
                         {/* 개인 맞춤형 질문 */}
                         <div className="bg-gray-100 rounded-lg p-6">
-                            <h3 className="text-xl font-bold text-indigo-600 mb-4">개인 맞춤형 질문</h3>
+                            <h3 className="text-xl font-bold text-gray-800 mb-4">개인 맞춤형 질문</h3>
                             <ul className="list-disc list-inside space-y-2">
                                 {customQuestions.map((question, index) => (
                                     <li key={index} className="text-lg text-gray-800">
@@ -132,7 +149,7 @@ function InterviewDetails({ interviewId }) {
                                             <span className="font-bold">{item.title}:</span>
                                             <span className="text-indigo-600 font-bold">{item.value}점</span>
                                         </div>
-                                        <p className="text-gray-700 mt-1">{item.message}</p>
+                                        <div className="mt-2">{processMessage(item.message)}</div>
                                     </li>
                                 ))}
                             </ul>
