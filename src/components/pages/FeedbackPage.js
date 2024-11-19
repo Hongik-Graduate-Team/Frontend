@@ -70,18 +70,19 @@ const FeedbackPage = () => {
           }
         )
         )
+        setLoading(false);
       } catch (error) {
         console.error('데이터를 가져오는 중 오류가 발생했습니다:', error);
-      }  finally {
-        setTimeout(() => {
-          setLoading(false); // 데이터 로딩 완료 후 로딩 상태 해제
-        }, 500);
       }
     };
 
-    if (resultData?.interviewId) {
-      fetchFeedbackData();
-    }
+    const timer = setTimeout(() => {
+      if (resultData?.interviewId) {
+        fetchFeedbackData();
+      }
+    }, 5000);
+    return () => clearTimeout(timer);
+    
   }, [resultData]);
 
   if (loading) {
