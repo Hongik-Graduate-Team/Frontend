@@ -26,42 +26,56 @@ ChartJS.register(
 const FeedbackPage = () => {
   const location = useLocation();
   const resultData = location.state; // 이전 페이지에서 넘겨받은 데이터
-  const [gazeData, setGazeData] = useState({ gaze: 0, gazeMessage: '' }); // 시선 분석 데이터를 저장할 상태
-  const [expressionData, setExpressionData] = useState({ expression: 0, expressionMessage: '' }); // 표정 분석 데이터를 저장할 상태
+  const [gazeData, setGazeData] = useState({ gaze: 0, gazeMessage: '' }); // 시선 분석 데이터
+  const [gestureData, setGestureData] = useState({ gesture: 0, gestureMessage: '' }) // 자세 분석 데이터
+  const [expressionData, setExpressionData] = useState({ expression: 0, expressionMessage: '' }); // 표정 분석 데이터
+  const [audioData, setAudioData] = useState({
+    silenceDuration: 0,
+    voiceVolume: 0,
+    speechRate: 0,
+    silenceDurationMessage: '',
+    voiceVolumeMessage: '',
+    speechRateMessage: '' }) // 음성 분석 데이터
 
   useEffect(() => {
     const token = localStorage.getItem('userToken');  // 사용자 토큰 가져오기
     const interviewId = resultData?.interviewId;
-    const fetchGazeData = async () => {
+    const fetchFeedbackData = async () => {
       try {
-        const response = await axios.get(`https://namanba.shop/api/${interviewId}/evaluate-gaze`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          },
-        });
-        setGazeData(response.data.data); // 받아온 시선 분석 데이터를 상태에 저장
+        axios.all([
+          axios.get(`https://namanba.shop/api/${interviewId}/evaluate-gaze`, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            },}),
+          axios.get(`https://namanba.shop/api/${interviewId}/evaluate-gesture`, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            },}),
+          axios.get(`https://namanba.shop/api/${interviewId}/expression`, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            },}),
+          axios.get(`https://namanba.shop/api/${interviewId}/audio`, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            },}),
+        ])
+        .then(
+          axios.spread((res1, res2, res3, res4) => {
+            setGazeData(res1.data);
+            setGestureData(res2.data);
+            setExpressionData(res3.data);
+            setAudioData(res4.data);
+          }
+        )
+        )
       } catch (error) {
-        console.error('시선 분석 데이터를 가져오는 중 오류가 발생했습니다:', error);
-      }
-    };
-
-    // 표정 분석 데이터를 가져오는 함수
-    const fetchExpressionData = async () => {
-      try {
-        const response = await axios.get(`https://namanba.shop/api/${interviewId}/expression`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          },
-        });
-        setExpressionData(response.data.data); // 받아온 표정 분석 데이터를 상태에 저장
-      } catch (error) {
-        console.error('표정 분석 데이터를 가져오는 중 오류가 발생했습니다:', error);
+        console.error('데이터를 가져오는 중 오류가 발생했습니다:', error);
       }
     };
 
     if (resultData?.interviewId) {
-      fetchGazeData();
-      fetchExpressionData();
+      fetchFeedbackData();
     }
   }, [resultData]);
 
@@ -90,10 +104,15 @@ const FeedbackPage = () => {
     labels: ['시선 처리', '제스처', '침묵 시간', '발화 속도', '목소리 크기', '표정'],
     datasets: [
       {
-        label: '', // 제목 라벨을 빈 문자열로 설정하여 안 보이게 만듭니다.
-        data: [gazeData.gaze, 1, 2, 3, 3, 3], // 여기에 실제 데이터를 넣을 수 있습니다.
-        backgroundColor: 'rgba(0, 0, 139, 0.2)', // 남색으로 변경 (rgba로 투명도 설정)
-        borderColor: 'rgba(0, 0, 139, 1)', // 남색으로 변경
+        label: '',
+        data: [gazeData.gaze,
+               gestureData.gesture,
+               audioData.silenceDuration,
+               audioData.speechRate,
+               audioData.voiceVolume,
+               expressionData.expression],
+        backgroundColor: 'rgba(0, 0, 139, 0.2)',
+        borderColor: 'rgba(0, 0, 139, 1)',
         borderWidth: 1,
       },
     ],
@@ -140,7 +159,7 @@ const FeedbackPage = () => {
 
               <h2 className="text-xl font-semibold mb-1">제스처</h2>
               <p className="mb-4">
-                답변 중 손을 사용하여 적극적으로 제스처를 하여 자신감이 느껴집니다. 그러나 지나치게 제스처가 많아 산만할 수 있습니다.
+                {gestureData.gestureMessage}
               </p>
 
               <h2 className="text-xl font-semibold mb-1">표정</h2>
@@ -150,17 +169,17 @@ const FeedbackPage = () => {
 
               <h2 className="text-xl font-semibold mb-1">목소리 크기</h2>
               <p className="mb-4">
-                목소리는 명확하고 적절한 크기를 유지하며 잘 전달됩니다. 다만, 답변 중간에 목소리가 작아지는 경향이 있어 주의가 필요합니다.
+                {audioData.voiceVolumeMessage}
               </p>
 
               <h2 className="text-xl font-semibold mb-1">발화 속도</h2>
               <p className="mb-4">
-                발화 속도는 일반적으로 적절하지만, 긴장할 때는 조금 빠르게 말하는 경향이 있습니다. 이는 답변의 이해를 어렵게 만들 수 있습니다.
+                {audioData.speechRateMessage}
               </p>
 
               <h2 className="text-xl font-semibold mb-1">침묵 시간</h2>
               <p className="mb-4">
-                답변 중간에 적절한 침묵 시간을 가지며, 생각을 정리하는 모습이 보였습니다. 그러나 긴 침묵이 몇 번 있었습니다, 이는 준비 부족을 나타낼 수 있습니다.
+                {audioData.silenceDurationMessage}
               </p>
             </div>
 
