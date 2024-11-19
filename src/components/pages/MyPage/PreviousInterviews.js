@@ -25,16 +25,12 @@ function PreviousInterviews({ onSelectInterview }) {
             const response = await axios.get('https://namanba.shop/interviews/lists', {
                 headers: { Authorization: `Bearer ${token}` }, // 토큰을 Authorization 헤더에 추가
                 params: {
-                    page: page, // 백엔드에서는 0부터 시작하는 페이지 번호 사용
+                    page: page, // 백엔드에서 시작하는 페이지 번호 사용
                     // direction: "DESC" // 내림차순 정렬
                 }
             });
 
             const data = response.data.data; // 백엔드에서 받은 데이터 추출
-            console.log("백엔드에서 받은 데이터:", data); // 받은 전체 데이터 확인
-            console.log("현재 페이지의 면접 목록:", data.content); // 현재 페이지의 면접 목록 확인
-            console.log("총 페이지 수:", data.totalPages); // 총 페이지 수 확인
-
             setInterviews(data.content); // 현재 페이지의 면접 목록 상태 업데이트
             setTotalPages(data.totalPages); // 총 페이지 수 상태 업데이트
         } catch (error) {
@@ -44,21 +40,18 @@ function PreviousInterviews({ onSelectInterview }) {
 
     // `currentPage`가 변경될 때마다 데이터를 요청
     useEffect(() => {
-        console.log("useEffect 실행: 현재 페이지", currentPage); // 현재 페이지 변경 확인
         fetchInterviews(currentPage); // 현재 페이지 데이터 요청
     }, [currentPage]);
 
     // 페이지 변경 시 호출되는 함수
     const handlePageChange = (newPage) => {
         if (newPage > 0 && newPage <= totalPages) {
-            console.log(`페이지 변경: ${currentPage} -> ${newPage}`); // 페이지 변경 확인
             setCurrentPage(newPage); // 새로운 페이지 설정
         }
     };
 
     // 면접 클릭 시 부모 컴포넌트에 선택된 면접 ID 전달
     const handleInterviewClick = (interviewId) => {
-        console.log(`면접 선택: ${interviewId}`); // 클릭한 면접 ID 확인
         onSelectInterview(interviewId); // 선택된 면접 ID를 부모 컴포넌트로 전달
     };
 
