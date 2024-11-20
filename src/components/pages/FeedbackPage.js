@@ -28,16 +28,16 @@ const FeedbackPage = () => {
   const location = useLocation();
   const resultData = location.state; // 이전 페이지에서 넘겨받은 데이터
   const [loading, setLoading] = useState(true);
-  const [gazeData, setGazeData] = useState({ gaze: 0, gazeMessage: '' }); // 시선 분석 데이터
-  const [gestureData, setGestureData] = useState({ gesture: 0, gestureMessage: '' }) // 자세 분석 데이터
-  const [expressionData, setExpressionData] = useState({ expression: 0, expressionMessage: '' }); // 표정 분석 데이터
+  const [gazeData, setGazeData] = useState({ gaze: 0, gazeMessage: '데이터를 불러오지 못했습니다.' }); // 시선 분석 데이터
+  const [gestureData, setGestureData] = useState({ gesture: 0, gestureMessage: '데이터를 불러오지 못했습니다.' }) // 자세 분석 데이터
+  const [expressionData, setExpressionData] = useState({ expression: 0, expressionMessage: '데이터를 불러오지 못했습니다.' }); // 표정 분석 데이터
   const [audioData, setAudioData] = useState({
     silenceDuration: 0,
     voiceVolume: 0,
     speechRate: 0,
-    silenceDurationMessage: '',
-    voiceVolumeMessage: '',
-    speechRateMessage: '' }) // 음성 분석 데이터
+    silenceDurationMessage: '데이터를 불러오지 못했습니다.',
+    voiceVolumeMessage: '데이터를 불러오지 못했습니다.',
+    speechRateMessage: '데이터를 불러오지 못했습니다.' }) // 음성 분석 데이터
   const [nickname, setNickname] = useState(''); // 사용자 이름
   
 
@@ -91,21 +91,21 @@ const FeedbackPage = () => {
           } else {
             console.error(`Request ${index + 1} failed:`, result.reason);
           }
+          setLoading(false);
         });
-
-        setLoading(false);
       } catch (error) {
         console.error('데이터를 가져오는 중 오류가 발생했습니다:', error);
+        setLoading(false);
       }
     };
 
     const timer = setTimeout(() => {
       if (resultData?.interviewId) {
         fetchFeedbackData();
-      }
-    }, 10000);
-    return () => clearTimeout(timer);
-  }, [resultData]);
+        }
+      }, 5000);
+      return () => clearTimeout(timer);
+    }, [resultData]);
 
   if (loading) {
     return (
