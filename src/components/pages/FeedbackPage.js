@@ -97,8 +97,10 @@ const FeedbackPage = () => {
                       speechRateMessage: '데이터를 불러오지 못했습니다.',
                     });
                 break;
-                case 4: // 닉네임 데이터
-                  setNickname(result.value.data.data ? result.value.data.data : '회원');
+              case 4: // 닉네임 데이터
+                setNickname(result.value.data.data && typeof result.value.data.data === 'string'
+                  ? result.value.data.data
+                  : '회원');
                 break;
               default:
                 break;
@@ -235,10 +237,10 @@ const FeedbackPage = () => {
       <div className="flex flex-col items-center justify-center">
         <div className="bg-gray-50 shadow-md p-8 mt-4 w-full max-w-7xl">
           <h1 className="text-3xl font-semibold text-indigo-600 mb-8">
-            {nickname}님의 면접 분석 결과입니다.
+            {nickname ? `${nickname}님의 면접 분석 결과입니다.` : '회원님의 면접 분석 결과입니다.'}
           </h1>
 
-          <div className="flex flex-cols-1 md:grid-cols-2 gap-8 w-3/4">
+          <div className="flex flex-cols-1 md:grid-cols-2 gap-8 w-4/5">
             {/* 분석 결과 텍스트 */}
             <div>
               <h2 className="text-xl font-semibold mb-1">시선 처리</h2>
