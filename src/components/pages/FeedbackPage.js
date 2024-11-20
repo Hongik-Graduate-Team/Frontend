@@ -12,6 +12,7 @@ import {
 import { Radar } from 'react-chartjs-2';
 import MainHeader from '../molecules/Header/MainHeader';
 import axios from 'axios';
+import LoadingImg from '../../assets/img/loading.gif';
 
 // Radar 차트를 그리기 위해 필요한 구성 요소들을 Chart.js에 등록합니다.
 ChartJS.register(
@@ -82,14 +83,19 @@ const FeedbackPage = () => {
       }
     }, 13000);
     return () => clearTimeout(timer);
-    
+
   }, [resultData]);
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-2xl font-semibold">데이터를 로딩 중입니다.<p></p>잠시만 기다려주세요.</p>
+      <div className="min-h-screen flex flex-col items-center justify-center">
+        <div className="flex flex-col items-center">
+          <p className="text-2xl font-semibold mb-4 text-center">피드백 데이터를 로딩 중입니다.<p></p>잠시만 기다려주세요.</p>
+          <img
+            src={LoadingImg}
+            alt={"LoadingImg"}
+            className="mt-5 w-1/3"
+          />
         </div>
       </div>
     );
