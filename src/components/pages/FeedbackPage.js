@@ -106,7 +106,36 @@ const FeedbackPage = () => {
                 break;
             }
           } else {
+            // 실패한 요청 처리
             console.error(`Request ${index + 1} failed:`, result.reason);
+        
+            const defaultErrorMessage = '데이터를 불러오지 못했습니다.';
+            switch (index) {
+              case 0: // Gaze 데이터
+                setGazeData({ gaze: 0, gazeMessage: defaultErrorMessage });
+                break;
+              case 1: // Gesture 데이터
+                setGestureData({ gesture: 0, gestureMessage: defaultErrorMessage });
+                break;
+              case 2: // Expression 데이터
+                setExpressionData({ expression: 0, expressionMessage: defaultErrorMessage });
+                break;
+              case 3: // Audio 데이터
+                setAudioData({
+                  silenceDuration: 0,
+                  voiceVolume: 0,
+                  speechRate: 0,
+                  silenceDurationMessage: defaultErrorMessage,
+                  voiceVolumeMessage: defaultErrorMessage,
+                  speechRateMessage: defaultErrorMessage,
+                });
+                break;
+              case 4: // 닉네임 데이터
+                setNickname('회원');
+                break;
+              default:
+                break;
+            }
           }
         });
       } catch (error) {
