@@ -40,10 +40,10 @@ function InputInfo() {
     const token = localStorage.getItem('userToken'); // 로컬 스토리지에서 토큰 가져오기
 
     if (!token) {
-      // 토큰이 없으면 경고 및 리디렉션
-      alert("인증 토큰이 없습니다. 다시 로그인 해주세요.");
-      navigate('/signin'); // 로그인 페이지로 리디렉션
-      return; // 이후 로직을 실행하지 않음
+      // // 토큰이 없으면 경고 및 리디렉션
+      // alert("인증 토큰이 없습니다. 다시 로그인 해주세요.");
+      // navigate('/signin'); // 로그인 페이지로 리디렉션
+      // return; // 이후 로직을 실행하지 않음
     }
 
     // 토큰이 있으면 상태에 저장
@@ -264,11 +264,20 @@ const handleChange = (e, index) => {
       const idField = findIdField(item);
       return idField && item[idField];
     };
-  
+
+    // 빈 데이터 필터링
+    const isNotEmpty = item => {
+      return Object.keys(item).filter(key => !key.includes('Id')).some(key => {
+        const value = item[key];
+        return value !== null && value !== '' && value !== undefined;
+      });
+    };
+
     // Separate data into items for POST and PUT requests
-    const dataToPost = data.filter(item => !hasId(item)).map(removeIdField); // Remove ID fields from items to be posted
-    const dataToPut = data.filter(hasId);
-  
+    const dataToPost = data.filter(item => !hasId(item) && isNotEmpty(item)).map(removeIdField); // Remove ID fields from items to be posted
+    const dataToPut = data.filter(item => hasId(item) && isNotEmpty(item));
+
+
     let promises = [];
   
     if (dataToPost.length > 0) {
