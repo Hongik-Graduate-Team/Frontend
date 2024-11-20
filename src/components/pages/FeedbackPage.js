@@ -28,16 +28,16 @@ const FeedbackPage = () => {
   const location = useLocation();
   const resultData = location.state; // 이전 페이지에서 넘겨받은 데이터
   const [loading, setLoading] = useState(true);
-  const [gazeData, setGazeData] = useState({ gaze: 0, gazeMessage: '데이터를 불러오지 못했습니다.' }); // 시선 분석 데이터
-  const [gestureData, setGestureData] = useState({ gesture: 0, gestureMessage: '데이터를 불러오지 못했습니다.' }) // 자세 분석 데이터
-  const [expressionData, setExpressionData] = useState({ expression: 0, expressionMessage: '데이터를 불러오지 못했습니다.' }); // 표정 분석 데이터
+  const [gazeData, setGazeData] = useState({ gaze: 0, gazeMessage: '' }); // 시선 분석 데이터
+  const [gestureData, setGestureData] = useState({ gesture: 0, gestureMessage: '' }) // 자세 분석 데이터
+  const [expressionData, setExpressionData] = useState({ expression: 0, expressionMessage: '' }); // 표정 분석 데이터
   const [audioData, setAudioData] = useState({
     silenceDuration: 0,
     voiceVolume: 0,
     speechRate: 0,
-    silenceDurationMessage: '데이터를 불러오지 못했습니다.',
-    voiceVolumeMessage: '데이터를 불러오지 못했습니다.',
-    speechRateMessage: '데이터를 불러오지 못했습니다.' }) // 음성 분석 데이터
+    silenceDurationMessage: '',
+    voiceVolumeMessage: '',
+    speechRateMessage: '' }) // 음성 분석 데이터
   const [nickname, setNickname] = useState(''); // 사용자 이름
   
 
@@ -71,19 +71,26 @@ const FeedbackPage = () => {
           if (result.status === 'fulfilled') {
             switch (index) {
               case 0:
-                setGazeData(result.value.data.data);
+                setGazeData(result.value.data.data || { gaze: 0, gazeMessage: '데이터를 불러오지 못했습니다.' });
                 break;
               case 1:
-                setGestureData(result.value.data.data);
+                setGestureData(result.value.data.data || { gesture: 0, gestureMessage: '데이터를 불러오지 못했습니다.' });
                 break;
               case 2:
-                setExpressionData(result.value.data.data);
+                setExpressionData(result.value.data.data || { expression: 0, expressionMessage: '데이터를 불러오지 못했습니다.' });
                 break;
               case 3:
-                setAudioData(result.value.data.data);
+                setAudioData(result.value.data.data || {
+                  silenceDuration: 0,
+                  voiceVolume: 0,
+                  speechRate: 0,
+                  silenceDurationMessage: '데이터를 불러오지 못했습니다.',
+                  voiceVolumeMessage: '데이터를 불러오지 못했습니다.',
+                  speechRateMessage: '데이터를 불러오지 못했습니다.',
+                });
                 break;
               case 4:
-                setNickname(result.value.data.data);
+                setNickname(result.value.data.data || '사용자');
                 break;
               default:
                 break;
@@ -91,11 +98,11 @@ const FeedbackPage = () => {
           } else {
             console.error(`Request ${index + 1} failed:`, result.reason);
           }
-          setLoading(false);
         });
       } catch (error) {
         console.error('데이터를 가져오는 중 오류가 발생했습니다:', error);
-        setLoading(false);
+      } finally {
+        setLoading(false); // 모든 요청이 끝난 후 로딩 상태 종료
       }
     };
 
@@ -107,12 +114,11 @@ const FeedbackPage = () => {
       return () => clearTimeout(timer);
     }, [resultData]);
 
-
   if (loading) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center">
         <div className="flex flex-col items-center">
-          <p className="text-2xl font-semibold mb-4 text-center">피드백 데이터를 로딩 중입니다.<p></p>잠시만 기다려주세요.</p>
+          <p className="text-2xl font-semibold mb-4 text-center">피드백 데이터를 로딩 중입니다.<br />잠시만 기다려주세요.</p>
           <img
             src={LoadingImg}
             alt={"LoadingImg"}
