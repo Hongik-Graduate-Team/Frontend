@@ -32,7 +32,7 @@ function PreviousInterviews({ onSelectInterview }) {
 
             const data = response.data.data; // 백엔드에서 받은 데이터 추출
             setInterviews(data.content); // 현재 페이지의 면접 목록 상태 업데이트
-            setTotalPages(data.totalPages); // 총 페이지 수 상태 업데이트
+            setTotalPages(data.totalPages || 1); // 총 페이지 수 상태 업데이트 (0일 경우 1로 설정)
         } catch (error) {
             console.error("면접 목록 로드 오류:", error); // 요청 실패 시 에러 로그 출력
         }
@@ -110,7 +110,7 @@ function PreviousInterviews({ onSelectInterview }) {
                     </button>
                     {/* 현재 페이지 표시 */}
                     <span className="text-gray-700 font-semibold text-lg">
-                        {currentPage} / {totalPages}
+                        {currentPage} / {totalPages || 1}
                     </span>
                     {/* 다음 버튼 */}
                     <button

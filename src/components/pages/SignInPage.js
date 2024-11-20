@@ -31,7 +31,7 @@ function SignInPage() {
 
     // 카카오 로그인 핸들러
     const handleKakaoLogin = () => {
-        window.location.href = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=c04b061bca7c5b2db4d80b65c8f684fe&redirect_uri=https://main--namanbatest.netlify.app/signin`;
+        window.location.href = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=c04b061bca7c5b2db4d80b65c8f684fe&redirect_uri=https://namanba.site/signin`;
     };
 
     // 인가 코드가 URL에 있는 경우 처리

@@ -107,6 +107,7 @@ const FeedbackPage = () => {
       return () => clearTimeout(timer);
     }, [resultData]);
 
+
   if (loading) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center">
