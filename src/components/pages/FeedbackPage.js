@@ -14,7 +14,7 @@ import MainHeader from '../molecules/Header/MainHeader';
 import axios from 'axios';
 import LoadingImg from '../../assets/img/loading.gif';
 
-// Radar 차트를 그리기 위해 필요한 구성 요소들을 Chart.js에 등록합니다.
+// Radar 차트를 그리기 위해 필요한 구성 요소들을 Chart.js에 등록
 ChartJS.register(
   RadialLinearScale,
   PointElement,
@@ -40,37 +40,51 @@ const FeedbackPage = () => {
     speechRateMessage: '' }) // 음성 분석 데이터
 
   useEffect(() => {
-    const token = localStorage.getItem('userToken');  // 사용자 토큰 가져오기
+    const token = localStorage.getItem('userToken');
     const interviewId = resultData?.interviewId;
+
     const fetchFeedbackData = async () => {
       try {
-        axios.all([
+        const requests = [
           axios.get(`https://namanba.shop/api/${interviewId}/evaluate-gaze`, {
-            headers: {
-              Authorization: `Bearer ${token}`
-            },}),
+            headers: { Authorization: `Bearer ${token}` },
+          }),
           axios.get(`https://namanba.shop/api/${interviewId}/evaluate-gesture`, {
-            headers: {
-              Authorization: `Bearer ${token}`
-            },}),
+            headers: { Authorization: `Bearer ${token}` },
+          }),
           axios.get(`https://namanba.shop/api/${interviewId}/expression`, {
-            headers: {
-              Authorization: `Bearer ${token}`
-            },}),
+            headers: { Authorization: `Bearer ${token}` },
+          }),
           axios.get(`https://namanba.shop/api/${interviewId}/audio`, {
-            headers: {
-              Authorization: `Bearer ${token}`
-            },}),
-        ])
-        .then(
-          axios.spread((res1, res2, res3, res4) => {
-            setGazeData(res1.data.data);
-            setGestureData(res2.data.data);
-            setExpressionData(res3.data.data);
-            setAudioData(res4.data.data);
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+        ];
+
+        const results = await Promise.allSettled(requests);
+
+        results.forEach((result, index) => {
+          if (result.status === 'fulfilled') {
+            switch (index) {
+              case 0:
+                setGazeData(result.value.data.data);
+                break;
+              case 1:
+                setGestureData(result.value.data.data);
+                break;
+              case 2:
+                setExpressionData(result.value.data.data);
+                break;
+              case 3:
+                setAudioData(result.value.data.data);
+                break;
+              default:
+                break;
+            }
+          } else {
+            console.error(`Request ${index + 1} failed:`, result.reason);
           }
-        )
-        )
+        });
+
         setLoading(false);
       } catch (error) {
         console.error('데이터를 가져오는 중 오류가 발생했습니다:', error);
@@ -83,7 +97,6 @@ const FeedbackPage = () => {
       }
     }, 13000);
     return () => clearTimeout(timer);
-
   }, [resultData]);
 
   if (loading) {
