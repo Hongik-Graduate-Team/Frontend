@@ -59,25 +59,37 @@ const GazePoseAnalysis = ({ videoRef, isAnswering, interviewEnded, interviewId }
       stabilityScore,
       directionCounts,
     };
+
+    console.log(gazeDataToPost, postureData);
   
-    axios.all([
-      axios.post(`https://namanba.shop/api/${interviewId}/evaluate-gaze`, gazeDataToPost, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }),
-      axios.post(`https://namanba.shop/api/${interviewId}/evaluate-gesture`, postureData, {
-        headers: { 
-          Authorization: `Bearer ${token}`, 
-        },
-      })
-    ])
-    .then((response) => {
-      console.log('analysis results sent successfully:', response.data);
-    })
-    .catch((error) => {
-      console.error('Error sending analysis results:', error);
-    });
+    const sendGazeData = async () => {
+      try {
+        const gazeResponse = await axios.post(`https://namanba.shop/api/${interviewId}/evaluate-gaze`, gazeDataToPost, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        console.log("Gaze data sent successfully:", gazeResponse.data);
+      } catch (error) {
+        console.error("Error sending gaze data:", error);
+      }
+    };
+    
+    const sendGestureData = async () => {
+      try {
+        const gestureResponse = await axios.post(`https://namanba.shop/api/${interviewId}/evaluate-gesture`, postureData, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        console.log("Gesture data sent successfully:", gestureResponse.data);
+      } catch (error) {
+        console.error("Error sending gesture data:", error);
+      }
+    };
+    
+    sendGazeData();
+    sendGestureData();
   };
 
   useEffect(() => {
