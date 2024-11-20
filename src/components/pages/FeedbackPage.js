@@ -240,7 +240,7 @@ const FeedbackPage = () => {
             {nickname ? `${nickname}님의 면접 분석 결과입니다.` : '회원님의 면접 분석 결과입니다.'}
           </h1>
 
-          <div className="flex flex-cols-1 md:grid-cols-2 gap-8 w-4/5">
+          <div className="flex flex-cols-1 md:grid-cols-2 gap-8 w-full">
             {/* 분석 결과 텍스트 */}
             <div>
               <h2 className="text-xl font-semibold mb-1">시선 처리</h2>
