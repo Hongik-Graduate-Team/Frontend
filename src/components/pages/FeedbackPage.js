@@ -70,27 +70,37 @@ const FeedbackPage = () => {
         results.forEach((result, index) => {
           if (result.status === 'fulfilled') {
             switch (index) {
-              case 0:
-                setGazeData(result.value.data.data || { gaze: 0, gazeMessage: '데이터를 불러오지 못했습니다.' });
+              case 0: // Gaze 데이터
+                setGazeData(result.value.data.data && typeof result.value.data.data === 'object'
+                  ? result.value.data.data
+                  : { gaze: 0, gazeMessage: '데이터를 불러오지 못했습니다.' });
                 break;
-              case 1:
-                setGestureData(result.value.data.data || { gesture: 0, gestureMessage: '데이터를 불러오지 못했습니다.' });
+              case 1: // Gesture 데이터
+                setGestureData(result.value.data.data && typeof result.value.data.data === 'object'
+                  ? result.value.data.data
+                  : { gesture: 0, gestureMessage: '데이터를 불러오지 못했습니다.' });
                 break;
-              case 2:
-                setExpressionData(result.value.data.data || { expression: 0, expressionMessage: '데이터를 불러오지 못했습니다.' });
+              case 2: // Expression 데이터
+                setExpressionData(result.value.data.data && typeof result.value.data.data === 'object'
+                  ? result.value.data.data
+                  : { expression: 0, expressionMessage: '데이터를 불러오지 못했습니다.' });
                 break;
-              case 3:
-                setAudioData(result.value.data.data || {
-                  silenceDuration: 0,
-                  voiceVolume: 0,
-                  speechRate: 0,
-                  silenceDurationMessage: '데이터를 불러오지 못했습니다.',
-                  voiceVolumeMessage: '데이터를 불러오지 못했습니다.',
-                  speechRateMessage: '데이터를 불러오지 못했습니다.',
-                });
+              case 3: // Audio 데이터
+                setAudioData(result.value.data.data && typeof result.value.data.data === 'object'
+                  ? result.value.data.data
+                  : {
+                      silenceDuration: 0,
+                      voiceVolume: 0,
+                      speechRate: 0,
+                      silenceDurationMessage: '데이터를 불러오지 못했습니다.',
+                      voiceVolumeMessage: '데이터를 불러오지 못했습니다.',
+                      speechRateMessage: '데이터를 불러오지 못했습니다.',
+                    });
                 break;
-              case 4:
-                setNickname(result.value.data.data || '사용자');
+              case 4: // 닉네임 데이터
+                setNickname(result.value.data.data && typeof result.value.data.data === 'string'
+                  ? result.value.data.data
+                  : '회원');
                 break;
               default:
                 break;
@@ -197,7 +207,9 @@ const FeedbackPage = () => {
       <MainHeader /> {/* 헤더를 페이지 맨 위에 배치합니다 */}
       <div className="flex flex-col items-center justify-center">
         <div className="bg-gray-50 shadow-md p-8 mt-4 w-full max-w-7xl">
-          <h1 className="text-3xl font-semibold text-indigo-600 mb-8">{nickname}님의 면접 분석 결과입니다.</h1>
+          <h1 className="text-3xl font-semibold text-indigo-600 mb-8">
+            {nickname ? `${nickname}님의 면접 분석 결과입니다.` : '회원님의 면접 분석 결과입니다.'}
+          </h1>
 
           <div className="flex flex-cols-1 md:grid-cols-2 gap-8 w-full">
             {/* 분석 결과 텍스트 */}
