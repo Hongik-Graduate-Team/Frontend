@@ -27,7 +27,7 @@ ChartJS.register(
 const FeedbackPage = () => {
   const location = useLocation();
   const resultData = location.state; // 이전 페이지에서 넘겨받은 데이터
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [gazeData, setGazeData] = useState({ gaze: 0, gazeMessage: '' }); // 시선 분석 데이터
   const [gestureData, setGestureData] = useState({ gesture: 0, gestureMessage: '' }) // 자세 분석 데이터
   const [expressionData, setExpressionData] = useState({ expression: 0, expressionMessage: '' }); // 표정 분석 데이터
@@ -97,10 +97,11 @@ const FeedbackPage = () => {
                       speechRateMessage: '데이터를 불러오지 못했습니다.',
                     });
                 break;
-              case 4: // 닉네임 데이터
-                setUsername(result.value.data.data && typeof result.value.data.data === 'string'
-                  ? result.value.data.data
-                  : { name: '회원' });
+                case 4: // 닉네임 데이터
+                setUsername(result.value.data.data && typeof result.value.data.data === 'object'
+                    ? { name: result.value.data.data.nickname }
+                    : { name: '회원' }
+                );
                 break;
               default:
                 break;
@@ -131,7 +132,7 @@ const FeedbackPage = () => {
                 });
                 break;
               case 4: // 닉네임 데이터
-                setUsername({ name:'회원' });
+                setUsername({ name: '회원' });
                 break;
               default:
                 break;
@@ -149,7 +150,7 @@ const FeedbackPage = () => {
       if (resultData?.interviewId) {
         fetchFeedbackData();
         }
-      }, 4000);
+      }, 3000);
       return () => clearTimeout(timer);
     }, [resultData]);
 
@@ -236,17 +237,16 @@ const FeedbackPage = () => {
       <MainHeader /> {/* 헤더를 페이지 맨 위에 배치합니다 */}
       <div className="flex flex-col items-center justify-center">
         <div className="bg-gray-50 shadow-md p-8 mt-4 w-full max-w-7xl">
-          <h1 className="text-3xl font-semibold text-indigo-600 mb-8">
+          <h1 className="text-3xl font-semibold text-indigo-700 mb-8">
             {username.name}님의 면접 분석 결과입니다.
           </h1>
 
-          <div className="flex flex-cols-1 md:grid-cols-2 gap-8 w-full">
+          <div className="grid grid-cols-3 gap-8 w-full">
             {/* 분석 결과 텍스트 */}
-            <div>
+            <div className="col-span-2">
               <h2 className="text-xl font-semibold mb-1">시선 처리</h2>
               <p className="mb-4">
-                {gazeData.gazeMessage}               
-
+                {gazeData.gazeMessage}
               </p>
 
               <h2 className="text-xl font-semibold mb-1">제스처</h2>
@@ -276,7 +276,7 @@ const FeedbackPage = () => {
             </div>
 
             {/* 분석 결과 차트 */}
-            <div className="w-full flex flex-col items-center justify-center">
+            <div className="col-span-1 flex flex-col items-center">
               {/* 그래프 크기 조절 */}
               <div className="md:w-full" style={{ height: '400px' }}>
                 <Radar data={data} options={options} />
