@@ -24,11 +24,14 @@ function NavigationButtons({ page, setPage, handleSubmit, validateForm, isSubmit
     }
   };
 
-  const handleTempSave = async () => {
+  const handleTempSave = async (e) => {
+    e.preventDefault();
     try {
       // 임시 저장
-      await handleSubmit(); // 임시 저장 처리
-      alert('임시 저장되었습니다.');
+      const isSaveSuccessful = await handleSubmit(e);
+      if (isSaveSuccessful) {
+        alert('임시 저장되었습니다.');
+      }
     } catch (error) {
       console.error('Error saving resume data:', error);
     }

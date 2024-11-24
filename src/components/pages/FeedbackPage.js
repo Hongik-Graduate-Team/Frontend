@@ -27,7 +27,7 @@ ChartJS.register(
 const FeedbackPage = () => {
   const location = useLocation();
   const resultData = location.state; // 이전 페이지에서 넘겨받은 데이터
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [gazeData, setGazeData] = useState({ gaze: 0, gazeMessage: '' }); // 시선 분석 데이터
   const [gestureData, setGestureData] = useState({ gesture: 0, gestureMessage: '' }) // 자세 분석 데이터
   const [expressionData, setExpressionData] = useState({ expression: 0, expressionMessage: '' }); // 표정 분석 데이터
@@ -38,7 +38,7 @@ const FeedbackPage = () => {
     silenceDurationMessage: '',
     voiceVolumeMessage: '',
     speechRateMessage: '' }) // 음성 분석 데이터
-  const [nickname, setNickname] = useState(''); // 사용자 이름
+  const [username, setUsername] = useState({ name: '' }); // 사용자 이름
   
 
   useEffect(() => {
@@ -98,9 +98,9 @@ const FeedbackPage = () => {
                     });
                 break;
               case 4: // 닉네임 데이터
-                setNickname(result.value.data.data && typeof result.value.data.data === 'string'
+                setUsername(result.value.data.data && typeof result.value.data.data === 'string'
                   ? result.value.data.data
-                  : '회원');
+                  : { name: '회원' });
                 break;
               default:
                 break;
@@ -131,7 +131,7 @@ const FeedbackPage = () => {
                 });
                 break;
               case 4: // 닉네임 데이터
-                setNickname('회원');
+                setUsername({ name:'회원' });
                 break;
               default:
                 break;
@@ -149,7 +149,7 @@ const FeedbackPage = () => {
       if (resultData?.interviewId) {
         fetchFeedbackData();
         }
-      }, 5000);
+      }, 4000);
       return () => clearTimeout(timer);
     }, [resultData]);
 
@@ -237,7 +237,7 @@ const FeedbackPage = () => {
       <div className="flex flex-col items-center justify-center">
         <div className="bg-gray-50 shadow-md p-8 mt-4 w-full max-w-7xl">
           <h1 className="text-3xl font-semibold text-indigo-600 mb-8">
-            {nickname ? `${nickname}님의 면접 분석 결과입니다.` : '회원님의 면접 분석 결과입니다.'}
+            {username.name}님의 면접 분석 결과입니다.
           </h1>
 
           <div className="flex flex-cols-1 md:grid-cols-2 gap-8 w-full">
@@ -245,7 +245,8 @@ const FeedbackPage = () => {
             <div>
               <h2 className="text-xl font-semibold mb-1">시선 처리</h2>
               <p className="mb-4">
-                {gazeData.gazeMessage}
+                {gazeData.gazeMessage}               
+
               </p>
 
               <h2 className="text-xl font-semibold mb-1">제스처</h2>
@@ -275,7 +276,7 @@ const FeedbackPage = () => {
             </div>
 
             {/* 분석 결과 차트 */}
-            <div className="w-1/2 flex flex-col items-center justify-center">
+            <div className="w-full flex flex-col items-center justify-center">
               {/* 그래프 크기 조절 */}
               <div className="md:w-full" style={{ height: '400px' }}>
                 <Radar data={data} options={options} />

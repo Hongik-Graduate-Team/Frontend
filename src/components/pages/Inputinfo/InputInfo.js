@@ -40,10 +40,10 @@ function InputInfo() {
     const token = localStorage.getItem('userToken'); // 로컬 스토리지에서 토큰 가져오기
 
     if (!token) {
-      // // 토큰이 없으면 경고 및 리디렉션
-      // alert("인증 토큰이 없습니다. 다시 로그인 해주세요.");
-      // navigate('/signin'); // 로그인 페이지로 리디렉션
-      // return; // 이후 로직을 실행하지 않음
+      // 토큰이 없으면 경고 및 리디렉션
+      alert("인증 토큰이 없습니다. 다시 로그인 해주세요.");
+      navigate('/signin'); // 로그인 페이지로 리디렉션
+      return;
     }
 
     // 토큰이 있으면 상태에 저장
