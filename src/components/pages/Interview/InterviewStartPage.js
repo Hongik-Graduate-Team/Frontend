@@ -359,20 +359,20 @@ const InterviewStartPage = () => {
             <div className="w-full mt-2 text-center">
                 {currentStep === 'announcement' && (
                     <div>
-                        <p className="text-3xl font-semibold mb-4">지금부터 면접을 시작하겠습니다.</p>
-                        <p className="text-2xl mb-5">준비시간이 끝나면 자동으로 녹화가 시작됩니다.</p>
+                        <p className="text-3xl font-semibold mt-4 mb-4">지금부터 면접을 시작하겠습니다.</p>
+                        <p className="text-2xl mb-6">준비시간이 끝나면 자동으로 녹화가 시작됩니다.</p>
                     </div>
                 )}
 
                 {currentStep === 'ready' && (
                     <div>
                         <button
-                            className="px-3 py-1 text-teal-400 text-xl font-semibold bg-teal-50 rounded-md mb-4"
+                            className="px-3 py-1 text-teal-400 text-xl font-semibold bg-teal-50 rounded-md mb-2"
                         >
                             질문 {currentQuestionIndex + 1} / {totalQuestions}
                         </button>
                         <br />
-                        <p className="w-3/4 text-3xl mx-auto font-semibold mb-4">
+                        <p className="max-w-6xl w-3/4 text-3xl mx-auto font-semibold h-16 mb-4">
                             {questions[currentQuestionIndex] || "질문을 불러오는 중..."}
                         </p>
                     </div>
@@ -381,12 +381,12 @@ const InterviewStartPage = () => {
                 {currentStep === 'answering' && (
                     <div>
                         <button
-                            className="px-3 py-1 text-teal-400 text-xl font-semibold bg-teal-50 rounded-md mb-4"
+                            className="px-3 py-1 text-teal-400 text-xl font-semibold bg-teal-50 rounded-md mb-2"
                         >
                             질문 {currentQuestionIndex + 1} / {totalQuestions}
                         </button>
                         <br />
-                        <p className="w-3/4 text-3xl mx-auto font-semibold mb-4">
+                        <p className="max-w-6xl w-3/4 text-3xl mx-auto font-semibold h-16 mb-4">
                             {questions[currentQuestionIndex] || "질문을 불러오는 중..."}
                         </p>
                     </div>
