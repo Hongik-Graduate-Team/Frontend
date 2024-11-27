@@ -204,7 +204,7 @@ function SignInPage() {
                     const { token: accessToken, refreshToken, expiresIn } = response.data;
 
                     // 토큰 데이터 저장
-                    const expireTime = Date.now() + expiresIn * 1000; // 만료 시간 계산
+                    const expireTime = Date.now() + expiresIn; // 만료 시간 계산
                     localStorage.setItem('userToken', accessToken);
                     localStorage.setItem('refreshToken', refreshToken);
                     localStorage.setItem('expireTime', expireTime);
