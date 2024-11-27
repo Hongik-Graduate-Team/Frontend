@@ -159,9 +159,9 @@ const VoiceFaceRecognition = ({ videoRef, setFaceDetected, setNoAudioDetectedTim
                             setExpressionsCount(prevCounts => {
                                 const updatedCounts = {
                                     neutral: prevCounts.neutral + (expressions.neutral > 0.5 ? 1 : 0),
-                                    happy: prevCounts.happy + (expressions.happy > 0.5 ? 1 : 0),
+                                    happy: prevCounts.happy + (expressions.happy > 0.2 ? 1 : 0),
                                     sad: prevCounts.sad + (expressions.sad > 0.5 ? 1 : 0),
-                                    angry: prevCounts.angry + (expressions.angry > 0.3 ? 1 : 0),
+                                    angry: prevCounts.angry + (expressions.angry > 0.2 ? 1 : 0),
                                     fearful: prevCounts.fearful + (expressions.fearful > 0.5 ? 1 : 0),
                                     disgusted: prevCounts.disgusted + (expressions.disgusted > 0.5 ? 1 : 0),
                                     surprised: prevCounts.surprised + (expressions.surprised > 0.5 ? 1 : 0),
