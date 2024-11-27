@@ -116,23 +116,33 @@ function SignInPage() {
 
     // 4. 주기적으로 토큰 만료 확인
     useEffect(() => {
+        console.log('토큰 만료 확인 useEffect 실행'); // 디버깅 로그
+
         const interval = setInterval(() => {
+            console.log('토큰 만료 확인 인터벌 실행'); // 주기적으로 확인 로그
             const expireTime = localStorage.getItem('expireTime'); // 만료 시간 읽기
+
             if (!expireTime) {
                 console.error('만료 시간이 없습니다. 로그아웃합니다.');
                 handleLogout();
                 return;
             }
 
+            console.log('현재 시간:', Date.now(), '만료 시간:', expireTime); // 현재 시간과 만료 시간 로그
+
             // 만료 시간을 현재 시간과 비교
             if (Date.now() >= expireTime) {
                 console.log('액세스 토큰 만료. 갱신 시도 중...');
                 refreshAccessToken(); // 만료된 경우 토큰 갱신
             }
-        }, 120000); // 1시간 간격으로 확인 (3600000ms)
+        }, 120000); // 2분 간격으로 확인 (120000ms)
 
-        return () => clearInterval(interval); // 컴포넌트 언마운트 시 인터벌 제거
+        return () => {
+            console.log('토큰 만료 확인 인터벌 제거'); // 인터벌 제거 로그
+            clearInterval(interval);
+        };
     }, [refreshAccessToken, handleLogout]);
+
 
     // 5. Axios 요청 인터셉터 설정
     useEffect(() => {
@@ -200,7 +210,7 @@ function SignInPage() {
                     localStorage.setItem('expireTime', expireTime);
 
                     console.log('받은 액세스 토큰:', accessToken);
-                    console.log('토큰 만료 시간:', new Date(expireTime));
+                    console.log('토큰 만료 시간:', expireTime);
 
                     // 메인 페이지로 이동
                     navigate('/');
