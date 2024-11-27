@@ -129,7 +129,7 @@ function SignInPage() {
                 console.log('액세스 토큰 만료. 갱신 시도 중...');
                 refreshAccessToken(); // 만료된 경우 토큰 갱신
             }
-        }, 3600000); // 1시간 간격으로 확인 (3600000ms)
+        }, 120000); // 1시간 간격으로 확인 (3600000ms)
 
         return () => clearInterval(interval); // 컴포넌트 언마운트 시 인터벌 제거
     }, [refreshAccessToken, handleLogout]);
