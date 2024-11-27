@@ -75,116 +75,95 @@ function SignInPage() {
 
     // 1. 카카오 로그인 요청 함수
     const handleKakaoLogin = () => {
-        // 카카오 인증 페이지로 리다이렉트
         window.location.href = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=c04b061bca7c5b2db4d80b65c8f684fe&redirect_uri=https://namanba.site/signin`;
     };
 
     // 2. 로그아웃 처리 함수
     const handleLogout = useCallback(() => {
-        // localStorage에서 모든 토큰 관련 데이터 삭제
+        console.log('로그아웃 처리 중...');
         localStorage.removeItem('userToken');
         localStorage.removeItem('refreshToken');
         localStorage.removeItem('expireTime');
-        // 로그인 페이지로 리다이렉트
         navigate('/signin');
     }, [navigate]);
 
     // 3. 액세스 토큰 갱신 함수
     const refreshAccessToken = useCallback(async () => {
-        const refreshToken = localStorage.getItem('refreshToken'); // 저장된 리프레시 토큰 읽기
+        const refreshToken = localStorage.getItem('refreshToken');
         if (!refreshToken) {
-            console.error('리프레시 토큰이 없습니다. 로그아웃합니다.');
+            console.error('리프레시 토큰 없음. 로그아웃 처리.');
             handleLogout();
             return;
         }
 
         try {
-            // 백엔드로 리프레시 토큰 요청 보내기
             const response = await axios.post('https://namanba.shop/refresh-token', { refreshToken });
-            const { token: newAccessToken, expiresIn } = response.data;
-            const expireTime = Date.now() + expiresIn; // 만료 시간 계산
+            const { token: newAccessToken, expiresIn } = response.data; // **expiresIn은 13자리 밀리초 값**
 
-            // 새 액세스 토큰과 만료 시간 저장
+            // 새 액세스 토큰 및 만료 시간 저장
             localStorage.setItem('userToken', newAccessToken);
-            localStorage.setItem('expireTime', expireTime);
-            console.log('토큰 갱신 완료');
+            localStorage.setItem('expireTime', expiresIn); // **백엔드에서 받은 13자리 값을 그대로 저장**
+            console.log('토큰 갱신 완료. 새로운 만료 시간:', expiresIn);
         } catch (error) {
             console.error('토큰 갱신 실패:', error);
-            handleLogout(); // 갱신 실패 시 로그아웃
+            handleLogout();
         }
     }, [handleLogout]);
 
-    // 4. 주기적으로 토큰 만료 확인
+    // 4. 토큰 만료 확인
     useEffect(() => {
-        console.log('토큰 만료 확인 useEffect 실행'); // 디버깅 로그
+        console.log('토큰 만료 확인 useEffect 실행');
 
         const interval = setInterval(() => {
-            console.log('토큰 만료 확인 인터벌 실행'); // 주기적으로 확인 로그
-            const expireTime = localStorage.getItem('expireTime'); // 만료 시간 읽기
+            console.log('토큰 만료 확인 인터벌 실행');
+            const expireTime = parseInt(localStorage.getItem('expireTime'), 10); // **숫자 변환**
 
             if (!expireTime) {
-                console.error('만료 시간이 없습니다. 로그아웃합니다.');
+                console.error('만료 시간 없음. 로그아웃 처리.');
                 handleLogout();
                 return;
             }
 
-            console.log('현재 시간:', Date.now(), '만료 시간:', expireTime); // 현재 시간과 만료 시간 로그
-
-            // 만료 시간을 현재 시간과 비교
+            console.log('현재 시간:', Date.now(), '만료 시간:', expireTime);
             if (Date.now() >= expireTime) {
-                console.log('액세스 토큰 만료. 갱신 시도 중...');
-                refreshAccessToken(); // 만료된 경우 토큰 갱신
+                console.log('토큰 만료됨. 갱신 시도.');
+                refreshAccessToken();
             }
-        }, 120000); // 2분 간격으로 확인 (120000ms)
+        }, 120000); // 2분 간격으로 실행
 
         return () => {
-            console.log('토큰 만료 확인 인터벌 제거'); // 인터벌 제거 로그
+            console.log('토큰 만료 확인 인터벌 제거');
             clearInterval(interval);
         };
     }, [refreshAccessToken, handleLogout]);
 
-
-    // 5. Axios 요청 인터셉터 설정
+    // 5. Axios 인터셉터 설정
     useEffect(() => {
-        // 모든 요청에 Authorization 및 Refresh-Token 헤더 추가
         const requestInterceptor = axios.interceptors.request.use((config) => {
-            const accessToken = localStorage.getItem('userToken');  // 액세스 토큰
-            const refreshToken = localStorage.getItem('refreshToken');  // 리프레시 토큰
-
-            if (accessToken) {
-                config.headers.Authorization = `Bearer ${accessToken}`;  // 액세스 토큰을 Authorization 헤더에 추가
-            }
-
-            if (refreshToken) {
-                config.headers['Refresh-Token'] = refreshToken;  // 리프레시 토큰을 Refresh-Token 헤더에 추가
-            }
-
+            const accessToken = localStorage.getItem('userToken');
+            if (accessToken) config.headers.Authorization = `Bearer ${accessToken}`;
             return config;
         });
 
-        // 401 응답 발생 시 토큰 갱신 후 재요청 처리
         const responseInterceptor = axios.interceptors.response.use(
-            (response) => response, // 정상 응답은 그대로 반환
+            (response) => response,
             async (error) => {
                 const originalRequest = error.config;
-
-                // 인증 실패(401) 및 첫 번째 시도인 경우 처리
                 if (error.response?.status === 401 && !originalRequest._retry) {
-                    originalRequest._retry = true; // 재요청 방지 플래그 설정
-                    await refreshAccessToken(); // 토큰 갱신 시도
-                    const token = localStorage.getItem('userToken');
-                    if (token) {
-                        originalRequest.headers.Authorization = `Bearer ${token}`;
-                        return axios(originalRequest); // 갱신된 토큰으로 재요청
+                    originalRequest._retry = true;
+                    await refreshAccessToken();
+                    const newAccessToken = localStorage.getItem('userToken');
+                    if (newAccessToken) {
+                        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+                        return axios(originalRequest);
                     }
                 }
-                handleLogout(); // 실패 시 로그아웃
+                handleLogout();
                 return Promise.reject(error);
             }
         );
 
         return () => {
-            // 컴포넌트 언마운트 시 인터셉터 제거
             axios.interceptors.request.eject(requestInterceptor);
             axios.interceptors.response.eject(responseInterceptor);
         };
@@ -193,31 +172,28 @@ function SignInPage() {
     // 6. 카카오 인증 코드 처리
     useEffect(() => {
         const searchParams = new URLSearchParams(location.search);
-        const code = searchParams.get('code'); // URL에서 인증 코드 가져오기
+        const code = searchParams.get('code');
 
         if (code) {
             console.log('받은 인가 코드:', code);
 
-            // 인증 코드를 백엔드에 전달하여 토큰 요청
             axios.get(`https://namanba.shop/login/oauth2/code/kakao?code=${code}`)
                 .then((response) => {
-                    const { token: accessToken, refreshToken, expiresIn } = response.data;
+                    const { token: accessToken, refreshToken, expiresIn } = response.data; // **expiresIn은 13자리 밀리초 값**
 
                     // 토큰 데이터 저장
-                    const expireTime = Date.now() + expiresIn; // 만료 시간 계산
                     localStorage.setItem('userToken', accessToken);
                     localStorage.setItem('refreshToken', refreshToken);
-                    localStorage.setItem('expireTime', expireTime);
+                    localStorage.setItem('expireTime', expiresIn); // **13자리 밀리초 값 그대로 저장**
 
                     console.log('받은 액세스 토큰:', accessToken);
-                    console.log('토큰 만료 시간:', expireTime);
+                    console.log('토큰 만료 시간:', expiresIn);
 
-                    // 메인 페이지로 이동
                     navigate('/');
                 })
                 .catch((error) => {
-                    console.error('카카오 로그인 처리 오류:', error);
-                    alert('카카오 로그인에 실패했습니다. 다시 시도해주세요.');
+                    console.error('카카오 로그인 오류:', error);
+                    alert('로그인에 실패했습니다. 다시 시도해주세요.');
                 });
         }
     }, [location, navigate]);
