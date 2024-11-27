@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import SignInHeader from '../molecules/Header/SignInHeader';
@@ -8,21 +8,44 @@ function SignInPage() {
     const navigate = useNavigate();
     const location = useLocation();
 
+    // Axios 인터셉터 설정
+    useEffect(() => {
+        // 요청 인터셉터
+        const requestInterceptor = axios.interceptors.request.use((config) => {
+            const accessToken = localStorage.getItem('userToken');
+            const refreshToken = localStorage.getItem('refreshToken');
+            if (accessToken) config.headers.Authorization = `Bearer ${accessToken}`;
+            if (refreshToken) config.headers['Refresh-Token'] = refreshToken; // 리프레시 토큰 추가
+            return config;
+        });
+
+        // 응답 인터셉터
+        const responseInterceptor = axios.interceptors.response.use(
+            (response) => response,
+            (error) => {
+                if (error.response?.status === 401) {
+                    // 401 에러 처리 (토큰 만료 또는 유효하지 않은 경우)
+                    console.error('로그아웃 처리: 토큰 문제');
+                    localStorage.removeItem('userToken');
+                    localStorage.removeItem('refreshToken');
+                    alert('세션이 만료되었습니다. 다시 로그인해주세요.');
+                    navigate('/signin'); // 로그인 페이지로 이동
+                }
+                return Promise.reject(error);
+            }
+        );
+
+        // 컴포넌트 언마운트 시 인터셉터 해제
+        return () => {
+            axios.interceptors.request.eject(requestInterceptor);
+            axios.interceptors.response.eject(responseInterceptor);
+        };
+    }, [navigate]);
+
     // 카카오 로그인 핸들러
     const handleKakaoLogin = () => {
         window.location.href = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=c04b061bca7c5b2db4d80b65c8f684fe&redirect_uri=https://namanba.site/signin`;
     };
-
-    // API 요청 에러 핸들러
-    const handleApiError = useCallback((error) => {
-        if (error.response?.status === 401) {
-            alert('로그인이 만료되었습니다. 다시 로그인해주세요.');
-            localStorage.removeItem('userToken');
-            navigate('/signin');
-        } else {
-            console.error('API 요청 중 에러 발생:', error);
-        }
-    }, [navigate]); // navigate가 종속성에 포함됨
 
     // 인가 코드가 URL에 있는 경우 처리
     useEffect(() => {
@@ -30,11 +53,20 @@ function SignInPage() {
         const code = searchParams.get('code');
 
         if (code) {
-            axios.get(`https://namanba.shop/login/oauth2/code/kakao?code=${code}`)
+            console.log('받은 인가 코드:', code);
+
+            axios
+                .get(`https://namanba.shop/login/oauth2/code/kakao?code=${code}`)
                 .then((response) => {
-                    const kakaoAccessToken = response.data.token;
+                    const kakaoAccessToken = response.data.token; // 액세스 토큰
+                    const refreshToken = response.data.refreshToken; // 리프레시 토큰
+
+                    // 토큰 저장
                     localStorage.setItem('userToken', kakaoAccessToken);
-                    navigate('/');
+                    localStorage.setItem('refreshToken', refreshToken);
+
+                    console.log('받은 카카오 액세스 토큰:', kakaoAccessToken);
+                    navigate('/'); // 메인 페이지로 이동
                 })
                 .catch((error) => {
                     console.error('카카오 로그인 처리 오류:', error);
@@ -43,22 +75,14 @@ function SignInPage() {
         }
     }, [location, navigate]);
 
-    // 공통적으로 API 요청 시 토큰 검증
-    useEffect(() => {
-        const userToken = localStorage.getItem('userToken');
-        if (userToken) {
-            axios.get('https://namanba.shop/api/validate-token', {
-                headers: { Authorization: `Bearer ${userToken}` },
-            }).catch((error) => handleApiError(error));
-        }
-    }, [handleApiError]); // handleApiError를 종속성에 추가
-
     return (
         <div className="flex flex-col">
             <SignInHeader />
             <div className="flex flex-1 items-center justify-center bg-white-100">
                 <div className="w-full max-w-lg p-8 space-y-8">
-                    <h1 className="mt-10 mb-10 text-center text-4xl font-bold leading-9 tracking-tight text-gray-900">로그인</h1>
+                    <h1 className="mt-10 mb-10 text-center text-4xl font-bold leading-9 tracking-tight text-gray-900">
+                        로그인
+                    </h1>
                     <div className="flex justify-center">
                         <button
                             onClick={handleKakaoLogin}
@@ -74,3 +98,4 @@ function SignInPage() {
 }
 
 export default SignInPage;
+
