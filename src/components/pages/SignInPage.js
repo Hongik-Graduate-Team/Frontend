@@ -21,16 +21,39 @@ function SignInPage() {
 
         // 응답 인터셉터
         const responseInterceptor = axios.interceptors.response.use(
-            (response) => response,
-            (error) => {
+            (response) => response, // 정상 응답 처리
+            async (error) => {
                 if (error.response?.status === 401) {
-                    // 401 에러 처리 (토큰 만료 또는 유효하지 않은 경우)
-                    console.error('로그아웃 처리: 토큰 문제');
-                    localStorage.removeItem('userToken');
-                    localStorage.removeItem('refreshToken');
-                    alert('세션이 만료되었습니다. 다시 로그인해주세요.');
-                    navigate('/signin'); // 로그인 페이지로 이동
+                    // 401 에러 처리 (액세스 토큰 만료)
+                    console.error('액세스 토큰 만료, 재발급 시도 중...');
+                    try {
+                        const refreshToken = localStorage.getItem('refreshToken');
+                        if (!refreshToken) {
+                            throw new Error('리프레시 토큰이 없습니다.');
+                        }
+
+                        // 새 액세스 토큰 요청
+                        const { data } = await axios.post('https://namanba.shop/refresh-token', { refreshToken });
+
+                        // 새 액세스 토큰 저장
+                        localStorage.setItem('userToken', data.token);
+
+                        // 원래 요청 다시 실행
+                        const originalRequest = error.config;
+                        originalRequest.headers.Authorization = `Bearer ${data.token}`;
+                        return axios(originalRequest); // 원래 요청 실행
+                    } catch (refreshError) {
+                        console.error('토큰 재발급 실패:', refreshError);
+                        // 로컬 스토리지에서 토큰 제거 후 로그아웃 처리
+                        localStorage.removeItem('userToken');
+                        localStorage.removeItem('refreshToken');
+                        alert('세션이 만료되었습니다. 다시 로그인해주세요.');
+                        navigate('/signin'); // 로그인 페이지로 이동
+                        return Promise.reject(refreshError);
+                    }
                 }
+
+                // 다른 에러 처리
                 return Promise.reject(error);
             }
         );
@@ -98,4 +121,3 @@ function SignInPage() {
 }
 
 export default SignInPage;
-
