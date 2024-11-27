@@ -102,7 +102,7 @@ function SignInPage() {
             // 백엔드로 리프레시 토큰 요청 보내기
             const response = await axios.post('https://namanba.shop/refresh-token', { refreshToken });
             const { token: newAccessToken, expiresIn } = response.data;
-            const expireTime = Date.now() + expiresIn * 1000; // 만료 시간 계산
+            const expireTime = Date.now() + expiresIn; // 만료 시간 계산
 
             // 새 액세스 토큰과 만료 시간 저장
             localStorage.setItem('userToken', newAccessToken);
