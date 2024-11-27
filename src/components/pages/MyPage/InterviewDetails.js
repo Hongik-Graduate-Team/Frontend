@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 
 function InterviewDetails({ interviewId }) {
     const [interviewDetails, setInterviewDetails] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
-    const handleNavigation = (path) => {
-        navigate(path);
-    };
+    // const handleNavigation = (path) => {
+    //     navigate(path);
+    // };
 
     useEffect(() => {
         const token = localStorage.getItem("userToken");
@@ -159,12 +159,12 @@ function InterviewDetails({ interviewId }) {
 
                 {/* 이전 버튼 */}
                 <div className="flex justify-center">
-                    <button
-                        onClick={() => handleNavigation("/mypage")}
-                        className="px-5 py-2 bg-indigo-500 text-white text-lg rounded-lg shadow hover:bg-indigo-600 transition"
-                    >
-                        이전
-                    </button>
+                    {/*<button*/}
+                    {/*    onClick={() => handleNavigation("/mypage")}*/}
+                    {/*    className="px-5 py-2 bg-indigo-500 text-white text-lg rounded-lg shadow hover:bg-indigo-600 transition"*/}
+                    {/*>*/}
+                    {/*    이전*/}
+                    {/*</button>*/}
                 </div>
             </div>
         </div>
