@@ -23,9 +23,11 @@ function SignInPage() {
         const responseInterceptor = axios.interceptors.response.use(
             (response) => response, // 정상 응답 처리
             async (error) => {
-                if (error.response?.status === 401) {
-                    // 401 에러 처리 (액세스 토큰 만료)
-                    console.error('액세스 토큰 만료, 재발급 시도 중...');
+                // 401 상태 처리 (액세스 토큰 만료)
+                if (error.response?.status === 401 && !error.config._retry) {
+                    error.config._retry = true; // 무한 재시도를 방지
+                    console.error('401 Unauthorized - 액세스 토큰 만료, 토큰 재발급 중...');
+
                     try {
                         const refreshToken = localStorage.getItem('refreshToken');
                         if (!refreshToken) {
@@ -33,22 +35,25 @@ function SignInPage() {
                         }
 
                         // 새 액세스 토큰 요청
-                        const { data } = await axios.post('https://namanba.shop/refresh-token', { refreshToken });
+                        const { data } = await axios.post(
+                            'https://namanba.shop/refresh-token',
+                            { refreshToken }
+                        );
 
                         // 새 액세스 토큰 저장
                         localStorage.setItem('userToken', data.token);
 
                         // 원래 요청 다시 실행
-                        const originalRequest = error.config;
-                        originalRequest.headers.Authorization = `Bearer ${data.token}`;
-                        return axios(originalRequest); // 원래 요청 실행
+                        error.config.headers.Authorization = `Bearer ${data.token}`;
+                        return axios(error.config);
                     } catch (refreshError) {
                         console.error('토큰 재발급 실패:', refreshError);
-                        // 로컬 스토리지에서 토큰 제거 후 로그아웃 처리
+
+                        // 로그아웃 처리
                         localStorage.removeItem('userToken');
                         localStorage.removeItem('refreshToken');
                         alert('세션이 만료되었습니다. 다시 로그인해주세요.');
-                        navigate('/signin'); // 로그인 페이지로 이동
+                        navigate('/signin');
                         return Promise.reject(refreshError);
                     }
                 }
