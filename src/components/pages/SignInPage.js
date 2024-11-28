@@ -14,42 +14,52 @@ function SignInPage() {
         const requestInterceptor = axios.interceptors.request.use((config) => {
             const accessToken = localStorage.getItem('userToken');
             const refreshToken = localStorage.getItem('refreshToken');
+
+            // 요청 헤더에 액세스 토큰과 리프레시 토큰 추가
             if (accessToken) config.headers.Authorization = `Bearer ${accessToken}`;
-            if (refreshToken) config.headers['Refresh-Token'] = refreshToken; // 리프레시 토큰 추가
+            if (refreshToken) config.headers['Refresh-Token'] = refreshToken;
             return config;
         });
 
         // 응답 인터셉터
         const responseInterceptor = axios.interceptors.response.use(
-            (response) => response, // 정상 응답 처리
+            (response) => response, // 정상 응답일 경우 그대로 반환
             async (error) => {
-                // 401 상태 처리 (액세스 토큰 만료)
-                if (error.response?.status === 401 && !error.config._retry) {
-                    error.config._retry = true; // 무한 재시도를 방지
-                    console.error('401 Unauthorized - 액세스 토큰 만료, 토큰 재발급 중...');
+                const originalRequest = error.config;
+
+                // 401 에러 처리 (액세스 토큰 만료)
+                if (error.response?.status === 401 && !originalRequest._retry) {
+                    originalRequest._retry = true; // 무한 루프 방지
 
                     try {
+                        console.error('401 에러 - 토큰 만료. 새로운 토큰 발급 요청 중...');
+
+                        // 리프레시 토큰 가져오기
                         const refreshToken = localStorage.getItem('refreshToken');
                         if (!refreshToken) {
-                            throw new Error('리프레시 토큰이 없습니다.');
+                            console.error('리프레시 토큰 없음. 다시 로그인 필요.');
+                            navigate('/signin');
+                            return Promise.reject(error);
                         }
 
-                        // 새 액세스 토큰 요청
+                        // 리프레시 토큰을 사용해 새 액세스 토큰 요청
                         const { data } = await axios.post(
                             'https://namanba.shop/refresh-token',
-                            { refreshToken }
+                            { refreshToken } // 요청 바디에 리프레시 토큰 전달
                         );
 
                         // 새 액세스 토큰 저장
                         localStorage.setItem('userToken', data.token);
+                        console.log('새 액세스 토큰 발급 완료:', data.token);
 
-                        // 원래 요청 다시 실행
-                        error.config.headers.Authorization = `Bearer ${data.token}`;
-                        return axios(error.config);
+                        // 원래의 요청에 새 토큰을 설정하고 다시 실행
+                        originalRequest.headers.Authorization = `Bearer ${data.token}`;
+                        return axios(originalRequest);
+
                     } catch (refreshError) {
                         console.error('토큰 재발급 실패:', refreshError);
 
-                        // 로그아웃 처리
+                        // 재발급 실패 시 로그아웃 처리
                         localStorage.removeItem('userToken');
                         localStorage.removeItem('refreshToken');
                         alert('세션이 만료되었습니다. 다시 로그인해주세요.');
