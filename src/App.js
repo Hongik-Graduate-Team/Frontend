@@ -1,5 +1,5 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
 import { AuthProvider } from './services/AuthContext'; // AuthProvider 가져오기
 import SignInPage from './components/pages/SignInPage';
 import HomePage from './components/pages/Homepage/HomePage';
@@ -12,12 +12,28 @@ import './index.css';
 import { InterviewProvider } from "./context/InterviewContext";
 import InterviewDetails from "./components/pages/MyPage/InterviewDetails";
 import PreviousInterviews from "./components/pages/MyPage/PreviousInterviews";
+import { setupAxiosInterceptors } from './services/AxiosClient'; // Axios 설정 가져오기
+
+// Axios 인터셉터 초기화를 담당하는 컴포넌트
+const AxiosInterceptorInitializer = () => {
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        // Axios 인터셉터 초기화
+        setupAxiosInterceptors(navigate);
+    }, [navigate]);
+
+    return null; // 화면에 아무것도 렌더링하지 않음
+};
 
 function App() {
     return (
         <InterviewProvider>
             <AuthProvider>
                 <Router>
+                    {/* Axios 인터셉터 초기화 */}
+                    <AxiosInterceptorInitializer />
+
                     <Routes>
                         <Route path="/" element={<HomePage />} />
                         <Route path="/signin" element={<SignInPage />} />
@@ -36,4 +52,3 @@ function App() {
 }
 
 export default App;
-

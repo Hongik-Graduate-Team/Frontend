@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import axiosClient from "../../../services/AxiosClient"; // axiosClient 경로에 맞게 수정
 
 function PreviousInterviews({ onSelectInterview }) {
     const [interviews, setInterviews] = useState([]); // 현재 페이지의 면접 목록
     const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 번호
     const [totalPages, setTotalPages] = useState(1); // 총 페이지 수
+    const [error, setError] = useState(null); // 에러 상태 추가
 
     // 날짜 형식을 AM/PM 형식으로 변환하는 함수
     const formatDateTime = (dateString) => {
@@ -18,16 +19,14 @@ function PreviousInterviews({ onSelectInterview }) {
 
     // 현재 페이지 데이터를 백엔드에서 가져오는 함수
     const fetchInterviews = async (page) => {
-        const token = localStorage.getItem("userToken"); // 사용자 토큰 가져오기
         console.log(`백엔드 요청: 페이지 번호 ${page}`); // 현재 페이지 번호 출력
+        setError(null); // 기존 에러 초기화
 
         try {
-            const response = await axios.get('https://namanba.shop/interviews/lists', {
-                headers: { Authorization: `Bearer ${token}` }, // 토큰을 Authorization 헤더에 추가
+            const response = await axiosClient.get("/interviews/lists", {
                 params: {
                     page: page, // 백엔드에서 시작하는 페이지 번호 사용
-                    // direction: "DESC" // 내림차순 정렬
-                }
+                },
             });
 
             const data = response.data.data; // 백엔드에서 받은 데이터 추출
@@ -35,6 +34,7 @@ function PreviousInterviews({ onSelectInterview }) {
             setTotalPages(data.totalPages || 1); // 총 페이지 수 상태 업데이트 (0일 경우 1로 설정)
         } catch (error) {
             console.error("면접 목록 로드 오류:", error); // 요청 실패 시 에러 로그 출력
+            setError("면접 목록을 불러오는 중 문제가 발생했습니다."); // 사용자 에러 메시지 설정
         }
     };
 
@@ -59,8 +59,10 @@ function PreviousInterviews({ onSelectInterview }) {
         <div className="min-h-screen p-8">
             <div className="bg-white shadow-md rounded-lg p-6 max-w-7xl mx-auto">
                 <h1 className="text-3xl font-semibold text-indigo-600 mb-8">면접 이력</h1>
+                {/* 에러 메시지 표시 */}
+                {error && <div className="text-red-500 text-center mb-4">{error}</div>}
                 {/* 면접 목록이 없을 때 */}
-                {interviews.length === 0 ? (
+                {interviews.length === 0 && !error ? (
                     <div className="text-center text-gray-500">면접 기록이 없습니다.</div>
                 ) : (
                     <div>
@@ -127,6 +129,3 @@ function PreviousInterviews({ onSelectInterview }) {
 }
 
 export default PreviousInterviews;
-
-
-
