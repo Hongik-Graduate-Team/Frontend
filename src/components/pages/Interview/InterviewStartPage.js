@@ -5,7 +5,7 @@ import {CircularProgressbar, buildStyles} from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import VoiceFaceRecognition from './VoiceFaceRecognition';
 import { InterviewContext } from '../../../context/InterviewContext';
-import axios from "axios"; // Context 가져오기
+import axiosClient from "../../../services/AxiosClient"; // 설정된 Axios 인스턴스 가져오기
 import GazePoseAnalysis from './GazePoseAnalysis';  // 시선 분석 컴포넌트
 
 const InterviewStartPage = () => {
@@ -31,25 +31,25 @@ const InterviewStartPage = () => {
 
     // API로부터 질문을 불러오는 함수
     const loadQuestions = useCallback(async () => {
-        const token = localStorage.getItem('userToken');  // 토큰을 로컬스토리지에서 가져옴
-        console.log(token);
         try {
-            const response = await axios.get('https://namanba.shop/api/interview', {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                },
+            // Axios 인스턴스를 통해 API 호출
+            const response = await axiosClient.get('/api/interview', {
                 params: {
-                    interviewTitle: interviewTitle   // 인터뷰 제목을 여기에 입력
-                }
+                    interviewTitle: interviewTitle, // 인터뷰 제목을 쿼리 파라미터로 추가
+                },
             });
-            const questionData = response.data.data;  // 질문 데이터를 받아옴
+
+            // 응답 데이터에서 필요한 질문 데이터 추출
+            const questionData = response.data.data;
             console.log(questionData);
+
+            // 상태 업데이트
             setInterviewId(questionData.interviewId);
             setQuestions([
                 questionData.basicInterview1,
                 questionData.basicInterview2,
                 questionData.basicInterview3,
-                ...questionData.customQuestions  // 기본 질문과 커스텀 질문을 합침
+                ...questionData.customQuestions, // 기본 질문과 커스텀 질문 결합
             ]);
         } catch (error) {
             console.error("질문을 불러오는 중 오류 발생:", error);
@@ -120,9 +120,8 @@ const InterviewStartPage = () => {
                     const formData = new FormData();
                     formData.append("audio", audioBlob, "audio.webm");
 
-                    axios.post(`https://namanba.shop/api/${interviewId}/audio`, formData, {
+                    axiosClient.post(`/api/${interviewId}/audio`, formData, {
                         headers: {
-                            Authorization: `Bearer ${localStorage.getItem('userToken')}`,
                             'Content-Type': 'multipart/form-data',
                         },
                     })

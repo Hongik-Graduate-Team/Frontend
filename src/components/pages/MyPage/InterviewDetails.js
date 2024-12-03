@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import axiosClient from "../../../services/AxiosClient"; // 커스텀 Axios 클라이언트 사용
 // import { useNavigate } from "react-router-dom";
 
 function InterviewDetails({ interviewId }) {
@@ -12,19 +12,10 @@ function InterviewDetails({ interviewId }) {
     // };
 
     useEffect(() => {
-        const token = localStorage.getItem("userToken");
-
         const fetchInterviewDetails = async () => {
             setIsLoading(true);
             try {
-                const response = await axios.get(
-                    `https://namanba.shop/interviews/${interviewId}`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }
-                );
+                const response = await axiosClient.get(`/interviews/${interviewId}`);
                 setInterviewDetails(response.data.data);
             } catch (error) {
                 console.error("면접 상세 정보 로드 오류:", error);
