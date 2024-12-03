@@ -1,6 +1,6 @@
 import { useRef, useEffect, useState, useCallback } from 'react';
 import * as faceapi from 'face-api.js';
-import axios from 'axios';
+import axiosClient from '../../../services/AxiosClient';
 
 const VoiceFaceRecognition = ({ videoRef, setFaceDetected, setNoAudioDetectedTime, isAnswering, interviewEnded, interviewId }) => {
     const audioContextRef = useRef(null);
@@ -24,7 +24,7 @@ const VoiceFaceRecognition = ({ videoRef, setFaceDetected, setNoAudioDetectedTim
         console.log('백엔드로 전송할 표정 데이터:', data);
         try {
             const kakaoToken = localStorage.getItem('kakaoToken');
-            await axios.post(`https://namanba.shop/api/${interviewId}/expression`, {
+            await axiosClient.post(`/api/${interviewId}/expression`, {
                 neutral: data.neutral,
                 happy: data.happy,
                 sad: data.sad,
