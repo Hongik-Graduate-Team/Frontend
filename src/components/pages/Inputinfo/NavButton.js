@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from "axios";
+import axiosClient from "../../../services/AxiosClient";
 import { useNavigate } from 'react-router-dom';
 import InputTitleModal from "../../modal/InputTitleModal";
 
@@ -40,7 +40,7 @@ function NavigationButtons({ page, setPage, handleSubmit, validateForm, isSubmit
   const handleStartInterview = async (title) => {
     try {
       // 제목을 백엔드로 전송
-      await axios.post('/api/interviews', { title });
+      await axiosClient.post(`/api/interviews`, { title });
       navigate('/interviewpreparation', { state: { interviewTitle: title } });
     } catch (error) {
       console.error('제목 저장 오류:', error);

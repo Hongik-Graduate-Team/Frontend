@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { FaceMesh } from '@mediapipe/face_mesh';
 import { Pose } from '@mediapipe/pose';
-import axios from 'axios';
+import axiosClient from "../../../services/AxiosClient";
 
 const GazePoseAnalysis = ({ videoRef, isAnswering, interviewEnded, interviewId }) => {
   const [gazeData, setGazeData] = useState([]);  // 시선 데이터를 저장하는 상태
@@ -53,7 +53,6 @@ const GazePoseAnalysis = ({ videoRef, isAnswering, interviewEnded, interviewId }
   // 백엔드에 분석 결과 전송 함수
   const sendAnalysisToBackend = (avgPosition, stability, directionCounts, postureData, interviewId) => {
     const stabilityScore = Math.sqrt(stability.varianceX + stability.varianceY);  // 안정성 점수 계산
-    const token = localStorage.getItem('userToken');  // 사용자 토큰 가져오기
   
     const gazeDataToPost = {
       stabilityScore,
@@ -64,11 +63,7 @@ const GazePoseAnalysis = ({ videoRef, isAnswering, interviewEnded, interviewId }
   
     const sendGazeData = async () => {
       try {
-        const gazeResponse = await axios.post(`https://namanba.shop/api/${interviewId}/evaluate-gaze`, gazeDataToPost, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const gazeResponse = await axiosClient.post(`/api/${interviewId}/evaluate-gaze`, gazeDataToPost);
         console.log("Gaze data sent successfully:", gazeResponse.data);
       } catch (error) {
         console.error("Error sending gaze data:", error);
@@ -77,11 +72,7 @@ const GazePoseAnalysis = ({ videoRef, isAnswering, interviewEnded, interviewId }
     
     const sendGestureData = async () => {
       try {
-        const gestureResponse = await axios.post(`https://namanba.shop/api/${interviewId}/evaluate-gesture`, postureData, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const gestureResponse = await axiosClient.post(`/api/${interviewId}/evaluate-gesture`, postureData);
         console.log("Gesture data sent successfully:", gestureResponse.data);
       } catch (error) {
         console.error("Error sending gesture data:", error);
