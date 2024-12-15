@@ -113,7 +113,7 @@ const handleChange = (e, index) => {
 
   // 날짜 변경 핸들러
   const handleDateChange = (section, index, dateType, date) => {
-    const formattedDate = date.toISOString().split('T')[0];
+    const formattedDate = date ? date.toISOString().split('T')[0] : null;
 
     const updatedItems = [...resumeData[section]];
     updatedItems[index] = {
