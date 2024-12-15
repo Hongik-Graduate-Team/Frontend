@@ -155,6 +155,7 @@ function PageOne({ resumeData, handleChange, handleItemChange, addInputField, de
                 dateFormat="yyyy-MM-dd"
                 className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
                 placeholderText="시작일"
+                isClearable
               />
               <DatePicker
                 selected={career.endDate}
@@ -167,6 +168,7 @@ function PageOne({ resumeData, handleChange, handleItemChange, addInputField, de
                 dateFormat="yyyy-MM-dd"
                 className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
                 placeholderText="종료일"
+                isClearable
               />
               </div>  
               {resumeData.careers.length > 1 && (
@@ -303,6 +305,7 @@ function PageOne({ resumeData, handleChange, handleItemChange, addInputField, de
                 dateFormat="yyyy-MM-dd"
                 className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
                 placeholderText="취득일"
+                isClearable
               />
             </div>
             {resumeData.certifications.length > 1 && (
@@ -355,6 +358,7 @@ function PageOne({ resumeData, handleChange, handleItemChange, addInputField, de
                 dateFormat="yyyy-MM-dd"
                 className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500"
                 placeholderText="취득일"
+                isClearable
               />
             </div>
             {resumeData.languageCerts && resumeData.languageCerts.length > 1 && (
