@@ -1,6 +1,6 @@
 import React, { useState , useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axiosClient from "../../../services/AxiosClient";
 import MainHeader from '../../molecules/Header/MainHeader';
 import PageOne from './Page1';
 import PageTwo from './Page2';
@@ -9,7 +9,6 @@ import NavigationButtons from './NavButton';
 function InputInfo() {
   const [page, setPage] = useState(1);
   const [isFormChanged, setIsFormChanged] = useState(false);
-  const [kakaoToken, setKakaoToken] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [resumeData, setResumeData] = useState({
     position: '',
@@ -37,26 +36,10 @@ function InputInfo() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem('userToken'); // 로컬 스토리지에서 토큰 가져오기
-
-    if (!token) {
-      // 토큰이 없으면 경고 및 리디렉션
-      alert("인증 토큰이 없습니다. 다시 로그인 해주세요.");
-      navigate('/signin'); // 로그인 페이지로 리디렉션
-      return;
-    }
-
-    // 토큰이 있으면 상태에 저장
-    setKakaoToken(token);
-
-    // 서버에서 데이터 불러오기 함수
+    // 서버에서 데이터 불러오기
     const loadData = async () => {
       try {
-        const response = await axios.get('https://namanba.shop/api/portfolio', {
-          headers: {
-            Authorization: `Bearer ${token}`
-          },
-        });
+        const response = await axiosClient.get(`/api/portfolio`);
 
         const data = response.data.data || {};
         console.log("fetched data:", data);
@@ -282,11 +265,8 @@ const handleChange = (e, index) => {
   
     if (dataToPost.length > 0) {
       promises.push(
-        axios.post(`https://namanba.shop/api/${endpoint}`, dataToPost, {
-          headers: {
-            Authorization: `Bearer ${kakaoToken}`,
-          }
-        }).catch(error => {
+        axiosClient.post(`/api/${endpoint}`, dataToPost
+        ).catch(error => {
           console.error(`POST ${endpoint} 요청 오류:`, error);
         })
       );
@@ -294,11 +274,8 @@ const handleChange = (e, index) => {
   
     if (dataToPut.length > 0) {
       promises.push(
-        axios.put(`https://namanba.shop/api/${endpoint}`, dataToPut, {
-          headers: {
-            Authorization: `Bearer ${kakaoToken}`,
-          }
-        }).catch(error => {
+        axiosClient.put(`/api/${endpoint}`, dataToPut
+        ).catch(error => {
           console.error(`PUT ${endpoint} 요청 오류:`, error);
         })
       );
@@ -315,10 +292,7 @@ const handleChange = (e, index) => {
   
     if (idsToDelete.length > 0) {
       return [
-        axios.delete(`https://namanba.shop/api/${endpoint}`, {
-          headers: {
-            Authorization: `Bearer ${kakaoToken}`,
-          },
+        axiosClient.delete(`/api/${endpoint}`, {
           data: idsToDelete
         }).catch(error => {
           console.error(`DELETE ${endpoint} 요청 오류:`, error);
@@ -370,10 +344,7 @@ const handleChange = (e, index) => {
   
       // 'position' 업데이트 처리
       allPromises.push(
-        axios.put('https://namanba.shop/api/portfolio/position', null, {
-          headers: {
-            Authorization: `Bearer ${kakaoToken}`,
-          },
+        axiosClient.put(`/api/portfolio/position`, null, {
           params: { positionName: resumeData.position }
         }).catch(error => {
           console.error('PUT position 요청 오류:', error);

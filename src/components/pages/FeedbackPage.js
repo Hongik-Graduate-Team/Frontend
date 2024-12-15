@@ -11,7 +11,7 @@ import {
 } from 'chart.js';
 import { Radar } from 'react-chartjs-2';
 import MainHeader from '../molecules/Header/MainHeader';
-import axios from 'axios';
+import axiosClient from "../../services/AxiosClient";
 import LoadingImg from '../../assets/img/loading.gif';
 
 // Radar 차트를 그리기 위해 필요한 구성 요소들을 Chart.js에 등록
@@ -42,27 +42,16 @@ const FeedbackPage = () => {
   
 
   useEffect(() => {
-    const token = localStorage.getItem('userToken');
     const interviewId = resultData?.interviewId;
 
     const fetchFeedbackData = async () => {
       try {
         const requests = [
-          axios.get(`https://namanba.shop/api/${interviewId}/evaluate-gaze`, {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
-          axios.get(`https://namanba.shop/api/${interviewId}/evaluate-gesture`, {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
-          axios.get(`https://namanba.shop/api/${interviewId}/expression`, {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
-          axios.get(`https://namanba.shop/api/${interviewId}/audio`, {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
-          axios.get(`https://namanba.shop/api/user/profile`, {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
+          axiosClient.get(`/api/${interviewId}/evaluate-gaze`),
+          axiosClient.get(`/api/${interviewId}/evaluate-gesture`),
+          axiosClient.get(`/api/${interviewId}/expression`),
+          axiosClient.get(`/api/${interviewId}/audio`),
+          axiosClient.get(`/api/user/profile`),
         ];
 
         const results = await Promise.allSettled(requests);
