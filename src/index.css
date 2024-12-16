@@ -8,9 +8,13 @@ body {
     font-family: "Noto Sans KR", sans-serif;
 }
 
-@layer utilities {
-    .react-datepicker__close-icon::after {
-      background-color: #D1D5DB !important;
-      padding: 1px !important;
-    }
-  }
+.react-datepicker__close-icon {
+  padding-right: 0.5rem !important;
+  padding-top: 0.25rem !important;
+}
+
+.react-datepicker__close-icon::after {
+  background-color: #D1D5DB !important;
+  padding: 1px !important;
+  font-size: 9px !important;
+}
