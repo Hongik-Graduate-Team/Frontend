@@ -49,13 +49,19 @@
 ---
 
 ## 👥 팀원 소개  
+<p align="center">
+  <img src="https://avatars.githubusercontent.com/u/81088222?v=4" width="100">  
+  <img src="https://avatars.githubusercontent.com/u/81136546?v=4" width="100">  
+  <img src="https://avatars.githubusercontent.com/u/90558692?v=4" width="100">  
+  <img src="https://avatars.githubusercontent.com/u/103306888?v=4" width="100">  
+</p>
 
 | 이름 | 역할 | GitHub 프로필 |
 | --- | --- | --- |
 | **서혜원** | 프로젝트 팀장 & 백엔드 개발 | [GitHub 프로필](https://github.com/JSHWJ) |
 | **조예지** | 백엔드 개발자 | [GitHub 프로필](https://github.com/CYJhub) |
 | **장윤서** | 프론트엔드 개발 & 디자인 | [GitHub 프로필](https://github.com/Ooorami) |
-| **박선하** | 프론트엔드 개발 & 디자인 | [GitHub 프로필](https://github.com/ahnus) |
+| **박선하** | 프론트엔드 개발 & 디자인 | [GitHub 프로필](https://github.com/ahnus) |  
 
 ## 🔹 팀원별 역할
 
