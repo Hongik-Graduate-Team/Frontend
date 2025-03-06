@@ -56,57 +56,66 @@
 
 | 이름 | 역할 | GitHub 프로필 |
 | --- | --- | --- |
-| **서혜원** | 백엔드 개발자 | [GitHub 프로필](https://github.com/Hongik-Graduate-Team) |
-| **조예지** | 백엔드 개발자 | [GitHub 프로필](https://github.com/Hongik-Graduate-Team) |
-| **장윤서** | 프론트엔드 개발자 & 디자인 | [GitHub 프로필](https://github.com/Hongik-Graduate-Team) |
-| **박선하** | 프론트엔드 개발자 & 디자인 | [GitHub 프로필](https://github.com/Hongik-Graduate-Team) |
+| **서혜원** | 프로젝트 팀장 & 백엔드 개발 | [GitHub 프로필](https://github.com/JSHWJ) |
+| **조예지** | 백엔드 개발자 | [GitHub 프로필](https://github.com/CYJhub) |
+| **장윤서** | 프론트엔드 개발 & 디자인 | [GitHub 프로필](https://github.com/Ooorami) |
+| **박선하** | 프론트엔드 개발 & 디자인 | [GitHub 프로필](https://github.com/ahnus) |
 
 ## 🔹 팀원별 역할
 
-### 🏆 서혜원 - 프로젝트 팀장 & 백엔드 개발
+| 이름 | 역할 | 상세 내용 |
+| --- | --- | --- |
+| **서혜원** | 프로젝트 팀장 & 백엔드 개발 | **프로젝트 팀장 역할**<br>- 프로젝트 일정 조율<br>- 회의록 관리 및 문서 정리<br>- 프로젝트 진행에 필요한 문서 및 자료 정리<br><br>**백엔드 개발 역할**<br>- **개발 기획**<br>  - 사용자 포트폴리오 및 맞춤형 질문 개발 기획<br>  - 사용자 면접 데이터 평가 시스템 설계<br>- **DB 설계**<br>  - 사용자 포트폴리오 및 기본 질문 DB 설계<br>  - 사용자 맞춤형 질문 DB 설계<br>  - 사용자 데이터 기반 평가 DB 설계<br>- **API 개발**<br>  - **사용자 포트폴리오 관리**<br>    - 포트폴리오 각 카테고리별(수상 이력, 성적, 자기소개서, 어학 자격증 등) CRUD 기능 구현<br>  - **마이페이지 기능**<br>    - 사용자 인터뷰 목록 조회 API<br>    - 사용자 인터뷰 상세 조회 API<br>  - **평가 및 AI 활용 기능**<br>    - 사용자 시선 및 자세 평가 API<br>    - 생성형 AI 기반 사용자 정보 맞춤형 질문 생성 및 반환 API<br>  - **사용자 데이터 관리**<br>    - 사용자 정보 조회 API |
+| **조예지** | 백엔드 개발자 | **백엔드 개발 역할**<br>- **API 개발**<br>  - 사용자 인증 및 권한 관리<br>  - 면접 질문 생성 및 관리<br>- **DB 관리**<br>  - 데이터 모델링 및 최적화<br>- **서버 관리**<br>  - 서버 배포 및 유지보수 |
+| **장윤서** | 프론트엔드 개발 & 디자인 | **프론트엔드 개발 역할**<br>- **카카오 로그인 기능 개발**<br>  - 카카오 회원가입 및 로그인 구현<br>  - 카카오 로그아웃 기능 개발<br>- **재사용 가능한 모달창 개발 및 디자인**<br>  - UI/UX 디자인 개선<br>- **마이페이지 개발 및 디자인**<br>  - 사용자 인터뷰 목록 조회 페이지 개발 및 디자인<br>  - 사용자 인터뷰 상세 조회 페이지 개발 및 디자인<br>- **메인 페이지, 면접 준비 페이지 및 면접 진행 페이지 공동 개발**<br>  - UI 설계 및 기능 구현 참여<br>  - 사용자 인터페이스 최적화 및 디자인 개선<br>- **AI 기반 표정 분석 개발**<br>  - face-api.js를 활용하여 사용자의 표정 인식 기능 개발<br>  - 표정 데이터 분석 및 시각적 피드백 제공 |
+| **박선하** | 프론트엔드 개발자 & 디자인 | **프론트엔드 개발 역할**<br>- **UI/UX 디자인**<br>  - 전체적인 서비스 디자인 컨셉 수립<br>  - 사용자 친화적인 인터페이스 설계<br>- **프론트엔드 개발**<br>  - 반응형 웹 디자인 구현<br>  - 다양한 디바이스 호환성 확보 |
 
-#### **프로젝트 팀장 역할**
-- 프로젝트 일정 조율
-- 회의록 관리 및 문서 정리
-- 프로젝트 진행에 필요한 문서 및 자료 정리
+---
 
-#### **백엔드 개발 역할**
+## 🛠 기술 스택 및 개발 환경  
 
-- **개발 기획**
-    - 사용자 포트폴리오 및 맞춤형 질문 개발 기획
-    - 사용자 면접 데이터 평가 시스템 설계
-- **DB 설계**
-    - 사용자 포트폴리오 및 기본 질문 DB 설계
-    - 사용자 맞춤형 질문 DB 설계
-    - 사용자 데이터 기반 평가 DB 설계
-- **API 개발**
-    - **사용자 포트폴리오 관리**
-        - 포트폴리오 각 카테고리별(수상 이력, 성적, 자기소개서, 어학 자격증 등) CRUD 기능 구현
-    - **마이페이지 기능**
-        - 사용자 인터뷰 목록 조회 API
-        - 사용자 인터뷰 상세 조회 API
-    - **평가 및 AI 활용 기능**
-        - 사용자 시선 및 자세 평가 API
-        - 생성형 AI 기반 사용자 정보 맞춤형 질문 생성 및 반환 API
-    - **사용자 데이터 관리**
-        - 사용자 정보 조회 API
+### 🎨 **Frontend**
+<p>
+  <img src="https://img.shields.io/badge/React-61DAFB?style=flat&logo=react&logoColor=white" />
+  <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=white" />
+</p>
+- **React와 JavaScript를 사용하여 동적인 면접 질문 화면 구성 및 인터페이스 개발**
+- **시뮬레이션 인터페이스 및 평가 결과 시각화**
 
----  
+### 🏗 **Backend**
+<p>
+  <img src="https://img.shields.io/badge/Spring%20Boot-6DB33F?style=flat&logo=spring-boot&logoColor=white" />
+  <img src="https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=mysql&logoColor=white" />
+</p>
+- **Spring Boot와 MySQL을 사용해 서비스 핵심 로직 처리 및 데이터 관리**
 
-### 🎨 장윤서 - 프론트엔드 개발 & 디자인
+### 🎯 **AI 분석 기술**
+<p>
+  <img src="https://img.shields.io/badge/MediaPipe-4285F4?style=flat&logo=google&logoColor=white" />
+  <img src="https://img.shields.io/badge/Face--API.js-FF6F00?style=flat&logo=javascript&logoColor=white" />
+</p>
+- **MediaPipe와 Face-API를 활용하여 시선 추적 및 표정 분석 기능 개발**
+- **사용자의 면접 태도를 실시간으로 분석**
 
-#### **프론트엔드 개발 역할**
-- **카카오 로그인 기능 개발**
-  - 카카오 회원가입 및 로그인 구현
-  - 카카오 로그아웃 기능 개발
-- **재사용 가능한 모달창 개발 및 디자인**
-  - UI/UX 디자인 개선
-- **마이페이지 개발 및 디자인**
-  - 사용자 인터뷰 목록 조회 페이지 개발 및 디자인
-  - 사용자 인터뷰 상세 조회 페이지 개발 및 디자인
-- **메인 페이지, 면접 준비 페이지 및 면접 진행 페이지 공동 개발**
-  - UI 설계 및 기능 구현 참여
-  - 사용자 인터페이스 최적화 및 디자인 개선
-- **AI 기반 표정 분석 개발**
-  - face-api.js를 활용하여 사용자의 표정 인식 기능 개발
-  - 표정 데이터 분석 및 시각적 피드백 제공
+### ☁ **DevOps & 배포 환경**
+<p>
+  <img src="https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white" />
+  <img src="https://img.shields.io/badge/AWS-232F3E?style=flat&logo=amazon-aws&logoColor=white" />
+</p>
+- **Docker를 활용한 개발 환경 컨테이너화**
+- **AWS를 사용하여 안정적이고 확장성이 높은 배포 환경 구축**
+
+### 🛠 **개발 협업 툴**
+<p>
+  <img src="https://img.shields.io/badge/Notion-000000?style=flat&logo=notion&logoColor=white" />
+  <img src="https://img.shields.io/badge/Figma-F24E1E?style=flat&logo=figma&logoColor=white" />
+  <img src="https://img.shields.io/badge/Git-F05032?style=flat&logo=git&logoColor=white" />
+  <img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white" />
+  <img src="https://img.shields.io/badge/Slack-4A154B?style=flat&logo=slack&logoColor=white" />
+</p>
+- **Notion을 활용한 문서화 및 일정 관리**
+- **Figma를 사용한 UI/UX 디자인 설계**
+- **Git & GitHub를 통한 버전 관리 및 코드 협업**
+- **Slack을 이용한 실시간 소통 및 협업**
+
+---
