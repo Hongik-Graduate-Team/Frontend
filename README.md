@@ -1,7 +1,7 @@
 # 🏆 나만바 - AI 면접 웹사이트  
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/Hongik-Graduate-Team/Frontend/main/src/assets/img/Logo/logo.png" width="200" alt="나만바 로고">
+  <img src="https://raw.githubusercontent.com/Hongik-Graduate-Team/Frontend/main/src/assets/img/logo.png" width="200" alt="나만바 로고">
 </p>
 
 ## 📌 서비스 소개  
@@ -17,8 +17,12 @@
 > 
 ---
 
+
+
 ## 🌐 배포 URL  
 🔗 **[나만바 바로가기](https://namanba.site/)**  
+
+
 
 ---
 
