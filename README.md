@@ -1,9 +1,5 @@
 # 🏆 나만바 - AI 면접 웹사이트  
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/Hongik-Graduate-Team/Frontend/main/public/favicon.ico" width="200" alt="나만바 로고">
-</p>
-
 ## 📌 서비스 소개  
 > 🚀 **나만바**는 개인 맞춤형 AI 면접 도우미 서비스입니다. 
 >
