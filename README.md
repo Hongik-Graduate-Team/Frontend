@@ -54,7 +54,7 @@
 | --- | --- | --- | --- |
 | **서혜원** | **조예지** | **장윤서** | **박선하** |
 | 프로젝트 팀장 & 백엔드 | 백엔드 | 프론트엔드 & 디자인 | 프론트엔드 & 디자인 |
-| [GitHub 프로필](https://github.com/JSHWJ) | [GitHub 프로필](https://github.com/CYJhub) | [GitHub 프로필](https://github.com/Ooorami) | [GitHub 프로필](https://github.com/ahnus) |
+| [@JSHWJ](https://github.com/JSHWJ) | [@CYJhub](https://github.com/CYJhub) | [@Ooorami](https://github.com/Ooorami) | [@ahnus](https://github.com/ahnus) |
  
 
 ## 🔹 팀원별 역할
