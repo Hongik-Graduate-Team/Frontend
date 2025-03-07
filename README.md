@@ -208,34 +208,33 @@
 
 <div align="center">
 
-<table style="width:100%; text-align:center; border-collapse: collapse;">
+<table>
   <tr>
-    <th style="padding: 12px; border-bottom: 2px solid #ddd;">단계</th>
-    <th style="padding: 12px; border-bottom: 2px solid #ddd;">기간</th>
-    <th style="padding: 12px; border-bottom: 2px solid #ddd;">내용</th>
+    <th style="font-size: 18px; padding: 15px;">🚀 단계</th>
+    <th style="font-size: 18px; padding: 15px;">📅 기간</th>
+    <th style="font-size: 18px; padding: 15px;">📌 내용</th>
   </tr>
   <tr>
-    <td style="padding: 10px; border-bottom: 1px solid #ddd;"><b>설계 기간</b></td>
-    <td style="padding: 10px; border-bottom: 1px solid #ddd;">2024.03.01 ~ 2024.06.30</td>
-    <td style="padding: 10px; border-bottom: 1px solid #ddd;">시스템 아키텍처 및 UI/UX 설계</td>
+    <td style="font-size: 16px; padding: 12px;"><b>설계 기간</b></td>
+    <td style="font-size: 16px; padding: 12px;">2024.03.01 ~ 2024.06.30</td>
+    <td style="font-size: 16px; padding: 12px;">시스템 아키텍처 및 UI/UX 설계</td>
   </tr>
   <tr>
-    <td style="padding: 10px; border-bottom: 1px solid #ddd;"><b>개발 기간</b></td>
-    <td style="padding: 10px; border-bottom: 1px solid #ddd;">2024.07.01 ~ 2024.09.15</td>
-    <td style="padding: 10px; border-bottom: 1px solid #ddd;">핵심 기능 구현 및 시스템 개발</td>
+    <td style="font-size: 16px; padding: 12px;"><b>개발 기간</b></td>
+    <td style="font-size: 16px; padding: 12px;">2024.07.01 ~ 2024.09.15</td>
+    <td style="font-size: 16px; padding: 12px;">핵심 기능 구현 및 시스템 개발</td>
   </tr>
   <tr>
-    <td style="padding: 10px; border-bottom: 1px solid #ddd;"><b>유지보수 기간</b></td>
-    <td style="padding: 10px; border-bottom: 1px solid #ddd;">2024.09.16 ~ 2024.11.30</td>
-    <td style="padding: 10px; border-bottom: 1px solid #ddd;">성능 개선 및 최적화, 버그 수정</td>
+    <td style="font-size: 16px; padding: 12px;"><b>유지보수 기간</b></td>
+    <td style="font-size: 16px; padding: 12px;">2024.09.16 ~ 2024.11.30</td>
+    <td style="font-size: 16px; padding: 12px;">성능 개선 및 최적화, 버그 수정</td>
   </tr>
   <tr>
-    <td style="padding: 12px;"><b>총 개발 기간</b></td>
-    <td style="padding: 12px;">2024.03.01 ~ 2024.11.30</td>
-    <td style="padding: 12px;">전체 프로젝트 진행 기간</td>
+    <td style="font-size: 18px; padding: 15px;"><b>총 개발 기간</b></td>
+    <td style="font-size: 18px; padding: 15px;">2024.03.01 ~ 2024.11.30</td>
+    <td style="font-size: 18px; padding: 15px;">전체 프로젝트 진행 기간</td>
   </tr>
 </table>
 
 </div>
-
 
