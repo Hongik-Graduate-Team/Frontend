@@ -48,14 +48,38 @@
 
 ---
 
+<div align="center">
+
 ## 👥 팀원 소개  
 
-| <img src="https://avatars.githubusercontent.com/u/81088222?v=4" width="200"> | <img src="https://avatars.githubusercontent.com/u/81136546?v=4" width="200"> | <img src="https://avatars.githubusercontent.com/u/90558692?v=4" width="200"> | <img src="https://avatars.githubusercontent.com/u/103306888?v=4" width="200"> |
-| --- | --- | --- | --- |
-| **서혜원** | **조예지** | **장윤서** | **박선하** |
-| 프로젝트 팀장 & 백엔드 | 백엔드 | 프론트엔드 & 디자인 | 프론트엔드 & 디자인 |
-| [@JSHWJ](https://github.com/JSHWJ) | [@CYJhub](https://github.com/CYJhub) | [@Ooorami](https://github.com/Ooorami) | [@ahnus](https://github.com/ahnus) |
- 
+<table>
+  <tr>
+    <td><img src="https://avatars.githubusercontent.com/u/81088222?v=4" width="200"></td>
+    <td><img src="https://avatars.githubusercontent.com/u/81136546?v=4" width="200"></td>
+    <td><img src="https://avatars.githubusercontent.com/u/90558692?v=4" width="200"></td>
+    <td><img src="https://avatars.githubusercontent.com/u/103306888?v=4" width="200"></td>
+  </tr>
+  <tr>
+    <td><p align="center"><b>서혜원</b></p></td>
+    <td><p align="center"><b>조예지</b></p></td>
+    <td><p align="center"><b>장윤서</b></p></td>
+    <td><p align="center"><b>박선하</b></p></td>
+  </tr>
+  <tr>
+    <td><p align="center">프로젝트 팀장 & 백엔드</p></td>
+    <td><p align="center">백엔드</p></td>
+    <td><p align="center">프론트엔드 & 디자인</p></td>
+    <td><p align="center">프론트엔드 & 디자인</p></td>
+  </tr>
+  <tr>
+    <td><p align="center"><a href="https://github.com/JSHWJ">@JSHWJ</a></p></td>
+    <td><p align="center"><a href="https://github.com/CYJhub">@CYJhub</a></p></td>
+    <td><p align="center"><a href="https://github.com/Ooorami">@Ooorami</a></p></td>
+    <td><p align="center"><a href="https://github.com/ahnus">@ahnus</a></p></td>
+  </tr>
+</table>
+
+</div>
 
 ## 🔹 팀원별 역할
 
