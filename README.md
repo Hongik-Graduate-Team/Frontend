@@ -208,7 +208,7 @@
 
 <div align="center">
 
-<table style="width:500; text-align:center; border-collapse: collapse;">
+<table style="width:100%; text-align:center; border-collapse: collapse;">
   <tr>
     <th style="padding: 12px; border-bottom: 2px solid #ddd;">단계</th>
     <th style="padding: 12px; border-bottom: 2px solid #ddd;">기간</th>
