@@ -110,13 +110,13 @@
   - **사용자 데이터 관리**  
     - 사용자 정보 조회 API  
 
----
+##
 
 ### 🔧 조예지 - 백엔드 개발  
 ⚙️ **백엔드 개발 역할**  
 *(추가할 내용이 있다면 입력해주세요!)*  
 
----
+##
 
 ### 🎨 장윤서 - 프론트엔드 개발 & 디자인  
 
@@ -135,7 +135,7 @@
   - face-api.js를 활용하여 사용자의 표정 인식 기능 개발  
   - 표정 데이터 분석 및 시각적 피드백 제공  
 
----
+##
 
 ### 🎨 박선하 - 프론트엔드 개발 & 디자인  
 
@@ -163,7 +163,7 @@
 ![React](https://img.shields.io/badge/React-61DAFB?style=flat&logo=react&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=white)
 
----
+##
 
 ### 🏗 **Backend**  
 ✔ **Spring Boot** 기반의 백엔드 구축  
@@ -172,7 +172,7 @@
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-6DB33F?style=flat&logo=spring-boot&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=mysql&logoColor=white)
 
----
+##
 
 ### 🎯 **AI 분석 기술**  
 ✔ **MediaPipe & Face-API.js**를 활용한 표정 및 시선 분석  
@@ -181,7 +181,7 @@
 ![MediaPipe](https://img.shields.io/badge/MediaPipe-4285F4?style=flat&logo=google&logoColor=white)
 ![Face-API.js](https://img.shields.io/badge/Face--API.js-FF6F00?style=flat&logo=javascript&logoColor=white)
 
----
+##
 
 ### ☁ **DevOps & 배포 환경**  
 ✔ **Docker 기반의 컨테이너 환경 구축**  
@@ -190,7 +190,7 @@
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white)
 ![AWS](https://img.shields.io/badge/AWS-232F3E?style=flat&logo=amazon-aws&logoColor=white)
 
----
+##
 
 ### 🛠 **개발 협업 툴**  
 ✔ **Notion**을 활용한 문서화 및 일정 관리  
