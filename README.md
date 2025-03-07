@@ -157,50 +157,58 @@
 
 ---
 
-## 🛠 기술 스택 및 개발 환경  
+# 🛠 기술 스택 및 개발 환경  
 
-### 🎨 **Frontend**
-<p>
-  <img src="https://img.shields.io/badge/React-61DAFB?style=flat&logo=react&logoColor=white" />
-  <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=white" />
-</p>
-- **React와 JavaScript를 사용하여 동적인 면접 질문 화면 구성 및 인터페이스 개발**
-- **시뮬레이션 인터페이스 및 평가 결과 시각화**
+## 🎨 Frontend  
+React와 JavaScript를 활용하여 동적인 면접 질문 화면 및 평가 결과 시각화 개발  
+✔ **React와 JavaScript**를 사용하여 인터페이스 구현  
+✔ 시뮬레이션 인터페이스 및 평가 결과 **시각화**  
 
-### 🏗 **Backend**
-<p>
-  <img src="https://img.shields.io/badge/Spring%20Boot-6DB33F?style=flat&logo=spring-boot&logoColor=white" />
-  <img src="https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=mysql&logoColor=white" />
-</p>
-- **Spring Boot와 MySQL을 사용해 서비스 핵심 로직 처리 및 데이터 관리**
-
-### 🎯 **AI 분석 기술**
-<p>
-  <img src="https://img.shields.io/badge/MediaPipe-4285F4?style=flat&logo=google&logoColor=white" />
-  <img src="https://img.shields.io/badge/Face--API.js-FF6F00?style=flat&logo=javascript&logoColor=white" />
-</p>
-- **MediaPipe와 Face-API를 활용하여 시선 추적 및 표정 분석 기능 개발**
-- **사용자의 면접 태도를 실시간으로 분석**
-
-### ☁ **DevOps & 배포 환경**
-<p>
-  <img src="https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white" />
-  <img src="https://img.shields.io/badge/AWS-232F3E?style=flat&logo=amazon-aws&logoColor=white" />
-</p>
-- **Docker를 활용한 개발 환경 컨테이너화**
-- **AWS를 사용하여 안정적이고 확장성이 높은 배포 환경 구축**
-
-### 🛠 **개발 협업 툴**
-<p>
-  <img src="https://img.shields.io/badge/Notion-000000?style=flat&logo=notion&logoColor=white" />
-  <img src="https://img.shields.io/badge/Figma-F24E1E?style=flat&logo=figma&logoColor=white" />
-  <img src="https://img.shields.io/badge/Git-F05032?style=flat&logo=git&logoColor=white" />
-  <img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white" />
-  <img src="https://img.shields.io/badge/Slack-4A154B?style=flat&logo=slack&logoColor=white" />
-</p>
-- **Notion을 활용한 문서화 및 일정 관리**
-- **Figma를 사용한 UI/UX 디자인 설계**
-- **Git & GitHub를 통한 버전 관리 및 코드 협업**
-- **Slack을 이용한 실시간 소통 및 협업**
+![React](https://img.shields.io/badge/React-61DAFB?style=flat&logo=react&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=white)
 
 ---
+
+## 🏗 Backend  
+Spring Boot와 MySQL을 활용하여 핵심 로직 처리 및 데이터 관리  
+✔ **Spring Boot** 기반의 백엔드 로직 구축  
+✔ **MySQL**을 활용한 데이터 저장 및 관리  
+
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-6DB33F?style=flat&logo=spring-boot&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=mysql&logoColor=white)
+
+---
+
+## 🎯 AI 분석 기술  
+MediaPipe와 Face-API를 활용하여 사용자 면접 태도 분석  
+✔ **MediaPipe & Face-API**를 활용한 시선 추적 및 표정 분석  
+✔ 실시간 면접 태도 평가 및 분석 기능 개발  
+
+![MediaPipe](https://img.shields.io/badge/MediaPipe-4285F4?style=flat&logo=google&logoColor=white)
+![Face-API.js](https://img.shields.io/badge/Face--API.js-FF6F00?style=flat&logo=javascript&logoColor=white)
+
+---
+
+## ☁ DevOps & 배포 환경  
+Docker 및 AWS를 활용한 안정적이고 확장 가능한 서비스 구축  
+✔ **Docker**를 활용한 컨테이너화 및 배포 환경 구성  
+✔ **AWS** 기반의 안정적이고 확장성 높은 서비스 운영  
+
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white)
+![AWS](https://img.shields.io/badge/AWS-232F3E?style=flat&logo=amazon-aws&logoColor=white)
+
+---
+
+## 🛠 개발 협업 툴  
+효율적인 개발 협업을 위한 다양한 도구 활용  
+✔ **Notion**을 통한 문서화 및 일정 관리  
+✔ **Figma**를 활용한 UI/UX 설계  
+✔ **Git & GitHub**을 통한 코드 버전 관리  
+✔ **Slack**을 통한 실시간 커뮤니케이션  
+
+![Notion](https://img.shields.io/badge/Notion-000000?style=flat&logo=notion&logoColor=white)
+![Figma](https://img.shields.io/badge/Figma-F24E1E?style=flat&logo=figma&logoColor=white)
+![Git](https://img.shields.io/badge/Git-F05032?style=flat&logo=git&logoColor=white)
+![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white)
+![Slack](https://img.shields.io/badge/Slack-4A154B?style=flat&logo=slack&logoColor=white)
+
