@@ -1,11 +1,11 @@
 ## 📌 1. 서비스 소개  
-🚀 **나만바**는 개인 맞춤형 AI 면접 도우미 서비스입니다.  
+**나만바**는 개인 맞춤형 AI 면접 도우미 서비스입니다.  
 
-✅ **맞춤형 질문 생성**: 사용자가 입력한 자기소개서와 포트폴리오를 분석하여 AI 기반 맞춤형 질문을 생성  
-✅ **실제 면접과 유사한 시뮬레이션**: 직군별 기본 질문과 함께 실시간 화상 면접 진행  
-✅ **실시간 분석 제공**: 면접 중 **표정, 시선, 제스처, 말의 속도, 목소리 크기, 침묵 시간** 총 6가지 요소 분석  
-✅ **피드백 제공**: 면접 종료 후 AI 분석 기반 **강점과 개선점 제시**  
-✅ **기존 AI 면접 서비스보다 심층적인 개선 피드백 제공**  
+- **맞춤형 질문 생성**: 사용자가 입력한 자기소개서와 포트폴리오를 분석하여 AI 기반 맞춤형 질문을 생성  
+- **실제 면접과 유사한 시뮬레이션**: 직군별 기본 질문과 함께 실시간 화상 면접 진행  
+- **실시간 분석 제공**: 면접 중 **표정, 시선, 제스처, 말의 속도, 목소리 크기, 침묵 시간** 총 6가지 요소 분석  
+- **피드백 제공**: 면접 종료 후 AI 분석 기반 **강점과 개선점 제시**  
+- **기존 AI 면접 서비스보다 심층적인 개선 피드백 제공**  
 
 ---
 
@@ -18,29 +18,29 @@
 
 📌 **나만바를 활용하는 6단계**  
 
-### 1️⃣ **회원가입 및 로그인** 🔑  
-✔ 이메일, 비밀번호 입력 후 **회원가입**  
-✔ 계정 생성 후 로그인하여 서비스 이용 시작  
+### 1️⃣ **회원가입 및 로그인**  
+- 이메일, 비밀번호 입력 후 **회원가입**  
+- 계정 생성 후 로그인하여 서비스 이용 시작  
 
-### 2️⃣ **프로필 작성** 📝  
-✔ **개인 정보 입력**: 이름, 연락처, 경력 사항 등 기본 정보 입력  
-✔ **자기소개서 및 포트폴리오 업로드**: AI 분석을 위한 문서 업로드  
+### 2️⃣ **프로필 작성**  
+- **개인 정보 입력**: 이름, 연락처, 경력 사항 등 기본 정보 입력  
+- **자기소개서 및 포트폴리오 업로드**: AI 분석을 위한 문서 업로드  
 
-### 3️⃣ **면접 설정** ⚙️  
-✔ **직군 및 직무 선택**하여 맞춤형 질문 설정  
-✔ **질문 유형 선택**: 기본 질문, AI 생성 질문 설정  
+### 3️⃣ **면접 설정**   
+- **직군 및 직무 선택**하여 맞춤형 질문 설정  
+- **질문 유형 선택**: 기본 질문, AI 생성 질문 설정  
 
-### 4️⃣ **AI 면접 진행** 🎥  
-✔ **실제 면접처럼 웹캠 & 마이크를 활용한 진행**  
-✔ **실시간 피드백 제공** (표정, 시선, 제스처 분석)  
+### 4️⃣ **AI 면접 진행**   
+- **실제 면접처럼 웹캠 & 마이크를 활용한 진행**  
+- **실시간 피드백 제공** (표정, 시선, 제스처 분석)  
 
-### 5️⃣ **면접 결과 확인** 📊  
-✔ **AI 분석 리포트 제공**  
-✔ **강점 및 개선점 명확하게 파악**  
+### 5️⃣ **면접 결과 확인**
+- **AI 분석 리포트 제공**  
+- **강점 및 개선점 명확하게 파악**  
 
-### 6️⃣ **피드백 기반 연습** 🔄  
-✔ **피드백을 바탕으로 추가 연습 진행**  
-✔ **반복 학습을 통해 면접 스킬 향상**  
+### 6️⃣ **피드백 기반 연습** 
+- **피드백을 바탕으로 추가 연습 진행**  
+- **반복 학습을 통해 면접 스킬 향상**  
 
 ---
 
@@ -112,7 +112,19 @@
 
 ### 🔧 조예지 - 백엔드 개발  
 ⚙️ **백엔드 개발 역할**  
-*(추가할 내용이 있다면 입력해주세요!)*  
+- **설계 및 인프라 구축**  
+  - API 설계 및 DB(RDS) 생성
+  - Docker 컨테이너 생성 및 Nginx 구축
+  - 서버 구축 및 배포 환경 설정
+  - CI/CD 자동화 (GitHub Actions 활용)   
+- **API 개발**  
+  - **회원 관리 기능**  
+    - 카카오 로그인 구현
+    - 로그인 연장 및 로그아웃 처리
+  - **면접 평가 기능**  
+    - 표정 평가 및 피드백 반환 API 
+    - 침묵 비율 검출 및 피드백 반환 API
+    - 목소리 크기 측정 및 피드백 반환 API
 
 ##
 
@@ -154,47 +166,47 @@
 
 ## 🛠 6. 기술 스택 및 개발 환경  
 
-### 🎨 **Frontend**  
-✔ **React와 JavaScript**를 사용하여 인터페이스 구현  
-✔ 시뮬레이션 인터페이스 및 평가 결과 **시각화**
+###  **Frontend**  
+- **React와 JavaScript**를 사용하여 인터페이스 구현  
+- 시뮬레이션 인터페이스 및 평가 결과 **시각화**
 
 ![React](https://img.shields.io/badge/React-61DAFB?style=flat&logo=react&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=white)
 
 ##
 
-### 🏗 **Backend**  
-✔ **Spring Boot** 기반의 백엔드 구축  
-✔ **MySQL**을 활용한 데이터 저장 및 관리  
+###  **Backend**  
+- **Spring Boot** 기반의 백엔드 구축  
+- **MySQL**을 활용한 데이터 저장 및 관리  
 
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-6DB33F?style=flat&logo=spring-boot&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=mysql&logoColor=white)
 
 ##
 
-### 🎯 **AI 분석 기술**  
-✔ **MediaPipe & Face-API.js**를 활용한 표정 및 시선 분석  
-✔ **실시간 면접 태도 평가 기능 개발**  
+###  **AI 분석 기술**  
+- **MediaPipe & Face-API.js**를 활용한 표정 및 시선 분석  
+- **실시간 면접 태도 평가 기능 개발**  
 
 ![MediaPipe](https://img.shields.io/badge/MediaPipe-4285F4?style=flat&logo=google&logoColor=white)
 ![Face-API.js](https://img.shields.io/badge/Face--API.js-FF6F00?style=flat&logo=javascript&logoColor=white)
 
 ##
 
-### ☁ **DevOps & 배포 환경**  
-✔ **Docker 기반의 컨테이너 환경 구축**  
-✔ **AWS를 활용한 배포 및 확장성 확보**  
+###  **DevOps & 배포 환경**  
+- **Docker 기반의 컨테이너 환경 구축**  
+- **AWS를 활용한 배포 및 확장성 확보**  
 
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white)
 ![AWS](https://img.shields.io/badge/AWS-232F3E?style=flat&logo=amazon-aws&logoColor=white)
 
 ##
 
-### 🛠 **개발 협업 툴**  
-✔ **Notion**을 활용한 문서화 및 일정 관리  
-✔ **Figma**를 활용한 UI/UX 설계  
-✔ **Git & GitHub**을 통한 코드 버전 관리  
-✔ **Slack을 통한 실시간 협업**  
+###  **개발 협업 툴**  
+- **Notion**을 활용한 문서화 및 일정 관리  
+- **Figma**를 활용한 UI/UX 설계  
+- **Git & GitHub**을 통한 코드 버전 관리  
+- **Slack을 통한 실시간 협업**  
 
 ![Notion](https://img.shields.io/badge/Notion-000000?style=flat&logo=notion&logoColor=white)
 ![Figma](https://img.shields.io/badge/Figma-F24E1E?style=flat&logo=figma&logoColor=white)
@@ -210,9 +222,9 @@
 
 <table>
   <tr>
-    <th style="font-size: 18px; padding: 15px;">🚀 단계</th>
-    <th style="font-size: 18px; padding: 15px;">📅 기간</th>
-    <th style="font-size: 18px; padding: 15px;">📌 내용</th>
+    <th style="font-size: 18px; padding: 15px;"> 단계</th>
+    <th style="font-size: 18px; padding: 15px;"> 기간</th>
+    <th style="font-size: 18px; padding: 15px;"> 내용</th>
   </tr>
   <tr>
     <td style="font-size: 16px; padding: 12px;"><b>설계 기간</b></td>
