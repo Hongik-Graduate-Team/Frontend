@@ -290,8 +290,12 @@ AI가 사용자의 면접 내용을 분석하여 음성, 시선, 제스처 등 �
 사용자의 자세, 조명, 배경음 등을 확인할 수 있도록 가이드 제공
 원활한 AI 면접 환경을 위한 체크리스트 제공
 
+<img src="https://github.com/user-attachments/assets/4e48791e-57af-48c7-9a92-01d6f34ecf93" width="700"/>
+
+
 ### 면접 페이지
 
 실제 면접 시뮬레이션 기능 제공
 자소서를 기반으로 AI가 면접 질문을 자동 생성 및 제시
 사용자는 음성으로 답변하며, 카메라를 통해 표정·시선·제스처도 함께 기록
+<img src="https://github.com/user-attachments/assets/0da4475e-672f-4dd0-992f-dad494c84ca6" width="700"/>
