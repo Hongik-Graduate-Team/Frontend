@@ -46,7 +46,7 @@
     <td><p align="center"><a href="https://github.com/JSHWJ">@JSHWJ</a></p></td>
     <td><p align="center"><a href="https://github.com/CYJhub">@CYJhub</a></p></td>
     <td><p align="center"><a href="https://github.com/Ooorami">@Ooorami</a></p></td>
-    <td><p align="center"><a href="https://github.com/ahnus">@ahnus</a></p></td>
+    <td><p align="center"><a href="https://github.com/sunha21">@ahnus</a></p></td>
   </tr>
 </table>
 
